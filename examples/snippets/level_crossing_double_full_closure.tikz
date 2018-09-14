@@ -1,0 +1,13 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../../overview.tex
+
+% Copyright 2018 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\draw[line width=2pt] (-2.5,-0.5) -- ++(5,0);
+\draw[line width=2pt] (-2.5, 0.5) -- ++(5,0);
+\pic at (0, 1.5) {level_crossing_barrier_right};
+\pic at (0, 0.5) {level_crossing_barrier_left};
+\pic at (0, 0.5) {level_crossing};
+\pic at (0,-0.5) {level_crossing_barrier_right};
+\pic at (0,-1.5) {level_crossing_barrier_left};

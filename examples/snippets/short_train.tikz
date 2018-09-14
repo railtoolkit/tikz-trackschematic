@@ -1,0 +1,9 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../../overview.tex
+
+% Copyright 2018 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\draw[line width=2pt] (-2.5,0) -- ++(5,0);
+\pic at (-0.5,0) {train=1};
+% change the 1 to desired length
