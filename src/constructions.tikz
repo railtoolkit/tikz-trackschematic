@@ -1,0 +1,72 @@
+%% symbol library for TikZ track schematics
+%
+% Copyright 2018 Martin Scheidt (ISC license)
+
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\tikzset{
+  pics/platform_left/.style n args={1}{
+    code={
+      \path[draw, line width=0.75pt] (0,0.5) -- ++(0,-0.3) -- ++(#1,0) -- ++(0,0.3);
+      \path[draw, line width=0.75pt] (0,0.3) -- ++(#1,0);
+    }
+  },
+  pics/platform_left/.default=4,
+}
+\tikzset{
+  pics/platform_right/.style n args={1}{
+    code={
+      \path[draw, line width=0.75pt] (0,-0.5) -- ++(0,0.3) -- ++(#1,0) -- ++(0,-0.3);
+      \path[draw, line width=0.75pt] (0,-0.3) -- ++(#1,0);
+    }
+  },
+  pics/platform_right/.default=4,
+}
+\tikzset{
+  level_crossing_barrier_left/.pic={
+    { % road
+      \path[draw, line width=1pt] (-0.2, 0.8) --  ++(0,-0.6);
+      \path[draw, line width=1pt] ( 0.2, 0.8) --  ++(0,-0.6);
+    }
+    { % barrier
+      \filldraw (-0.4,0.5) circle (0.05);
+      \path[draw, line width=1pt] (-0.4,0.5) --  ++(0.39,0);
+    }
+  };
+}
+\tikzset{
+  level_crossing_barrier_right/.pic={
+    { % road
+      \path[draw, line width=1pt] (-0.2,-0.8) --  ++(0, 0.6);
+      \path[draw, line width=1pt] ( 0.2,-0.8) --  ++(0, 0.6);
+    }
+    { % barrier
+      \filldraw (0.4,-0.5) circle (0.05);
+      \path[draw, line width=1pt] (0.4,-0.5) --  ++(-0.39,0);
+    }
+  };
+}
+\tikzset{
+  level_crossing/.pic={
+    { % road
+      \path[draw, line width=1pt] (-0.2,-0.8) --  ++(0, 0.6);
+      \path[draw, line width=1pt] ( 0.2,-0.8) --  ++(0, 0.6);
+    }
+  };
+}
+\tikzset{
+  pics/bridge_left/.style n args={1}{
+    code={
+      \path[draw, line width=0.75pt] (-0.1,0.48) --  ++(0.08,-0.08) -- ++(#1,0) -- ++(0.08,0.08);
+    }
+  },
+  pics/bridge_left/.default=3,
+}
+\tikzset{
+  pics/bridge_right/.style n args={1}{
+    code={
+      \path[draw, line width=0.75pt] (-0.1,-0.48) --  ++(0.08,0.08) -- ++(#1,0) -- ++(0.08,-0.08);
+    }
+  },
+  pics/bridge_right/.default=3,
+}

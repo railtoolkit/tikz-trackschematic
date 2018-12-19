@@ -6,11 +6,13 @@
 \documentclass[tikz,border=2]{standalone}
 
 \usepackage{lmodern}
+\usepackage[prefix=]{xcolor-solarized}
 
-\input{../src/solarizedColors.tex}
-\input{../src/topologySymbols.tex}
-% \input{../src/layoutSymbols_DE.tex}
-\input{../src/vehicles.tex}
+\def\rootTrackschematic{../../tikz-trackschematic}
+\def\srcTrackschematic{\rootTrackschematic/src}
+\input{\srcTrackschematic/topology.tikz}
+\input{\srcTrackschematic/trafficControl.tikz}
+\input{\srcTrackschematic/constructions.tikz}
 
 \begin{document}
   \begin{tikzpicture}[font=\sffamily]
@@ -46,14 +48,14 @@
     \node[fill=white] at (22.5, 5) { 5};
     \node[fill=white] at (29.0, 6) {51};
     % % bufferstops
-    \pic at ( 9, 1) {bufferstop_backward};
-    \pic at (30, 6) {bufferstop_forward};
+    \pic  at ( 9, 1) {bufferstop_backward};
+    \pic  at (30, 6) {bufferstop_forward};
     % turnouts
     \pic  at ( 5,0) {turnout_left_forward};
     \node at ( 5,-0.2) {\footnotesize W1};
     % \pic at ( 5,0) {fouling_point_left_forward};
     \pic  at ( 6,1) {turnout_left_backward};
-    \node at (6,1.2) {\footnotesize W2};
+    \node at ( 6,1.2) {\footnotesize W2};
     % \pic at ( 6,1) {fouling_point_left_backward};
     \pic  at (11,4) {derailer_left_forward};
     \node[left,align=right] at (11.1,4.2) {\footnotesize Gs41};

@@ -1,6 +1,6 @@
-%! TEX TS-program = pdflatexmk
-% Copyright 2018 Martin Scheidt (ISC license)
+%!TEX TS-program = pdflatexmk
 
+% Copyright 2018 Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[a4paper,landscape]{article}
@@ -8,193 +8,192 @@
 \usepackage{fullpage}
 \usepackage{longtable}
 \usepackage{tikz}
-\usepackage[prefix=]{xcolor-solarized}
-\usepackage{hyperref}
 \usepackage{listings}
 \lstset{
   language=TeX,
   basicstyle=\ttfamily,
   columns=fullflexible,
   breaklines=true
-  }
+}
+
+\def\rootTrackschematic{../tikz-trackschematic}
+\def\srcTrackschematic{\rootTrackschematic/src}
+
 
 \renewcommand{\symbol}[1]{
-\begin{tikzpicture}[anchor=base,baseline=-3]
-  \input{examples/snippets/#1}
-  \path (-3,-1.0) rectangle (3,1.0); % background rectangle to unify every cell containing a symbol
-\end{tikzpicture}
+  \begin{tikzpicture}[anchor=base,baseline=-3]
+    \input{examples/snippets/#1}
+    \path (-3,-1.2) rectangle (3,1.2); % background rectangle to unify every cell containing a symbol
+  \end{tikzpicture}
 }
-\newcommand{\code}[1]{\lstinputlisting[firstline=7]{examples/snippets/#1}}
+\newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/examples/snippets/#1}}
 \newcommand{\colorsquare}[1]{
-\begin{tikzpicture}[anchor=base,baseline=-3]
-  \filldraw [#1] (-0.3,-0.3) rectangle (0.3,0.3);
-\end{tikzpicture}
+  \begin{tikzpicture}[anchor=base,baseline=-3]
+    \filldraw [#1] (-0.3,-0.3) rectangle (0.3,0.3);
+  \end{tikzpicture}
 }
+\newcounter{symbolNo}
+\def\No{\stepcounter{symbolNo}\arabic{symbolNo}}
 
-\input{src/layoutSymbols_DE.tex}
-\input{src/topologySymbols.tex}
-\input{src/vehicles.tex}
-\input{src/graphSymbols.tex}
+\input{\srcTrackschematic/topology.tikz}
+\input{\srcTrackschematic/trafficControl.tikz}
+\input{\srcTrackschematic/vehicles.tikz}
+\input{\srcTrackschematic/constructions.tikz}
 
 \begin{document}
   \centering
-  \begin{longtable}{|l|c|l|c|}
+  \begin{longtable}{|r|l|c|l|c|}
     \hline
-      Name                            & Symbol                                          & Code                                          & File                        \\
+      No. & Name                            & Symbol                                           & Code                                           & File                  \\
     \endhead
     \hline
-      main track                      & \symbol{main_track.tikz}                         & \code{main_track.tikz}                         & \emph{none}                 \\
+      \No & main track                      & \symbol{main_track.tikz}                         & \code{main_track.tikz}                         & \emph{none}           \\
     \hline
-      main line (double track)        & \symbol{main_line.tikz}                          & \code{main_line.tikz}                          & \emph{none}                 \\
+      \No & main line (double track)        & \symbol{main_line.tikz}                          & \code{main_line.tikz}                          & \emph{none}           \\
     \hline
-      side track                      & \symbol{side_track.tikz}                         & \code{side_track.tikz}                         & \emph{none}                 \\
+      \No & side track                      & \symbol{side_track.tikz}                         & \code{side_track.tikz}                         & \emph{none}           \\
     \hline
-      train berth sign (forward)      & \symbol{train_berth_sign_forward.tikz}           & \code{train_berth_sign_forward.tikz}           & \verb$topologySymbols.tex$  \\
+      \No & turnout left (forward)          & \symbol{turnout_left_forward.tikz}               & \code{turnout_left_forward.tikz}               & \texttt{topology.tikz} \\
     \hline
-      train berth sign (backward)     & \symbol{train_berth_sign_backward.tikz}          & \code{train_berth_sign_backward.tikz}          & \verb$topologySymbols.tex$  \\
+      \No & turnout left (backward)         & \symbol{turnout_left_backward.tikz}              & \code{turnout_left_backward.tikz}              & \texttt{topology.tikz} \\
     \hline
-      train berth shape               & \symbol{train_berth_shape.tikz}                  & \code{train_berth_shape.tikz}                  & \verb$topologySymbols.tex$  \\
+      \No & turnout right (forward)         & \symbol{turnout_right_forward.tikz}              & \code{turnout_right_forward.tikz}              & \texttt{topology.tikz} \\
     \hline
-      train berth                     & \symbol{train_berth.tikz}                        & \code{train_berth.tikz}                        & \verb$topologySymbols.tex$  \\
+      \No & turnout right (backward)        & \symbol{turnout_right_backward.tikz}             & \code{turnout_right_backward.tikz}             & \texttt{topology.tikz} \\
     \hline
-      platform (left)                 & \symbol{platform_left.tikz}                      & \code{platform_left.tikz}                      & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{5cm}{turnout left (forward)\\with fouling point indicator}
+                                            & \symbol{turnout_with_fouling_left_forward.tikz}  & \code{turnout_with_fouling_left_forward.tikz}  & \texttt{topology.tikz} \\
     \hline
-      platform (right)                & \symbol{platform_right.tikz}                     & \code{platform_right.tikz}                     & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{5cm}{turnout left (backward)\\with fouling point indicator}
+                                            & \symbol{turnout_with_fouling_left_backward.tikz} & \code{turnout_with_fouling_left_backward.tikz} & \texttt{topology.tikz} \\
     \hline
-      platform (middle)               & \symbol{platform_middle.tikz}                    & \code{platform_middle.tikz}                    & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{5cm}{turnout right (forward)\\with fouling point indicator}
+                                            & \symbol{turnout_with_fouling_right_forward.tikz} & \code{turnout_with_fouling_right_forward.tikz} & \texttt{topology.tikz} \\
     \hline
-      view point (forward)            & \symbol{view_point_forward.tikz}                 & \code{view_point_forward.tikz}                 & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{5cm}{turnout right (backward)\\with fouling point indicator}
+                                            & \symbol{turnout_with_fouling_right_backward.tikz}& \code{turnout_with_fouling_right_backward.tikz}& \texttt{topology.tikz} \\
     \hline
-      view point (backward)           & \symbol{view_point_backward.tikz}                & \code{view_point_backward.tikz}                & \verb$topologySymbols.tex$  \\
+      \No & double-slip turnout left        & \symbol{double-slip_turnout_left.tikz}           & \code{double-slip_turnout_left.tikz}           & \texttt{topology.tikz} \\
     \hline
-      distant signal (forward)        & \symbol{distant_signal_forward.tikz}             & \code{distant_signal_forward.tikz}             & \verb$topologySymbols.tex$  \\
+      \No & double-slip turnout right       & \symbol{double-slip_turnout_right.tikz}          & \code{double-slip_turnout_right.tikz}          & \texttt{topology.tikz} \\
     \hline
-      \parbox[c]{4cm}{distant signal\\with speed}
-                                      & \symbol{distant_speed_signal_forward.tikz}       & \code{distant_speed_signal_forward.tikz}       &\verb$topologySymbols.tex$   \\
+      \No & diamond crossing left           & \symbol{diamond_crossing_left.tikz}              & \code{diamond_crossing_left.tikz}              & \texttt{topology.tikz} \\
     \hline
-      distant signal (backward)       & \symbol{distant_signal_backward.tikz}            & \code{distant_signal_backward.tikz}            & \verb$topologySymbols.tex$  \\
+      \No & diamond crossing right          & \symbol{diamond_crossing_right.tikz}             & \code{diamond_crossing_right.tikz}             & \texttt{topology.tikz} \\
     \hline
-      \parbox[c]{4cm}{distant signal\\with speed}
-                                      & \symbol{distant_speed_signal_backward.tikz}      & \code{distant_speed_signal_backward.tikz}      &\verb$topologySymbols.tex$   \\
+      \No & derailer left (forward)         & \symbol{derailer_left_forward.tikz}              & \code{derailer_left_forward.tikz}              & \texttt{topology.tikz} \\
     \hline
-      speed signal (forward)          & \symbol{speed_signal_forward.tikz}               & \code{speed_signal_forward.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & derailer left (backward)        & \symbol{derailer_left_backward.tikz}             & \code{derailer_left_backward.tikz}             & \texttt{topology.tikz} \\
     \hline
-      speed signal (backward)         & \symbol{speed_signal_backward.tikz}              & \code{speed_signal_backward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & derailer right (forward)        & \symbol{derailer_right_forward.tikz}             & \code{derailer_right_forward.tikz}             & \texttt{topology.tikz} \\
     \hline
-      block signal (forward)          & \symbol{block_signal_forward.tikz}               & \code{block_signal_forward.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & derailer right (backward)       & \symbol{derailer_right_backward.tikz}            & \code{derailer_right_backward.tikz}            & \texttt{topology.tikz} \\
     \hline
-      block signal (backward)         & \symbol{block_signal_backward.tikz}              & \code{block_signal_backward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & bufferstop (forward)            & \symbol{bufferstop_forward.tikz}                 & \code{bufferstop_forward.tikz}                 & \texttt{topology.tikz} \\
     \hline
-      route signal (forward)          & \symbol{route_signal_forward.tikz}               & \code{route_signal_forward.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & bufferstop (backward)           & \symbol{bufferstop_backward.tikz}                & \code{bufferstop_backward.tikz}                & \texttt{topology.tikz} \\
     \hline
-      route signal (backward)         & \symbol{route_signal_backward.tikz}              & \code{route_signal_backward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & train (not moving)              & \symbol{train.tikz}                              & \code{train.tikz}                              & \texttt{vehicles.tikz} \\
     \hline
-      shunt signal (forward)          & \symbol{shunt_signal_forward.tikz}               & \code{shunt_signal_forward.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & short train (not moving)        & \symbol{short_train.tikz}                        & \code{short_train.tikz}                        & \texttt{vehicles.tikz} \\
     \hline
-      shunt signal (backward)         & \symbol{shunt_signal_backward.tikz}              & \code{shunt_signal_backward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & train moving (forward)          & \symbol{train_moving_forward.tikz}               & \code{train_moving_forward.tikz}               & \texttt{vehicles.tikz} \\
     \hline
-      shunt limit (forward)           & \symbol{shunt_limit_forward.tikz}                & \code{shunt_limit_forward.tikz}                & \verb$topologySymbols.tex$  \\
+      \No & train moving (backward)         & \symbol{train_moving_backward.tikz}              & \code{train_moving_backward.tikz}              & \texttt{vehicles.tikz} \\
     \hline
-      shunt limit (backward)          & \symbol{shunt_limit_backward.tikz}               & \code{shunt_limit_backward.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & ghost train moving (forward)    & \symbol{ghost_train_moving_forward.tikz}         & \code{ghost_train_moving_forward.tikz}         & \texttt{vehicles.tikz} \\
     \hline
-      block end marker (forward)      & \symbol{block_end_marker_forward.tikz}           & \code{block_end_marker_forward.tikz}           & \verb$topologySymbols.tex$  \\
+      \No & ghost train moving (backward)   & \symbol{ghost_train_moving_backward.tikz}        & \code{ghost_train_moving_backward.tikz}        & \texttt{vehicles.tikz} \\
     \hline
-      block end marker (backward)     & \symbol{block_end_marker_backward.tikz}          & \code{block_end_marker_backward.tikz}          & \verb$topologySymbols.tex$  \\
+      \No & train berth sign (forward)      & \symbol{train_berth_sign_forward.tikz}           & \code{train_berth_sign_forward.tikz}           & \texttt{trafficControl.tikz}  \\
     \hline
-      block clearing point (forward)  & \symbol{block_clearing_point_forward.tikz}       & \code{block_clearing_point_forward.tikz}       & \verb$topologySymbols.tex$  \\
+      \No & train berth sign (backward)     & \symbol{train_berth_sign_backward.tikz}          & \code{train_berth_sign_backward.tikz}          & \texttt{trafficControl.tikz}  \\
     \hline
-      block clearing point (backward) & \symbol{block_clearing_point_backward.tikz}      & \code{block_clearing_point_backward.tikz}      & \verb$topologySymbols.tex$  \\
+      \No & train berth shape bidirectional & \symbol{train_berth_shape_bidirectional.tikz}    & \code{train_berth_shape_bidirectional.tikz}    & \texttt{trafficControl.tikz} \\
     \hline
-      route clearing point (forward)  & \symbol{route_clearing_point_forward.tikz}       & \code{route_clearing_point_forward.tikz}       & \verb$topologySymbols.tex$  \\
+      \No & train berth shape               & \symbol{train_berth_shape.tikz}                  & \code{train_berth_shape.tikz}                  & \texttt{trafficControl.tikz} \\
     \hline
-      route clearing point (backward) & \symbol{route_clearing_point_backward.tikz}      & \code{route_clearing_point_backward.tikz}      & \verb$topologySymbols.tex$  \\
+      \No & train berth                     & \symbol{train_berth.tikz}                        & \code{train_berth.tikz}                        & \texttt{trafficControl.tikz} \\
     \hline
-      clearing point                  & \symbol{clearing_point.tikz}                     & \code{clearing_point.tikz}                     & \verb$topologySymbols.tex$  \\
+      \No & view point (forward)            & \symbol{view_point_forward.tikz}                 & \code{view_point_forward.tikz}                 & \texttt{trafficControl.tikz} \\
     \hline
-      turnout left (forward)          & \symbol{turnout_left_forward.tikz}               & \code{turnout_left_forward.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & view point (backward)           & \symbol{view_point_backward.tikz}                & \code{view_point_backward.tikz}                & \texttt{trafficControl.tikz} \\
     \hline
-      turnout left (backward)         & \symbol{turnout_left_backward.tikz}              & \code{turnout_left_backward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & distant signal (forward)        & \symbol{distant_signal_forward.tikz}             & \code{distant_signal_forward.tikz}             & \texttt{trafficControl.tikz} \\
     \hline
-      turnout right (forward)         & \symbol{turnout_right_forward.tikz}              & \code{turnout_right_forward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{4cm}{distant signal\\with speed indicator}
+                                            & \symbol{distant_speed_signal_forward.tikz}       & \code{distant_speed_signal_forward.tikz}       & \texttt{trafficControl.tikz} \\
     \hline
-      turnout right (backward)        & \symbol{turnout_right_backward.tikz}             & \code{turnout_right_backward.tikz}             & \verb$topologySymbols.tex$  \\
+      \No & distant signal (backward)       & \symbol{distant_signal_backward.tikz}            & \code{distant_signal_backward.tikz}            & \texttt{trafficControl.tikz} \\
     \hline
-      \parbox[c]{5cm}{turnout left (forward)\\with fouling point indicator}
-                                      & \symbol{turnout_with_fouling_left_forward.tikz}  & \code{turnout_with_fouling_left_forward.tikz}  & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{4cm}{distant signal\\with speed indicator}
+                                            & \symbol{distant_speed_signal_backward.tikz}      & \code{distant_speed_signal_backward.tikz}      & \texttt{trafficControl.tikz} \\
     \hline
-      \parbox[c]{5cm}{turnout left (backward)\\with fouling point indicator}
-                                      & \symbol{turnout_with_fouling_left_backward.tikz} & \code{turnout_with_fouling_left_backward.tikz} & \verb$topologySymbols.tex$  \\
+      \No & speed signal (forward)          & \symbol{speed_signal_forward.tikz}               & \code{speed_signal_forward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
-      \parbox[c]{5cm}{turnout right (forward)\\with fouling point indicator}
-                                      & \symbol{turnout_with_fouling_right_forward.tikz} & \code{turnout_with_fouling_right_forward.tikz} & \verb$topologySymbols.tex$  \\
+      \No & speed signal (backward)         & \symbol{speed_signal_backward.tikz}              & \code{speed_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
     \hline
-      \parbox[c]{5cm}{turnout right (backward)\\with fouling point indicator}
-                                      & \symbol{turnout_with_fouling_right_backward.tikz}& \code{turnout_with_fouling_right_backward.tikz}& \verb$topologySymbols.tex$  \\
+      \No & block signal (forward)          & \symbol{block_signal_forward.tikz}               & \code{block_signal_forward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
-      double-slip turnout left        & \symbol{double-slip_turnout_left.tikz}           & \code{double-slip_turnout_left.tikz}           & \verb$topologySymbols.tex$  \\
+      \No & block signal (backward)         & \symbol{block_signal_backward.tikz}              & \code{block_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
     \hline
-      double-slip turnout right       & \symbol{double-slip_turnout_right.tikz}          & \code{double-slip_turnout_right.tikz}          & \verb$topologySymbols.tex$  \\
+      \No & route signal (forward)          & \symbol{route_signal_forward.tikz}               & \code{route_signal_forward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
-      diamond crossing left           & \symbol{diamond_crossing_left.tikz}              & \code{diamond_crossing_left.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & route signal (backward)         & \symbol{route_signal_backward.tikz}              & \code{route_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
     \hline
-      diamond crossing right          & \symbol{diamond_crossing_right.tikz}             & \code{diamond_crossing_right.tikz}             & \verb$topologySymbols.tex$  \\
+      \No & shunt signal (forward)          & \symbol{shunt_signal_forward.tikz}               & \code{shunt_signal_forward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
-      derailer left (forward)         & \symbol{derailer_left_forward.tikz}              & \code{derailer_left_forward.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & shunt signal (backward)         & \symbol{shunt_signal_backward.tikz}              & \code{shunt_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
     \hline
-      derailer left (backward)        & \symbol{derailer_left_backward.tikz}             & \code{derailer_left_backward.tikz}             & \verb$topologySymbols.tex$  \\
+      \No & shunt limit (forward)           & \symbol{shunt_limit_forward.tikz}                & \code{shunt_limit_forward.tikz}                & \texttt{trafficControl.tikz} \\
     \hline
-      derailer right (forward)        & \symbol{derailer_right_forward.tikz}             & \code{derailer_right_forward.tikz}             & \verb$topologySymbols.tex$  \\
+      \No & shunt limit (backward)          & \symbol{shunt_limit_backward.tikz}               & \code{shunt_limit_backward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
-      derailer right (backward)       & \symbol{derailer_right_backward.tikz}            & \code{derailer_right_backward.tikz}            & \verb$topologySymbols.tex$  \\
+      \No & transmitter (below \& above)    & \symbol{transmitter.tikz}                        & \code{transmitter.tikz}                        & \texttt{trafficControl.tikz} \\
     \hline
-      bufferstop (forward)            & \symbol{bufferstop_forward.tikz}                 & \code{bufferstop_forward.tikz}                 & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{4.5cm}{transmitter (below)\\with signal}
+                                            & \symbol{transmitter_below_with_signal.tikz}      & \code{transmitter_below_with_signal.tikz}      & \texttt{trafficControl.tikz} \\
     \hline
-      bufferstop (backward)           & \symbol{bufferstop_backward.tikz}                & \code{bufferstop_backward.tikz}                & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{4.5cm}{transmitter (below \& above)\\ effective forward}
+                                            & \symbol{transmitter_forward.tikz}                & \code{transmitter_forward.tikz}                & \texttt{trafficControl.tikz} \\
     \hline
-      level crossing (single track)   & \symbol{level_crossing_single.tikz}              & \code{level_crossing_single.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{4.5cm}{transmitter (below \& above)\\ effective backward}
+                                            & \symbol{transmitter_backward.tikz}               & \code{transmitter_backward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
-      level crossing (double track)   & \symbol{level_crossing_double.tikz}              & \code{level_crossing_double.tikz}              & \verb$topologySymbols.tex$  \\
+      \No & \parbox[c]{4.5cm}{transmitter (below \& above)\\ effective bidirectional}
+                                            & \symbol{transmitter_bidirectional.tikz}          & \code{transmitter_bidirectional.tikz}          & \texttt{trafficControl.tikz} \\
     \hline
-      \parbox[c]{5cm}{level crossing (double track)\\with full closure}
-                                      & \symbol{level_crossing_double_full_closure.tikz} & \code{level_crossing_double_full_closure.tikz} & \verb$topologySymbols.tex$  \\
+      \No & block end marker (forward)      & \symbol{block_end_marker_forward.tikz}           & \code{block_end_marker_forward.tikz}           & \texttt{trafficControl.tikz} \\
     \hline
-      bridge                          & \symbol{bridge.tikz}                             & \code{bridge.tikz}                             & \verb$topologySymbols.tex$  \\
+      \No & block end marker (backward)     & \symbol{block_end_marker_backward.tikz}          & \code{block_end_marker_backward.tikz}          & \texttt{trafficControl.tikz} \\
     \hline
-      \parbox[c]{5cm}{bridge\\with track beneath}
-                                      & \symbol{bridge_track_beneath.tikz}               & \code{bridge_track_beneath.tikz}               & \verb$topologySymbols.tex$  \\
+      \No & block clearing point (forward)  & \symbol{block_clearing_point_forward.tikz}       & \code{block_clearing_point_forward.tikz}       & \texttt{trafficControl.tikz} \\
     \hline
-      train (not moving)              & \symbol{train.tikz}                              & \code{train.tikz}                              & \verb$vehicles.tex$         \\
+      \No & block clearing point (backward) & \symbol{block_clearing_point_backward.tikz}      & \code{block_clearing_point_backward.tikz}      & \texttt{trafficControl.tikz} \\
     \hline
-      short train (not moving)        & \symbol{short_train.tikz}                        & \code{short_train.tikz}                        & \verb$vehicles.tex$         \\
+      \No & route clearing point (forward)  & \symbol{route_clearing_point_forward.tikz}       & \code{route_clearing_point_forward.tikz}       & \texttt{trafficControl.tikz} \\
     \hline
-      train moving (forward)          & \symbol{train_moving_forward.tikz}               & \code{train_moving_forward.tikz}               & \verb$vehicles.tex$         \\
+      \No & route clearing point (backward) & \symbol{route_clearing_point_backward.tikz}      & \code{route_clearing_point_backward.tikz}      & \texttt{trafficControl.tikz} \\
     \hline
-      train moving (backward)         & \symbol{train_moving_backward.tikz}              & \code{train_moving_backward.tikz}              & \verb$vehicles.tex$         \\
+      \No & clearing point                  & \symbol{clearing_point.tikz}                     & \code{clearing_point.tikz}                     & \texttt{trafficControl.tikz} \\
     \hline
-      ghost train moving (forward)    & \symbol{ghost_train_moving_forward.tikz}         & \code{ghost_train_moving_forward.tikz}         & \verb$vehicles.tex$         \\
+      \No & platform (left)                 & \symbol{platform_left.tikz}                      & \code{platform_left.tikz}                      & \texttt{constructions.tikz} \\
     \hline
-      ghost train moving (backward)   & \symbol{ghost_train_moving_backward.tikz}        & \code{ghost_train_moving_backward.tikz}        & \verb$vehicles.tex$         \\
+      \No & platform (right)                & \symbol{platform_right.tikz}                     & \code{platform_right.tikz}                     & \texttt{constructions.tikz} \\
+    \hline
+      \No & platform (middle)               & \symbol{platform_middle.tikz}                    & \code{platform_middle.tikz}                    & \texttt{constructions.tikz} \\
+    \hline
+      \No & level crossing (single track)   & \symbol{level_crossing_single.tikz}              & \code{level_crossing_single.tikz}              & \texttt{constructions.tikz} \\
+    \hline
+      \No & level crossing (double track)   & \symbol{level_crossing_double.tikz}              & \code{level_crossing_double.tikz}              & \texttt{constructions.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{level crossing (double track)\\with full closure}
+                                            & \symbol{level_crossing_double_full_closure.tikz} & \code{level_crossing_double_full_closure.tikz} & \texttt{constructions.tikz} \\
+    \hline
+      \No & bridge                          & \symbol{bridge.tikz}                             & \code{bridge.tikz}                             & \texttt{constructions.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{bridge\\with track beneath}
+                                            & \symbol{bridge_track_beneath.tikz}               & \code{bridge_track_beneath.tikz}               & \texttt{constructions.tikz} \\
     \hline
   \end{longtable}
-  \begin{tabular}{l*{10}{c}}
-    name             &  100\%                         & 90\%                              & 80\%                              & 70\%                              & 60\%                              & 50\%                              & 40\%                              & 30\%                              & 20\%                              & 10\%                              \\
-    base03  & \colorsquare{base03}  & \colorsquare{base03!90}  & \colorsquare{base03!80}  & \colorsquare{base03!70}  & \colorsquare{base03!60}  & \colorsquare{base03!50}  & \colorsquare{base03!40}  & \colorsquare{base03!30}  & \colorsquare{base03!20}  & \colorsquare{base03!10}  \\
-    base02  & \colorsquare{base02}  & \colorsquare{base02!90}  & \colorsquare{base02!80}  & \colorsquare{base02!70}  & \colorsquare{base02!60}  & \colorsquare{base02!50}  & \colorsquare{base02!40}  & \colorsquare{base02!30}  & \colorsquare{base02!20}  & \colorsquare{base02!10}  \\
-    base01  & \colorsquare{base01}  & \colorsquare{base01!90}  & \colorsquare{base01!80}  & \colorsquare{base01!70}  & \colorsquare{base01!60}  & \colorsquare{base01!50}  & \colorsquare{base01!40}  & \colorsquare{base01!30}  & \colorsquare{base01!20}  & \colorsquare{base01!10}  \\
-    base00  & \colorsquare{base00}  & \colorsquare{base00!90}  & \colorsquare{base00!80}  & \colorsquare{base00!70}  & \colorsquare{base00!60}  & \colorsquare{base00!50}  & \colorsquare{base00!40}  & \colorsquare{base00!30}  & \colorsquare{base00!20}  & \colorsquare{base00!10}  \\
-    base0   & \colorsquare{base0}   & \colorsquare{base0!90}   & \colorsquare{base0!80}   & \colorsquare{base0!70}   & \colorsquare{base0!60}   & \colorsquare{base0!50}   & \colorsquare{base0!40}   & \colorsquare{base0!30}   & \colorsquare{base0!20}   & \colorsquare{base0!10}   \\
-    base1   & \colorsquare{base1}   & \colorsquare{base1!90}   & \colorsquare{base1!80}   & \colorsquare{base1!70}   & \colorsquare{base1!60}   & \colorsquare{base1!50}   & \colorsquare{base1!40}   & \colorsquare{base1!30}   & \colorsquare{base1!20}   & \colorsquare{base1!10}   \\
-    base2   & \colorsquare{base2}   & \colorsquare{base2!90}   & \colorsquare{base2!80}   & \colorsquare{base2!70}   & \colorsquare{base2!60}   & \colorsquare{base2!50}   & \colorsquare{base2!40}   & \colorsquare{base2!30}   & \colorsquare{base2!20}   & \colorsquare{base2!10}   \\
-    base3   & \colorsquare{base3}   & \colorsquare{base3!90}   & \colorsquare{base3!80}   & \colorsquare{base3!70}   & \colorsquare{base3!60}   & \colorsquare{base3!50}   & \colorsquare{base3!40}   & \colorsquare{base3!30}   & \colorsquare{base3!20}   & \colorsquare{base3!10}   \\
-    yellow  & \colorsquare{yellow}  & \colorsquare{yellow!90}  & \colorsquare{yellow!80}  & \colorsquare{yellow!70}  & \colorsquare{yellow!60}  & \colorsquare{yellow!50}  & \colorsquare{yellow!40}  & \colorsquare{yellow!30}  & \colorsquare{yellow!20}  & \colorsquare{yellow!10}  \\
-    orange  & \colorsquare{orange}  & \colorsquare{orange!90}  & \colorsquare{orange!80}  & \colorsquare{orange!70}  & \colorsquare{orange!60}  & \colorsquare{orange!50}  & \colorsquare{orange!40}  & \colorsquare{orange!30}  & \colorsquare{orange!20}  & \colorsquare{orange!10}  \\
-    red     & \colorsquare{red}     & \colorsquare{red!90}     & \colorsquare{red!80}     & \colorsquare{red!70}     & \colorsquare{red!60}     & \colorsquare{red!50}     & \colorsquare{red!40}     & \colorsquare{red!30}     & \colorsquare{red!20}     & \colorsquare{red!10}     \\
-    magenta & \colorsquare{magenta} & \colorsquare{magenta!90} & \colorsquare{magenta!80} & \colorsquare{magenta!70} & \colorsquare{magenta!60} & \colorsquare{magenta!50} & \colorsquare{magenta!40} & \colorsquare{magenta!30} & \colorsquare{magenta!20} & \colorsquare{magenta!10} \\
-    violet  & \colorsquare{violet}  & \colorsquare{violet!90}  & \colorsquare{violet!80}  & \colorsquare{violet!70}  & \colorsquare{violet!60}  & \colorsquare{violet!50}  & \colorsquare{violet!40}  & \colorsquare{violet!30}  & \colorsquare{violet!20}  & \colorsquare{violet!10}  \\
-    blue    & \colorsquare{blue}    & \colorsquare{blue!90}    & \colorsquare{blue!80}    & \colorsquare{blue!70}    & \colorsquare{blue!60}    & \colorsquare{blue!50}    & \colorsquare{blue!40}    & \colorsquare{blue!30}    & \colorsquare{blue!20}    & \colorsquare{blue!10}    \\
-    cyan    & \colorsquare{cyan}    & \colorsquare{cyan!90}    & \colorsquare{cyan!80}    & \colorsquare{cyan!70}    & \colorsquare{cyan!60}    & \colorsquare{cyan!50}    & \colorsquare{cyan!40}    & \colorsquare{cyan!30}    & \colorsquare{cyan!20}    & \colorsquare{cyan!10}    \\
-    green   & \colorsquare{green}   & \colorsquare{green!90}   & \colorsquare{green!80}   & \colorsquare{green!70}   & \colorsquare{green!60}   & \colorsquare{green!50}   & \colorsquare{green!40}   & \colorsquare{green!30}   & \colorsquare{green!20}   & \colorsquare{green!10}   \\
-    \multicolumn{11}{r}{solarized color scheme by \href{http://ethanschoonover.com/solarized}{Ethan Schoonover}}
-  \end{tabular}
-  \solarizedPalette
 \end{document}

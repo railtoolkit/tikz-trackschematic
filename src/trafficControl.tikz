@@ -29,29 +29,27 @@
 \tikzset{
   pics/train_berth_shape/.style n args={1}{
     code={
-      \path[draw,line width=0.75pt,dotted] (0, 0.25) -- (0, 0.35) -- (#1, 0.35) -- ++(0,-0.1); % berth shape
-      \path[draw,line width=0.75pt,dotted] (0,-0.25) -- (0,-0.35) -- (#1,-0.35) -- ++(0, 0.1); % berth shape
+      \path[draw,line width=0.75pt,densely dotted] (0, 0.25) -- (0, 0.35) -- (#1, 0.35) -- ++(0,-0.1); % berth shape
+      \path[draw,line width=0.75pt,densely dotted] (0,-0.25) -- (0,-0.35) -- (#1,-0.35) -- ++(0, 0.1); % berth shape
     }
   },
   pics/train_berth_shape/.default=4,
 }
 \tikzset{
-  pics/platform_left/.style n args={1}{
+  pics/train_berth_shape_forward/.style n args={1}{
     code={
-      \path[draw, line width=0.75pt] (0,0.5) -- ++(0,-0.3) -- ++(#1,0) -- ++(0,0.3);
-      \path[draw, line width=0.75pt] (0,0.3) -- ++(#1,0);
+      \path[draw,line width=0.75pt,densely dotted] (0,-0.25) -- (0,-0.35) -- (#1,-0.35) -- ++(0, 0.1); % berth shape
     }
   },
-  pics/platform_left/.default=4,
+  pics/train_berth_shape/.default=4,
 }
 \tikzset{
-  pics/platform_right/.style n args={1}{
+  pics/train_berth_shape_backward/.style n args={1}{
     code={
-      \path[draw, line width=0.75pt] (0,-0.5) -- ++(0,0.3) -- ++(#1,0) -- ++(0,-0.3);
-      \path[draw, line width=0.75pt] (0,-0.3) -- ++(#1,0);
+      \path[draw,line width=0.75pt,densely dotted] (0, 0.25) -- (0, 0.35) -- (#1, 0.35) -- ++(0,-0.1); % berth shape
     }
   },
-  pics/platform_right/.default=4,
+  pics/train_berth_shape/.default=4,
 }
 \tikzset{
   view_point_forward/.pic={
@@ -82,7 +80,7 @@
       \node[rotate=-90,font=\sffamily] at (0.9,-0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/distant_signal_forward/.default=,
 }
 \tikzset{
   pics/distant_signal_backward/.style args={#1}{
@@ -92,7 +90,7 @@
       \node[rotate=90,font=\sffamily] at (-0.9,0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/distant_signal_backward/.default=,
 }
 \tikzset{
   pics/speed_signal_forward/.style args={#1}{
@@ -102,7 +100,7 @@
       \node[rotate=-90,font=\sffamily] at (0.9,-0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/speed_signal_forward/.default=,
 }
 \tikzset{
   pics/speed_signal_backward/.style args={#1}{
@@ -112,7 +110,7 @@
       \node[rotate=90,font=\sffamily] at (-0.9,0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/speed_signal_backward/.default=,
 }
 \tikzset{
   pics/block_signal_forward/.style args={#1}{
@@ -122,7 +120,7 @@
       \node[rotate=-90,font=\sffamily] at (1.2,-0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/block_signal_forward/.default=,
 }
 \tikzset{
   pics/block_signal_backward/.style args={#1}{
@@ -132,7 +130,7 @@
       \node[rotate=90,font=\sffamily] at (-1.2,0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/block_signal_backward/.default=,
 }
 \tikzset{
   pics/route_signal_forward/.style args={#1}{
@@ -142,7 +140,7 @@
       \node[rotate=-90,font=\sffamily] at (1.2,-0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/route_signal_forward/.default=,
 }
 \tikzset{
   pics/route_signal_backward/.style args={#1}{
@@ -152,7 +150,7 @@
       \node[rotate=90,font=\sffamily] at (-1.2,0.4) {#1}; % speed indicator
     }
   },
-  pics/node/.default=,
+  pics/route_signal_backward/.default=,
 }
 \tikzset{
   shunt_signal_forward/.pic={
@@ -180,26 +178,26 @@
 }
 \tikzset{
   block_end_marker_forward/.pic={
-    \path[draw, line width=1pt] (0,0) -- ++(0,-0.4); % marker
-    \path[draw, line width=1pt] (0,-0.4) -- ++(-0.1,-0.1) -- ++(0.1,-0.1) -- ++(0.1,0.1) -- cycle; % sign
+    \path[draw, line width=1pt] (0,0) -- ++(0,-0.5); % marker
+    \path[draw, line width=1pt] (-0.1,-0.7) rectangle ++(0.2,0.2); % sign
   };
 }
 \tikzset{
   block_end_marker_backward/.pic={
-    \path[draw, line width=1pt] (0,0) -- ++(0,0.4); % marker
-    \path[draw, line width=1pt] (0,0.4) -- ++(0.1,0.1) -- ++(-0.1,0.1) -- ++(-0.1,-0.1) -- cycle; % sign
+    \path[draw, line width=1pt] (0,0) -- ++(0,0.5); % marker
+    \path[draw, line width=1pt] (0.1,0.7) rectangle ++(-0.2,-0.2); % sign
   };
 }
 \tikzset{
   block_clearing_point_forward/.pic={
     \path[draw, line width=1pt] (0,0.1) -- ++(0,-0.2); % marker
-    \path[draw, line width=1pt] (-0.1,-0.3) rectangle ++(0.2,0.2); % sign
+    \path[draw, line width=1pt] (0,-0.1) -- ++(-0.1,-0.1) -- ++(0.1,-0.1) -- ++(0.1,0.1) -- cycle; % sign
   };
 }
 \tikzset{
   block_clearing_point_backward/.pic={
     \path[draw, line width=1pt] (0,-0.1) -- ++(0,0.2); % marker
-    \path[draw, line width=1pt] (0.1,0.3) rectangle ++(-0.2,-0.2); % sign
+    \path[draw, line width=1pt] (0,0.1) -- ++(0.1,0.1) -- ++(-0.1,0.1) -- ++(-0.1,-0.1) -- cycle; % sign
   };
 }
 \tikzset{
@@ -221,156 +219,74 @@
   };
 }
 \tikzset{
-  pics/turnout_left_forward/.style args={#1}{
+  pics/transmitter_below/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(0.4,0.4) -- ++(0,-0.4); % turnout marker
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/transmitter_below/.default=white,
 }
 \tikzset{
-  pics/turnout_left_backward/.style args={#1}{
+  pics/transmitter_below_forward/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(-0.4,-0.4) -- ++(0,0.4); % turnout marker
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
+      \path[draw] (0.1,-0.05) -- (0.2,-0.125) -- (0.1,-0.2) -- cycle;
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/transmitter_below_forward/.default=white,
 }
 \tikzset{
-  pics/turnout_right_forward/.style args={#1}{
+  pics/transmitter_below_backward/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(0.4,-0.4) -- ++(0,0.4); % turnout marker
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
+      \path[draw] (-0.1,-0.05) -- (-0.2,-0.125) -- (-0.1,-0.2) -- cycle;
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/transmitter_below_backward/.default=white,
 }
 \tikzset{
-  pics/turnout_right_backward/.style args={#1}{
+  pics/transmitter_below_bidirectional/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(-0.4,0.4) -- ++(0,-0.4); % turnout marker
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
+      \path[draw] ( 0.1,-0.05) -- ( 0.2,-0.125) -- ( 0.1,-0.2) -- cycle;
+      \path[draw] (-0.1,-0.05) -- (-0.2,-0.125) -- (-0.1,-0.2) -- cycle;
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/transmitter_below_bidirectional/.default=white,
 }
 \tikzset{
-  fouling_point_right_backward/.pic={
-    \path[draw,line width=0.75pt] (-0.7,0) --  ++(0,0.7); % fouling point indicator
-  };
-}
-\tikzset{
-  fouling_point_left_backward/.pic={
-    \path[draw,line width=0.75pt] (-0.7,0) --  ++(0,-0.7); % fouling point indicator
-  };
-}
-\tikzset{
-  fouling_point_right_forward/.pic={
-    \path[draw,line width=0.75pt] (0.7,0) --  ++(0,-0.7); % fouling point indicator
-  };
-}
-\tikzset{
-  fouling_point_left_forward/.pic={
-    \path[draw,line width=0.75pt] (0.7,0) --  ++(0,0.7); % fouling point indicator
-  };
-}
-\tikzset{
-  slip_left_forward/.pic={
-    \path[draw,line width=0.75pt] (-0.4,0.1) --  (0.3,0.4); % fouling point indicator
-  };
-}
-\tikzset{
-  slip_left_backward/.pic={
-    \path[draw,line width=0.75pt] (-0.3,-0.4) --  (0.4,-0.1); % fouling point indicator
-  };
-}
-\tikzset{
-  slip_right_forward/.pic={
-    \path[draw,line width=0.75pt] (-0.4,-0.1) --  (0.3,-0.4); % fouling point indicator
-  };
-}
-\tikzset{
-  slip_right_backward/.pic={
-    \path[draw,line width=0.75pt] (0.4,0.1) --  (-0.3,0.4); % fouling point indicator
-  };
-}
-\tikzset{
-  derailer_right_forward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,-0.4); % derailer arrow
-  };
-}
-\tikzset{
-  derailer_right_backward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,0.4); % derailer arrow
-  };
-}
-\tikzset{
-  derailer_left_forward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,0.4); % derailer arrow
-  };
-}
-\tikzset{
-  derailer_left_backward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,-0.4); % derailer arrow
-  };
-}
-\tikzset{
-  bufferstop_forward/.pic={
-    \path[draw, line width=1pt] (-0.1,0.2) --  ++(0.1,0) -- ++(0,-0.4) -- ++ (-0.1,0); % bufferstop marker
-  };
-}
-\tikzset{
-  bufferstop_backward/.pic={
-    \path[draw, line width=1pt] (0.1,0.2) --  ++(-0.1,0) -- ++(0,-0.4) -- ++ (0.1,0); % bufferstop marker
-  };
-}
-\tikzset{
-  level_crossing_barrier_left/.pic={
-    { % road
-      \path[draw, line width=1pt] (-0.2, 0.8) --  ++(0,-0.6);
-      \path[draw, line width=1pt] ( 0.2, 0.8) --  ++(0,-0.6);
-    }
-    { % barrier
-      \filldraw (-0.4,0.5) circle (0.05);
-      \path[draw, line width=1pt] (-0.4,0.5) --  ++(0.39,0);
-    }
-  };
-}
-\tikzset{
-  level_crossing_barrier_right/.pic={
-    { % road
-      \path[draw, line width=1pt] (-0.2,-0.8) --  ++(0, 0.6);
-      \path[draw, line width=1pt] ( 0.2,-0.8) --  ++(0, 0.6);
-    }
-    { % barrier
-      \filldraw (0.4,-0.5) circle (0.05);
-      \path[draw, line width=1pt] (0.4,-0.5) --  ++(-0.39,0);
-    }
-  };
-}
-\tikzset{
-  level_crossing/.pic={
-    { % road
-      \path[draw, line width=1pt] (-0.2,-0.8) --  ++(0, 0.6);
-      \path[draw, line width=1pt] ( 0.2,-0.8) --  ++(0, 0.6);
-    }
-  };
-}
-\tikzset{
-  pics/bridge_left/.style n args={1}{
+  pics/transmitter_above/.style args={#1}{
     code={
-      \path[draw, line width=0.75pt] (-0.1,0.48) --  ++(0.08,-0.08) -- ++(#1,0) -- ++(0.08,0.08);
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
     }
   },
-  pics/bridge_left/.default=3,
+  pics/transmitter_above/.default=white,
 }
 \tikzset{
-  pics/bridge_right/.style n args={1}{
+  pics/transmitter_above_forward/.style args={#1}{
     code={
-      \path[draw, line width=0.75pt] (-0.1,-0.48) --  ++(0.08,0.08) -- ++(#1,0) -- ++(0.08,-0.08);
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
+      \path[draw] (0.1,0.05) -- (0.2,0.125) -- (0.1,0.2) -- cycle;
     }
   },
-  pics/bridge_right/.default=3,
+  pics/transmitter_above_forward/.default=white,
+}
+\tikzset{
+  pics/transmitter_above_backward/.style args={#1}{
+    code={
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
+      \path[draw] (-0.1,0.05) -- (-0.2,0.125) -- (-0.1,0.2) -- cycle;
+    }
+  },
+  pics/transmitter_above_backward/.default=white,
+}
+\tikzset{
+  pics/transmitter_above_bidirectional/.style args={#1}{
+    code={
+      \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
+      \path[draw] ( 0.1,0.05) -- ( 0.2,0.125) -- ( 0.1,0.2) -- cycle;
+      \path[draw] (-0.1,0.05) -- (-0.2,0.125) -- (-0.1,0.2) -- cycle;
+    }
+  },
+  pics/transmitter_above_bidirectional/.default=white,
 }

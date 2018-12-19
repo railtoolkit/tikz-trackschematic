@@ -13,10 +13,31 @@
   pics/node/.default=white/1pt,
 }
 \tikzset{
-  colon/.pic={
+  pics/node_with_label/.style args={#1/#2/#3}{
+    code={
+      \path[draw,line width=#2,fill=#1] (0,0) circle (0.1);
+      \node at (0,-0.3) {#3};
+    }
+  },
+  pics/node_with_label/.default=white/1pt/1,
+}
+\tikzset{
+  pics/colon/.style args={#1}{
+    code={
     \path[draw,line width=1pt,fill=white]  (-0.1,0) circle (0.1);
     \path[draw,line width=1pt,fill=white]  ( 0.1,0) circle (0.1);
-  };
+    \node at (0,-0.3) {#1};
+    }
+  },
+  pics/colon/.default=,
+}
+\tikzset{
+  pics/connexity/.style args={#1/#2}{
+    code={
+      \draw [#1,line width=#2,rounded corners=8pt,fill=white] (-0.5,-0.3) rectangle (0.5,0.3);
+    }
+  },
+  pics/connexity/.default=blue/1pt,
 }
 \tikzset{
   approach/.pic={

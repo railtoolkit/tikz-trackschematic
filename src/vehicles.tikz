@@ -5,46 +5,46 @@
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \tikzset{
-  pics/train/.style n args={1}{
+  pics/train/.style args={#1}{
     code={
       \path[draw, line width=1pt, fill=white] (0,-0.3) -- ++(#1,0) -- ++(0,0.6) -- ++(-#1,0) -- cycle; % train shape
-      % \node at (-2,0) {\emph{#1}}; %label of train
+      % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
   pics/train/.default=4,
 }
 \tikzset{
-  pics/train_moving_forward/.style n args={1}{
+  pics/train_moving_forward/.style args={#1}{
     code={
       \path[draw, line width=1pt, fill=white] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
-      % \node at (-2,0) {\emph{#1}}; %label of train
+      % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
   pics/train_moving_forward/.default=4,
 }
 \tikzset{
-  pics/train_moving_backward/.style n args={1}{
+  pics/train_moving_backward/.style args={#1}{
     code={
       \path[draw, line width=1pt, fill=white] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
-      % \node at (-2,0) {\emph{#1}}; %label of train
+      % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
   pics/train_moving_backward/.default=4,
 }
 \tikzset{
-  pics/ghost_train_moving_forward/.style n args={1}{
+  pics/ghost_train_moving_forward/.style args={#1}{
     code={
       \path[draw, line width=1pt, dashed] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
-      % \node at (-2,0) {\emph{#1}}; %label of train
+      % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
   pics/ghost_train_moving_forward/.default=4,
 }
 \tikzset{
-  pics/ghost_train_moving_backward/.style n args={1}{
+  pics/ghost_train_moving_backward/.style args={#1}{
     code={
       \path[draw, line width=1pt, dashed] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
-      % \node at (-2,0) {\emph{#1}}; %label of train
+      % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
   pics/ghost_train_moving_backward/.default=4,

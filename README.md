@@ -1,6 +1,13 @@
 tikz-trackschematic
 ======
 
+Version 0.2
+------
+
+  * added transmitters
+  * reorganized src library
+  * minor improvements
+
 Version 0.1
 ------
 
@@ -11,5 +18,5 @@ Roadmap
 
 * encapsulation of symbols in package for tex infrastructure
 * provide option for internationalziation (i18n)
-* write usefull documantion
+* write usefull documentation
 * re-think syntax
