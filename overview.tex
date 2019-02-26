@@ -5,7 +5,8 @@
 
 \documentclass[a4paper,landscape]{article}
 
-\usepackage{fullpage}
+\usepackage[margin=0pt]{geometry}
+\pagestyle{empty}
 \usepackage{longtable}
 \usepackage{tikz}
 \usepackage{listings}
@@ -47,11 +48,11 @@
       No. & Name                            & Symbol                                           & Code                                           & File                  \\
     \endhead
     \hline
-      \No & main track                      & \symbol{main_track.tikz}                         & \code{main_track.tikz}                         & \emph{none}           \\
+      \No & main track                      & \symbol{main_track.tikz}                         & \code{main_track.tikz}                         & \texttt{topology.tikz} \\
     \hline
-      \No & main line (double track)        & \symbol{main_line.tikz}                          & \code{main_line.tikz}                          & \emph{none}           \\
+      \No & main line (double track)        & \symbol{main_line.tikz}                          & \code{main_line.tikz}                          & \texttt{topology.tikz} \\
     \hline
-      \No & side track                      & \symbol{side_track.tikz}                         & \code{side_track.tikz}                         & \emph{none}           \\
+      \No & side track                      & \symbol{side_track.tikz}                         & \code{side_track.tikz}                         & \texttt{topology.tikz} \\
     \hline
       \No & turnout left (forward)          & \symbol{turnout_left_forward.tikz}               & \code{turnout_left_forward.tikz}               & \texttt{topology.tikz} \\
     \hline
@@ -93,17 +94,27 @@
     \hline
       \No & bufferstop (backward)           & \symbol{bufferstop_backward.tikz}                & \code{bufferstop_backward.tikz}                & \texttt{topology.tikz} \\
     \hline
-      \No & train (not moving)              & \symbol{train.tikz}                              & \code{train.tikz}                              & \texttt{vehicles.tikz} \\
+      \No & train (parked)                  & \symbol{train.tikz}                              & \code{train.tikz}                              & \texttt{vehicles.tikz} \\
     \hline
-      \No & short train (not moving)        & \symbol{short_train.tikz}                        & \code{short_train.tikz}                        & \texttt{vehicles.tikz} \\
+      \No & short train (parked)            & \symbol{short_train.tikz}                        & \code{short_train.tikz}                        & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train (direction forward)       & \symbol{train_direction_forward.tikz}            & \code{train_direction_forward.tikz}            & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train (direction backward)      & \symbol{train_direction_backward.tikz}           & \code{train_direction_backward.tikz}           & \texttt{vehicles.tikz} \\
+    \hline
+      \No & ghost train (direction forward) & \symbol{ghost_train_direction_forward.tikz}      & \code{ghost_train_direction_forward.tikz}      & \texttt{vehicles.tikz} \\
+    \hline
+      \No & ghost train (direction backward)& \symbol{ghost_train_direction_backward.tikz}     & \code{ghost_train_direction_backward.tikz}     & \texttt{vehicles.tikz} \\
     \hline
       \No & train moving (forward)          & \symbol{train_moving_forward.tikz}               & \code{train_moving_forward.tikz}               & \texttt{vehicles.tikz} \\
     \hline
       \No & train moving (backward)         & \symbol{train_moving_backward.tikz}              & \code{train_moving_backward.tikz}              & \texttt{vehicles.tikz} \\
     \hline
-      \No & ghost train moving (forward)    & \symbol{ghost_train_moving_forward.tikz}         & \code{ghost_train_moving_forward.tikz}         & \texttt{vehicles.tikz} \\
+      \No & \parbox[c]{4cm}{train drives automatic\\(direction forward)}
+                                            & \symbol{train_drive_automatic.tikz}              & \code{train_drive_automatic.tikz}              & \texttt{vehicles.tikz} \\
     \hline
-      \No & ghost train moving (backward)   & \symbol{ghost_train_moving_backward.tikz}        & \code{ghost_train_moving_backward.tikz}        & \texttt{vehicles.tikz} \\
+      \No & \parbox[c]{4cm}{train drives by human\\(direction forward)}
+                                            & \symbol{train_drive_human.tikz}                  & \code{train_drive_human.tikz}                  & \texttt{vehicles.tikz} \\
     \hline
       \No & train berth sign (forward)      & \symbol{train_berth_sign_forward.tikz}           & \code{train_berth_sign_forward.tikz}           & \texttt{trafficControl.tikz}  \\
     \hline

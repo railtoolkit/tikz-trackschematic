@@ -1,0 +1,59 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = timeDistanceDiagram_test.tex
+
+% Copyright 2018 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+% infrastructure
+\def\BkOne{7.5}
+\def\BkTwo{12}
+\def\BkTre{16.5}
+%
+% space-time-grid
+% visual and layout
+\def\Blocks{\BkOne,\BkTwo,\BkTre}
+\def\timetableHeight{14.5} 
+\setcounter{stationNum}{0}
+\setcounter{blockNum}{9}
+% infrastructure
+\def\SightingDistance{2}
+\def\ApproachDistance{3}
+\def\ClearingDistance{2}
+\def\InterlockingTime{0.5}
+\def\Latency{0.5}
+
+\begin{scope}[shift={(0,0)}]
+  %
+  \toggletrue{DEBUG}
+  \toggletrue{blockingTimeParts}
+  % \togglefalse{blockingTimeFill}
+  \def\Segments{\BkOne/\BkTwo/\mCoast,\BkTwo/\BkTre/\mCoast}
+  \pic at (0,-0.0) {train_path};
+  \def\Segments{\BkOne/\BkTwo/\mAcc,\BkTwo/\BkTre/\mDec}
+  \pic at (0,-6.5) {train_path};
+  %
+  \foreach \BKx in \Blocks {
+    \node [above=0.25cm] at (\BKx, 0) {\tiny \BlockNum};
+    \draw (\BKx, 0) -- ++(0,-\timetableHeight);
+    \pic  [above=0.2cm] at (\BKx, 0) {block};
+  }
+  %
+\end{scope}
+
+\begin{scope}[shift={(12,0)}]
+  %
+  \toggletrue{DEBUG}
+  \toggletrue{blockingTimeParts}
+  % \togglefalse{blockingTimeFill}
+  \def\Segments{\BkTre/\BkTwo/\mCoast, \BkTwo/\BkOne/\mCoast}
+  \pic at (0, -6.0) {train_path};
+  \def\Segments{\BkTre/\BkTwo/\mAcc,\BkTwo/\BkOne/\mDec}
+  \pic at (0,-12.5) {train_path};
+  %
+  \foreach \BKx in \Blocks {
+    \node [above=0.25cm] at (\BKx, 0) {\tiny \BlockNum};
+    \draw (\BKx, 0) -- ++(0,-\timetableHeight);
+    \pic  [above=0.2cm] at (\BKx, 0) {block};
+  }
+  %
+\end{scope}

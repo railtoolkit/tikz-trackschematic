@@ -4,9 +4,6 @@
 % Copyright 2018 Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\draw[MainTrack] (-2.5, 0) -- ++(5,0);
-\draw[MainTrack] (-1  ,-1) -- ++(2,2);
-\pic at (0,0) {turnout_left_forward};
-\pic at (0,0) {turnout_left_backward};
-\pic at (0,0) {slip_left_forward};
-\pic at (0,0) {slip_left_backward};
+\draw[MainTrack] (-2.5,0) -- ++(5,0);
+\pic at (2,0) {train_direction_forward}; % train
+\pic at (2,0) {train_human_forward}; % dot

@@ -55,13 +55,25 @@
   };
 }
 \tikzset{
-  route_forward/.pic={
-    \fill (0,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  route_passanger_forward/.pic={
+    \fill (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
   };
 }
 \tikzset{
-  route_backward/.pic={
-    \fill (0,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  route_passanger_backward/.pic={
+    \fill (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  route_freight_forward/.pic={
+    \fill (-0.35,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+    \fill ( 0   ,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  route_freight_backward/.pic={
+    \fill (0.35,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+    \fill (0   ,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
   };
 }
 % \tikzset{
@@ -106,5 +118,11 @@
   derailer_right_forward/.pic={
     \fill (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
     \path[draw,->,>=latex,line width=1pt] (-0.2,0.2) -- (0.4,-0.4); % derailer marker
+  };
+}
+\tikzset{
+  derailer_left_forward/.pic={
+    \fill (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
+    \path[draw,->,>=latex,line width=1pt] (-0.2,-0.2) -- (0.4,0.4); % derailer marker
   };
 }
