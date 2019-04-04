@@ -1,0 +1,18 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = network.tex
+
+% Copyright 2018 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\begin{scope}[shift={(-60,0)}]
+  \input{station_rebenau.tikz}
+\end{scope}
+\begin{scope}[shift={(10,-10)}]
+  \input{station_pockelsdorf.tikz}
+\end{scope}
+\begin{scope}[shift={(0,0)}]
+  \input{station_okerbach.tikz}
+\end{scope}
+\begin{scope}[shift={(60,0)}]
+  \input{station_schleinitz.tikz}
+\end{scope}

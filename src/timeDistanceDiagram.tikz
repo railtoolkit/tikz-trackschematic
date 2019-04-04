@@ -1,0 +1,251 @@
+%% library for drawing time distance diagrams
+%
+% Copyright 2018 Martin Scheidt (ISC license)
+%
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\RequirePackage{etoolbox,tikz}
+\usetikzlibrary{calc}
+
+%%% --[ USAGE ]-- %%%
+%% assumption:  • acceleration curve ends at Block
+%%%  -- first, define infrastructure and setting:
+% % infrastructure x-axis position
+% \def\StationA{0}
+% \def\BkOne{2}
+% \def\BkTwo{4}
+% \def\BkCThree{6}
+% \def\StationB{8}
+% % OPTIONs 1: infrastructure settings
+% \def\SightingDistance{0.1}
+% \def\ApproachDistance{0.3}
+% \def\ClearingDistance{0.4}
+% \def\InterlockingTime{0.1}
+% \def\Latency{0.1}
+% % OPTIONs 2: diagramm settings
+% \toggletrue{blockingTime}
+% \toggletrue{trainMarker}
+% \togglefalse{blockingTimeParts}
+% \togglefalse{DEBUG}
+% \toggletrue{blockingTimeFill}
+%%  -- second, define driving regime and train:
+% % driving regime
+% \def\Segments{\StationA/\BkOne/\ModeAcceleration, \BkOne/\BkTwo/\ModeCoasting, \BkTwo/\BkThree/\ModeCoasting, \BkThree/\StationB/\ModeDeceleration}
+% % train with #1 speed, #2 acceleration, #3 deceleration, #4 train length
+% \pic at (0,-2.8) {train_path=4.0/0.5/0.5/1.0};
+
+
+% % infrastructure defaults
+\def\SightingDistance{0.4}
+\def\ApproachDistance{1.0}
+\def\ClearingDistance{0.2}
+\def\InterlockingTime{0.1}
+\def\Latency{0.1}
+%
+\def\Segments{}
+\def\ModeCoasting{Coasting} % Default
+\def\ModeAcceleration{Acceleration}
+\def\ModeDeceleration{Deceleration}
+\edef\mCoast{\ModeCoasting} % synonym
+\edef\mAcc{\ModeAcceleration} % synonym
+\edef\mDec{\ModeDeceleration} % synonym
+%
+\newtoggle{DEBUG}
+\newtoggle{blockingTime}
+\newtoggle{blockingTimeParts}
+\newtoggle{trainMarker}
+\newtoggle{blockingTimeFill}
+\newtoggle{StartStopMarker}
+\newtoggle{Acceleration}
+\newtoggle{Coasting}
+\newtoggle{Deceleration}
+%
+\settoggle{DEBUG}{false}
+\settoggle{blockingTime}{true}
+\settoggle{trainMarker}{true}
+\settoggle{blockingTimeParts}{false}
+\settoggle{blockingTimeFill}{true}
+\settoggle{StartStopMarker}{true}
+\settoggle{Acceleration}{false}
+\settoggle{Coasting}{true}
+\settoggle{Deceleration}{false}
+
+\newcounter{stationNum}
+\def\StationNum{\stepcounter{stationNum}\Alph{stationNum}}
+\newcounter{blockNum}
+\def\BlockNum{\stepcounter{blockNum}\stepcounter{blockNum}\arabic{blockNum}}
+\setcounter{stationNum}{0}
+\setcounter{blockNum}{0}
+\newcommand\ifTrainRun{\expandafter\ifdefstrequal\expandafter}
+
+% DEBUG
+\iftoggle{DEBUG}{
+  \newcommand\xcoord[2][center]{{%
+    \pgfpointanchor{#2}{#1}%
+    \pgfmathparse{\pgf@x/\pgf@xx}%
+    \pgfmathprintnumber{\pgfmathresult}%
+  }}
+  \newcommand\ycoord[2][center]{{%
+    \pgfpointanchor{#2}{#1}%
+    \pgfmathparse{\pgf@y/\pgf@yy}%
+    \pgfmathprintnumber{\pgfmathresult}%
+  }}
+}
+
+\tikzset{
+  pics/train_path/.style args={#1/#2/#3/#4}{
+  code={
+    % settings
+    \def\Speed{#1}
+    \def\Accel{#2}
+    \def\Decel{#3}
+    \def\TrainLength{#4}
+    \foreach \PositionA/\PositionB/\mode in \Segments {
+      % test for running direction
+      \newdimen\dimPosA %You can not use floating variables. Use dimens instead
+      \dimPosA  = \PositionA cm % expand variable to \dimexpr for test \ifdimcomp{\dimexpr}{<}{\dimexpr}{⟨true⟩}{⟨false⟩}
+      \newdimen\dimPosB
+      \dimPosB = \PositionB cm % expand variable to \dimexpr for test \ifdimcomp{\dimexpr}{<}{\dimexpr}{⟨true⟩}{⟨false⟩}
+      \ifdimcomp{\dimPosA}{<}{\dimPosB}{
+        \def\Run{-1} % train running from left to right
+      }{
+        \def\Run{1}  % train running from right to left
+      }
+      % blocking time top part
+      \coordinate (basePosA)   at ($(\PositionA,0)  + (                    0,\Run*\PositionA*\Speed^-1)$);
+      \coordinate (basePosB)   at ($(basePosA)      + (\PositionB-\PositionA,0)$);
+      \coordinate (egressPosB) at ($(\PositionB,0)  + (                    0,\Run*\PositionB*\Speed^-1)$);
+      \coordinate (egressPosA) at ($(egressPosB)    + (\PositionA-\PositionB,0)$);
+      \ifTrainRun{\mode}{\ModeAcceleration}{
+        % mode acceleration
+        \coordinate (entryPosA)    at ($(basePosA)    + 2*\Speed^-1*(0,\Accel^-1)$);
+        \coordinate (entryPosB)    at ($(entryPosA)   + (\PositionB-\PositionA,0)$);
+        \coordinate (entryVector)  at ($(entryPosA)!0.75!(basePosA)$);
+        \coordinate (egressVector) at ($(basePosA)!0.25!(egressPosB)$);
+        \coordinate (sightingPosA) at ($(entryPosA)   + (    0,\Latency)$);
+      }{
+        % mode coasting & deceleration
+        \coordinate (approachPosA) at ($(basePosA)    + (                    0,\ApproachDistance*\Speed^-1)$);
+        \coordinate (approachPosB) at ($(approachPosA)+ (\PositionB-\PositionA,0)$);
+        \coordinate (sightingPosA) at ($(approachPosA)+ (                    0,\SightingDistance*\Speed^-1)$);
+      }
+      \coordinate (sightingPosB)   at ($(sightingPosA)+ (\PositionB-\PositionA,0)$);
+      \coordinate (beginPosA)      at ($(sightingPosA)+ (                    0,\InterlockingTime)$);
+      \coordinate (beginPosB)      at ($(beginPosA)   + (\PositionB-\PositionA,0)$);
+      % blocking time bottom part
+      \ifTrainRun{\mode}{\ModeDeceleration}{
+        % mode deceleration
+        \coordinate (exitPosB)     at ($(egressPosB)  + 2*\Speed^-1*(0,-\Decel^-1)$);
+        \coordinate (exitPosA)     at ($(exitPosB)    + (\PositionA-\PositionB,0)$);
+        \coordinate (clearingPosB) at ($(exitPosB)    + (                    0,-\Latency)$);
+        \coordinate (exitVector)   at ($(egressPosB)!0.25!(exitPosB)$);
+        \coordinate (baseVector)   at ($(basePosA)!0.75!(egressPosB)$);
+      }{
+        % mode coasting & acceleration
+        \coordinate (clearingPosB) at ($(egressPosB)  + (    0,-\ClearingDistance*\Speed^-1-\TrainLength*\Speed^-1)$);
+      }
+      \coordinate (clearingPosA)   at ($(clearingPosB)+ (\PositionA-\PositionB,0)$);
+      \coordinate (endPosB)        at ($(clearingPosB)+ (                    0,-\InterlockingTime)$);
+      \coordinate (endPosA)        at ($(endPosB)     + (\PositionA-\PositionB,0)$);
+      % finished coord calc for train run
+      %
+      % draw blocking time
+      \iftoggle{blockingTime}{
+        \iftoggle{blockingTimeFill}{
+          \fill [fill opacity=0.1] (beginPosA) -- (endPosA) -- (endPosB) -- (beginPosB) -- cycle;
+        }{}
+        \draw (beginPosA) -- (endPosA) -- (endPosB) -- (beginPosB) -- cycle;
+      }{}
+      % debug
+      \iftoggle{DEBUG}{
+        \togglefalse{trainMarker}
+        \ifdimcomp{\dimPosA}{<}{\dimPosB}{
+          \node[right,align=left,red] at ($(\PositionA +1,-0.5)$) {train run left to right};
+          \node[right,align=left,red] at ($(\PositionA +1,-1  )$) {mode: \mode};
+        }{
+          \node[right,align=left,red] at ($(\PositionB +1,+5.5)$) {train run right to left};
+          \node[right,align=left,red] at ($(\PositionB +1,+5  )$) {mode: \mode};
+        }
+        \ifTrainRun{\mode}{\ModeAcceleration}{
+          % mode acceleration
+          \def\DebugPointsPosA{basePosA, entryPosA, entryVector, sightingPosA, beginPosA, egressPosA, egressVector, clearingPosA, endPosA}
+          \def\DebugPointsPosB{basePosB, entryPosB, sightingPosB, beginPosB, egressPosB, clearingPosB, endPosB}
+          \draw[blue] (entryPosA) .. controls (entryVector) and (egressVector) .. (egressPosB) node [fill=black!10,midway,sloped] {\tiny \mode};
+          \draw[red,dashed] (entryPosA)-- (entryVector)-- (egressVector) -- (egressPosB) -- cycle (entryPosA)--(egressVector) (entryVector)--(egressPosB);
+        }{
+          \ifTrainRun{\mode}{\ModeDeceleration}{
+            % mode deceleration
+            \def\DebugPointsPosA{basePosA, approachPosA, sightingPosA, beginPosA, egressPosA, exitPosA, clearingPosA, endPosA}
+            \def\DebugPointsPosB{basePosB, approachPosB, sightingPosB, beginPosB, baseVector, egressPosB, exitVector, exitPosB, clearingPosB, endPosB}
+            \draw [blue] (basePosA) .. controls (baseVector) and (exitVector) .. (exitPosB) node [fill=black!10,midway,sloped] {\tiny \mode};
+            \draw[red,dashed,thin] (basePosA)-- (baseVector)-- (exitVector) -- (exitPosB) -- cycle (basePosA)--(exitVector) (baseVector)--(exitPosB);
+          }{
+            % mode coasting
+            \def\DebugPointsPosA{basePosA, approachPosA, sightingPosA, beginPosA, egressPosA, clearingPosA, endPosA}
+            \def\DebugPointsPosB{basePosB, approachPosB, sightingPosB, beginPosB, egressPosB, clearingPosB, endPosB}
+            \draw [blue] (basePosA) -- (egressPosB) node [fill=black!10,midway,sloped] {\tiny \mode};
+          }
+        }
+        \ifdimcomp{\dimPosA}{<}{\dimPosB}{
+          \foreach \point in \DebugPointsPosA
+            \draw [red] (\point) circle[radius=.03] (\point) node [left] {\tiny \point~(\xcoord{\point},\ycoord{\point})};
+          \foreach \point in \DebugPointsPosB
+            \draw [red] (\point) circle[radius=.03] (\point) node [right] {\tiny \point~(\xcoord{\point},\ycoord{\point})};
+        }{
+          \foreach \point in \DebugPointsPosA
+            \draw [red] (\point) circle[radius=.03] (\point) node [right] {\tiny \point~(\xcoord{\point},\ycoord{\point})};
+          \foreach \point in \DebugPointsPosB
+            \draw [red] (\point) circle[radius=.03] (\point) node [left] {\tiny \point~(\xcoord{\point},\ycoord{\point})};
+        }
+      }{}
+      % draw blocking time parts
+      \iftoggle{blockingTimeParts}{
+        \draw [line width=0.25pt] (sightingPosA) -- (sightingPosB);
+        \draw [line width=0.25pt] (clearingPosA) -- (clearingPosB);
+        \ifTrainRun{\mode}{\ModeAcceleration}{
+          % mode acceleration
+        }{
+          % mode deceleration & coasting
+          \draw [line width=0.25pt] (approachPosA) -- (approachPosB);
+          \draw [line width=0.25pt] (basePosA)     -- (basePosB);
+        }
+        \ifTrainRun{\mode}{\ModeDeceleration}{
+          % mode deceleration
+        }{
+          % mode acceleration & coasting
+          \draw [line width=0.25pt]   (egressPosA) -- (egressPosB);
+        }
+      }{}
+      % draw train path
+      \iftoggle{trainMarker}{
+        \ifTrainRun{\mode}{\ModeAcceleration}{
+          % mode acceleration
+          \draw [line width=1pt] (entryPosA) .. controls (entryVector) and (egressVector) .. (egressPosB);
+        }{
+          \ifTrainRun{\mode}{\ModeDeceleration}{
+            % mode deceleration
+            \draw [line width=1pt] (basePosA) .. controls (baseVector) and (exitVector) .. (exitPosB);
+          }{
+            % mode coasting
+            \draw [line width=1pt] (basePosA) -- (egressPosB);
+          }
+        }
+      }{}
+      % draw start and stop marker
+      \iftoggle{StartStopMarker}{
+        \ifTrainRun{\mode}{\ModeAcceleration}{
+          % Start Marker
+          \tikzset{every path/.style={solid,thin}};
+          \draw ($(entryPosA) + (0.1,0)$) -- ++(-0.2,0);
+          \draw (entryPosA) circle[radius=.05] (entryPosA);
+        }{}
+        \ifTrainRun{\mode}{\ModeDeceleration}{
+          % Stop Marker
+          \tikzset{every path/.style={solid,thin}};
+          \draw ($(exitPosB) + (0.1,0)$) -- ++(-0.2,0);
+          \draw (exitPosB) circle[radius=.05] (exitPosB);
+        }{}
+      }{}
+    }
+  }},pics/train_path/.default=4.0/0.5/0.5/2.0,
+}

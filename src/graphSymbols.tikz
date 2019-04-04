@@ -24,8 +24,8 @@
 \tikzset{
   pics/colon/.style args={#1}{
     code={
-    \path[draw,line width=1pt,fill=white]  (-0.1,0) circle (0.1);
-    \path[draw,line width=1pt,fill=white]  ( 0.1,0) circle (0.1);
+    \path[draw,line width=1pt,fill=background]  (-0.1,0) circle (0.1);
+    \path[draw,line width=1pt,fill=background]  ( 0.1,0) circle (0.1);
     \node at (0,-0.3) {#1};
     }
   },
@@ -34,56 +34,56 @@
 \tikzset{
   pics/connexity/.style args={#1/#2}{
     code={
-      \draw [#1,line width=#2,rounded corners=8pt,fill=white] (-0.5,-0.3) rectangle (0.5,0.3);
+      \draw [#1,line width=#2,rounded corners=8pt,fill=background] (-0.5,-0.3) rectangle (0.5,0.3);
     }
   },
   pics/connexity/.default=blue/1pt,
 }
 \tikzset{
   approach/.pic={
-    \path[draw, fill=white] (0,-0.1) -- ++(0.1,0.2) -- ++(-0.2,0) -- cycle; % triangle shape
+    \path[draw, fill=background] (0,-0.1) -- ++(0.1,0.2) -- ++(-0.2,0) -- cycle; % triangle shape
   };
 }
 \tikzset{
   tee/.pic={
-    \path[draw, fill=black] (0,0) circle (0.05);
+    \path[draw, fill] (0,0) circle (0.05);
   };
 }
 \tikzset{
   block_start/.pic={
-    \path[draw, fill=white] (-0.1,-0.1) rectangle ++(0.2,0.2);
+    \path[draw, fill=background] (-0.1,-0.1) rectangle ++(0.2,0.2);
   };
 }
 \tikzset{
   block_clearing/.pic={
-    \path[draw, fill=white] (-0.1,-0.1) rectangle ++(0.2,0.2);
+    \path[draw, fill=background] (-0.1,-0.1) rectangle ++(0.2,0.2);
     \path[draw] (-0.1,-0.1) -- ++(0.2,0.2);
   };
 }
 \tikzset{
   route_start/.pic={
-    \path[draw, fill=white] (0,0) circle (0.1);
+    \path[draw, fill=background] (0,0) circle (0.1);
   };
 }
 \tikzset{
   route_clearing/.pic={
-    \path [draw, fill=white] (0,0) circle (0.1);
+    \path [draw, fill=background] (0,0) circle (0.1);
     \draw (-0.07,-0.07) -- ++(0.14,0.14);
   };
 }
 \tikzset{
   block_end/.pic={
-    \path[draw, fill=white] (0,-0.1) -- ++(0.1,0.1) -- ++(-0.1,0.1) -- ++(-0.1,-0.1) -- cycle;
+    \path[draw, fill=background] (0,-0.1) -- ++(0.1,0.1) -- ++(-0.1,0.1) -- ++(-0.1,-0.1) -- cycle;
   };
 }
 \tikzset{
   flank_protection/.pic={
-    \path[draw, fill=white] (0:0.1) arc (0:180:0.1) -- cycle;
+    \path[draw, fill=background] (0:0.1) arc (0:180:0.1) -- cycle;
   };
 }
 \tikzset{
   train_berth/.pic={
-      \path[draw, fill=white] (-0.1,-0.15) rectangle ++(0.2,0.3);
+      \path[draw, fill=background] (-0.1,-0.15) rectangle ++(0.2,0.3);
       \path[draw, line width=0.75pt] (-0.05,-0.1) -- ++(0  ,0.2);
       \path[draw, line width=0.75pt] (-0.05, 0  ) -- ++(0.1,0  );
       \path[draw, line width=0.75pt] ( 0.05,-0.1) -- ++(0  ,0.2);

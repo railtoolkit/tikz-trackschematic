@@ -1,0 +1,106 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = station_pockelsdorf.tex
+
+% Copyright 2018 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+%% coordinates
+\coordinate (P2R) at ( 0, 0); % track to Rebenau
+\coordinate (P2M) at ( 3,-4); % track to Mittelstadt
+\coordinate (P2S) at (28, 0); % track to Schleinitz
+
+{ %% stations
+  \tikzset{every node/.style={base00}};
+  \node[right,align=left] at ( 0, 1) {to and from\\ Rebenau};
+  \node[left,align=right] at ( 3,-3) {to and from\\ Mittelstadt};
+  \node                   at (13.5,3.3) {{\LARGE Pockelsdorf}};
+  \node[right,align=left] at (26.5,-1.5) {Sidings};
+  \node[left,align=right] at (28,1) {to and from\\ Schleinitz};
+}
+{ %% tracks
+  \draw[MainTrack] ( P2R) --   (P2S); % track 1
+  \draw[MainTrack] ( 5,0) -- ++(1,1) -- ++(14,0) -- ++(1,-1); % track 2
+  \draw[MainTrack] ( 7,1) -- ++(1,1) -- ++(11,0) -- ++(1,-1); % track 3
+  \draw[MainTrack] ( P2M) -- ++(5,5);
+  \draw[SideTrack] (22,0) -- ++(1.5,-1.5) -- ++(3,0); % track 10
+}
+{ %% track numbers
+  \node[fill=background] at (13.5, 0) { 1};
+  \node[fill=background] at (13.5, 1) { 2};
+  \node[fill=background] at (13.5, 2) { 3};
+  \node[fill=background] at (26. ,-1.5) {10};
+}
+{ %% bufferstops
+  % \pic  at ( 9, 1) {bufferstop_backward};
+}
+{ %% turnouts
+  \pic  at ( 5,0) {turnout_left_forward};
+  \node at ( 5,-0.2) {\footnotesize W1};
+  % \pic at ( 5,0) {fouling_point_left_forward};
+  \pic  at ( 7,1) {turnout_left_forward};
+  \node at ( 7,0.8) {\footnotesize W2};
+  % \pic at ( 7,1) {fouling_point_left_forward};
+  \pic  at ( 7,0) {turnout_left_forward};
+  \pic  at ( 7,0) {turnout_left_backward};
+  \pic  at ( 7,0) {slip_left_backward};
+  \node[left,align=right] at (6.7, 0.2) {\footnotesize W3ab};
+  \node[right,align=left] at (7.3,-0.2) {\footnotesize W3cd};
+  % \pic at ( 7,0) {fouling_point_left_forward};
+  % \pic at ( 7,0) {fouling_point_left_backward};
+  \pic  at ( 8,1) {turnout_left_backward};
+  \node at ( 8,1.2) {\footnotesize W4};
+  % \pic at ( 8,1) {fouling_point_left_backward};
+
+  \pic  at (20,1) {turnout_right_backward};
+  \node[right,align=left] at (19.9,1.2) {\footnotesize W5};
+  % \pic at (20,1) {fouling_point_left_backward};
+  \pic  at (21,0) {turnout_right_backward};
+  \node at (21,-0.2) {\footnotesize W6};
+  % \pic at (21,0) {fouling_point_left_backward};
+  \pic  at (22,0) {turnout_right_forward};
+  \node at (22,0.2) {\footnotesize W7};
+  % \pic at (22,0) {fouling_point_left_forward};
+  \pic  at (24. ,-1.5) {derailer_left_backward};
+  \node[right,align=left] at (24. ,-1.7) {\footnotesize Gs10};
+}
+{ %% platforms
+  \pic  at (10.5,0) {platform_right=6};
+  \pic  at (10.5,1) {platform_left=6};
+  \pic  at (10.5,2) {platform_right=6};
+}
+{ %% signals
+  \pic at ( 1,0) {route_signal_forward};
+  \node[left] at (1,-0.4) {A};
+  \pic at ( 3,0) {shunt_limit_backward};
+  \pic at ( 4,0) {shunt_signal_forward};
+  \node[left] at ( 4,-0.4) {W1X};
+  \pic[rotate=45] at (3.75,-3.25) {route_signal_forward};
+  \node[left,rotate=45] at (4.05,-3.55) {B};
+  \pic[rotate=45] at (5.25,-1.75) {shunt_limit_backward};
+  \pic[rotate=45] at (6   ,-1   ) {shunt_signal_forward};
+  \node[left,rotate=45] at (6.3,-1.3) {W3X};
+  \pic at (9.5,0) {route_signal_backward};
+  \node[right] at (9.5, 0.4) {P1};
+  \pic at (9.5,1) {route_signal_backward};
+  \node[right] at (9.5, 1.4) {P2};
+  \pic at (9.5,2) {route_signal_backward};
+  \node[right] at (9.5, 2.4) {P3};
+
+  \pic at (17.5,0) {route_signal_forward};
+  \node[left] at (17.5,-0.4) {N1};
+  \pic at (17.5,1) {route_signal_forward};
+  \node[left] at (17.5, 0.6) {N2};
+  \pic at (17.5,2) {route_signal_forward};
+  \node[left] at (17.5, 1.6) {N3};
+  \pic at (23.0,0) {shunt_signal_backward};
+  \node[right] at (23,0.4) {W7Y};
+  \pic at (25. ,-1.5) {shunt_signal_backward};
+  \node[right] at (25. ,-1.1) {W10Y};
+  \pic at (25.0,0) {shunt_limit_forward};
+  \pic at (27.0,0) {route_signal_backward};
+  \node[right] at (27.0, 0.4) {G};
+}
+{ %% hectometer posts
+  \tikzset{every node/.style={base00,rotate=-90},every path/.style={base00,dashed}};
+  % \draw    (01.0,-0.85) -- ++(0,-0.7) node [right,align= left] {15.000};
+}

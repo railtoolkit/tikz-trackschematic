@@ -7,7 +7,7 @@
 \tikzset{
   pics/train/.style args={#1}{
     code={
-      \path[draw, line width=1pt, fill=white] (0,-0.3) -- ++(#1,0) -- ++(0,0.6) -- ++(-#1,0) -- cycle; % train shape
+      \path[draw, line width=1pt, fill=background] (0,-0.3) -- ++(#1,0) -- ++(0,0.6) -- ++(-#1,0) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
@@ -16,7 +16,7 @@
 \tikzset{
   pics/train_moving_forward/.style args={#1}{
     code={
-      \path[draw, line width=1pt, fill=white] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
+      \path[draw, line width=1pt, fill=background] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
       \path[draw, line width=1pt] (-0.13,0.23) -- (0.1,0) -- (-0.13,-0.23); % arrow shape part 1
       \path[draw, line width=1pt] (-0.03,0.23) -- (0.2,0) -- (-0.03,-0.23); % arrow shape part 2
       % \node at (-2,0) {\emph{#2}}; %label of train
@@ -27,7 +27,7 @@
 \tikzset{
   pics/train_moving_backward/.style args={#1}{
     code={
-      \path[draw, line width=1pt, fill=white] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
+      \path[draw, line width=1pt, fill=background] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
       \path[draw, line width=1pt] (0.13,0.23) -- (-0.1,0) -- (0.13,-0.23); % arrow shape part 1
       \path[draw, line width=1pt] (0.03,0.23) -- (-0.2,0) -- (0.03,-0.23); % arrow shape part 2
       % \node at (-2,0) {\emph{#2}}; %label of train
@@ -38,7 +38,7 @@
 \tikzset{
   pics/train_direction_forward/.style args={#1}{
     code={
-      \path[draw, line width=1pt, fill=white] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
+      \path[draw, line width=1pt, fill=background] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
@@ -47,7 +47,7 @@
 \tikzset{
   pics/train_direction_backward/.style args={#1}{
     code={
-      \path[draw, line width=1pt, fill=white] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
+      \path[draw, line width=1pt, fill=background] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
@@ -73,21 +73,21 @@
 }
 \tikzset{
   train_automatic_forward/.pic={
-    \path[draw, fill=black] (-0.15,0) -- ++(-0.15,0.15) -- ++(0,-0.3) -- cycle; % triangle
+    \path[draw, fill] (-0.15,0) -- ++(-0.15,0.15) -- ++(0,-0.3) -- cycle; % triangle
   };
 }
 \tikzset{
   train_automatic_backward/.pic={
-    \path[draw, fill=black] (0.15,0) -- ++(0.15,0.15) -- ++(0,-0.3) -- cycle; % triangle
+    \path[draw, fill] (0.15,0) -- ++(0.15,0.15) -- ++(0,-0.3) -- cycle; % triangle
   };
 }
 \tikzset{
   train_human_forward/.pic={
-    \path[draw, fill=black] (-0.4,0) circle (0.15); % dot
+    \path[draw, fill] (-0.4,0) circle (0.15); % dot
   };
 }
 \tikzset{
   train_human_backward/.pic={
-    \path[draw, fill=black] (0.4,0) circle (0.15); % dot
+    \path[draw, fill] (0.4,0) circle (0.15); % dot
   };
 }

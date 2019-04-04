@@ -7,8 +7,9 @@
 
 \usepackage[margin=0pt]{geometry}
 \pagestyle{empty}
-\usepackage{longtable}
-\usepackage{tikz}
+\usepackage{tabu,longtable}
+\usepackage{tikz,adjustbox}
+\usepackage{siunitx}
 \usepackage{listings}
 \lstset{
   language=TeX,
@@ -22,10 +23,10 @@
 
 
 \renewcommand{\symbol}[1]{
-  \begin{tikzpicture}[anchor=base,baseline=-3]
+  \adjustbox{valign=c}{\begin{tikzpicture}[scale=1.0,transform shape]
     \input{examples/snippets/#1}
-    \path (-3,-1.2) rectangle (3,1.2); % background rectangle to unify every cell containing a symbol
-  \end{tikzpicture}
+    \path (-3,-1.1) rectangle (3,1.1); % background rectangle to unify every cell containing a symbol
+  \end{tikzpicture}}
 }
 \newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/examples/snippets/#1}}
 \newcommand{\colorsquare}[1]{
@@ -43,7 +44,7 @@
 
 \begin{document}
   \centering
-  \begin{longtable}{|r|l|c|l|c|}
+  \begin{longtabu}{|r|l|c|l|c|}
     \hline
       No. & Name                            & Symbol                                           & Code                                           & File                  \\
     \endhead
@@ -52,7 +53,12 @@
     \hline
       \No & main line (double track)        & \symbol{main_line.tikz}                          & \code{main_line.tikz}                          & \texttt{topology.tikz} \\
     \hline
+      \No & track distance (in \si{\metre}) & \symbol{track_distance.tikz}                     & \code{track_distance.tikz}                     & \texttt{topology.tikz} \\
+    \hline
       \No & side track                      & \symbol{side_track.tikz}                         & \code{side_track.tikz}                         & \texttt{topology.tikz} \\
+    \hline
+      \No & track number                    & \symbol{track_number.tikz}                       & \code{track_number.tikz}                  
+      & \texttt{topology.tikz} \\
     \hline
       \No & turnout left (forward)          & \symbol{turnout_left_forward.tikz}               & \code{turnout_left_forward.tikz}               & \texttt{topology.tikz} \\
     \hline
@@ -152,6 +158,9 @@
     \hline
       \No & route signal (backward)         & \symbol{route_signal_backward.tikz}              & \code{route_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
     \hline
+      \No & \parbox[c]{4cm}{combined signal\\(distant and block signal)}
+                                            & \symbol{combined_signal_forward.tikz}            & \code{combined_signal_forward.tikz}            & \texttt{trafficControl.tikz} \\
+    \hline
       \No & shunt signal (forward)          & \symbol{shunt_signal_forward.tikz}               & \code{shunt_signal_forward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
       \No & shunt signal (backward)         & \symbol{shunt_signal_backward.tikz}              & \code{shunt_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
@@ -206,5 +215,9 @@
       \No & \parbox[c]{5cm}{bridge\\with track beneath}
                                             & \symbol{bridge_track_beneath.tikz}               & \code{bridge_track_beneath.tikz}               & \texttt{constructions.tikz} \\
     \hline
-  \end{longtable}
+      \No & hump                            & \symbol{hump.tikz}                               & \code{hump.tikz}                               & \texttt{constructions.tikz} \\
+    \hline
+      \No & interlocking                    & \symbol{interlocking.tikz}                       & \code{interlocking.tikz}                       & \texttt{constructions.tikz} \\
+    \hline
+  \end{longtabu}
 \end{document}

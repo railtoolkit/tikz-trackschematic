@@ -5,8 +5,27 @@
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \tikzset{MainTrack/.style={line width=2pt}}
-\tikzset{SideTrack/.style={line width=1pt}}
+\tikzset{SideTrack/.style={line width=0.7pt}}
+\colorlet{background}{white}
 
+\tikzset{
+  pics/track_number/.style args={#1}{
+    code={
+      \node[fill=background,font=\sffamily] at (0,0) {#1}; % speed indicator
+    }
+  },
+  pics/track_number/.default=,
+}
+\tikzset{
+  pics/track_distance/.style args={#1}{
+    code={
+      \fill (0,0.96) -- ++(-0.1,-0.15) -- ++(0.2,0) -- cycle; % upper triangle
+      \node[baseline=(current bounding box.center),font=\sffamily] at (0,0.5) {#1}; % distance indicator
+      \fill (0,0.04) -- ++(-0.1,0.15) -- ++(0.2,0) -- cycle; % lower triangle
+    }
+  },
+  pics/track_distance/.default=,
+}
 \tikzset{
   pics/turnout_left_forward/.style args={#1}{
     code={

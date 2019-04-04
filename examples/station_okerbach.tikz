@@ -1,0 +1,195 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = station_okerbach.tex
+
+% Copyright 2018 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+%% coordinates
+\coordinate (O2R-1) at ( 0,0); % track 1 to Rebenau
+\coordinate (O2R-2) at ( 0,1); % track 2 to Rebenau
+\coordinate (O2S-1) at (42,0); % track 1 to Schleinitz
+\coordinate (O2S-2) at (42,1); % track 2 to Schleinitz
+
+{ %% stations
+  \tikzset{every node/.style={base00}};
+  \node[right,align=left] at ( 0. , 2. ) {to and from\\ Rebenau};
+  \node[left,align=right] at ( 3.5, 4.0) {Sidings (Workshop)};
+  \node[left,align=right] at ( 3.5, 5.0) {Sidings (Habour)};
+  \node[right,align=left] at (37.5,-1.5) {Sidings (Power Station)};
+  \node                   at (15.5, 6.3) {{\LARGE Okerbach Gbf}};
+  \node                   at (29.0, 6.3) {{\LARGE Okerbach Pbf}};
+  \node[left,align=right] at (42,2) {to and from\\ Schleinitz};
+}
+{ %% tracks
+  \draw[MainTrack] (O2R-1) --   (O2S-1); % track 1
+  \draw[MainTrack] (O2R-2) --   (O2S-2); % track 2
+  \draw[MainTrack] ( 5, 1) -- ++( 1,-1); % track W1/W2
+  \draw[MainTrack] ( 7, 0) -- ++( 1, 1); % track W3/W4
+  \draw[SideTrack] ( 7, 2) -- ++(-3, 3) -- ++(-0.5,0); % track 132
+  \draw[MainTrack] ( 8, 0) -- ++( 1,-1) -- ++(13. ,0) -- ++( 1. , 1); % track 10
+  \draw[MainTrack] ( 9, 1) -- ++( 1, 1) -- ++(11. ,0) -- ++( 1. ,-1); % track 13
+  \draw[SideTrack] (10, 2) -- ++(-4, 0) -- ++(-2. ,2) -- ++(-0.5, 0); % track 131
+  \draw[MainTrack] (10, 2) -- ++( 1, 1) -- ++( 9. ,0) -- ++( 1. ,-1); % track 14
+  \draw[SideTrack] (11, 3) -- ++( 1, 1) -- ++( 7. ,0) -- ++( 1. ,-1); % track 15
+  \draw[SideTrack] (19, 4) -- ++( 4, 0); % track 215
+  \draw[MainTrack] (23, 1) -- ++( 1,-1); % track W16/W18
+  \draw[SideTrack] (32, 0) -- ++( 1.5,-1.5) -- ++( 4, 0); % track 410
+  \draw[MainTrack] (35, 0) -- ++( 1, 1); % track W21/W22
+}
+{ %% track numbers
+  \node[fill=background,rotate=-45] at ( 4.4, 3.6) {131};
+  \node[fill=background,rotate=-45] at ( 4.9, 4.1) {132};
+  \node[fill=background] at (15.5,-1. ) { 10};
+  \node[fill=background] at (15.5, 0. ) { 11};
+  \node[fill=background] at (15.5, 1. ) { 12};
+  \node[fill=background] at (15.5, 2. ) { 13};
+  \node[fill=background] at (15.5, 3. ) { 14};
+  \node[fill=background] at (15.5, 4. ) { 15};
+  \node[fill=background] at (22. , 4. ) {215};
+  \node[fill=background] at (29. , 0. ) {  1};
+  \node[fill=background] at (29. , 1. ) {  2};
+  \node[fill=background] at (36.5,-1.5) {410};
+}
+{ %% bufferstops
+  \pic  at ( 23, 4) {bufferstop_forward};
+}
+{ %% turnouts
+  \pic  at ( 5,1) {turnout_right_forward};
+  \node at ( 5,1.2) {\footnotesize W1};
+  % \pic at ( 5,1) {fouling_point_left_forward};
+  \pic  at ( 6,0) {turnout_right_backward};
+  \node at ( 6,-0.2) {\footnotesize W2};
+  % \pic at ( 6,0) {fouling_point_left_backward};
+  \pic  at ( 7,0) {turnout_left_forward};
+  \node at ( 7,-0.2) {\footnotesize W3};
+  % \pic at ( 7,0) {fouling_point_left_forward};
+  \pic  at ( 7,2) {turnout_right_backward};
+  \node at ( 7,1.8) {\footnotesize W9};
+  % \pic at ( 7,2) {fouling_point_right_backward};
+  \pic  at ( 8,1) {turnout_left_backward};
+  \node at ( 8,1.2) {\footnotesize W4};
+  % \pic at ( 8,1) {fouling_point_left_backward};
+  \pic  at ( 8,0) {turnout_right_forward};
+  \node at ( 8,0.2) {\footnotesize W5};
+  % \pic at ( 8,0) {fouling_point_right_forward};
+  \pic  at ( 8.5,2) {derailer_left_forward};
+  \node[left,align=right] at ( 8.5,1.8) {\footnotesize Gs8};
+  \pic  at ( 9,1) {turnout_left_forward};
+  \node at ( 9,0.8) {\footnotesize W6};
+  % \pic at ( 9,1) {fouling_point_left_forward};
+  \pic  at (10,2) {turnout_left_forward};
+  \pic  at (10,2) {turnout_left_backward};
+  \pic  at (10,2) {slip_left_forward};
+  \pic  at (10,2) {slip_left_backward};
+  \node[left,align=right] at ( 9.7,1.8) {\footnotesize W7ab};
+  \node[right,align=left] at (10.3,2.2) {\footnotesize W7cd};
+  % \pic at (10,2) {fouling_point_left_backward};
+  % \pic at (10,2) {fouling_point_left_forward};
+  \pic  at (11,3) {turnout_left_forward};
+  \node[left,align=right] at (11,3.1) {\footnotesize W10};
+  % \pic at (11,3) {fouling_point_left_forward};
+
+  \pic  at (19,4) {turnout_right_forward};
+  \node at (19,4.2) {\footnotesize W11};
+  % \pic at (19,4) {fouling_point_right_forward};
+  \pic  at (20,4) {derailer_right_backward};
+  \node[right] at (20,3.8) {\footnotesize Gs12};
+  \pic  at (20,3) {turnout_right_backward};
+  \node[right,align=left] at (20,3.1) {\footnotesize W13};
+  % \pic at (20,3) {fouling_point_right_backward};
+  \pic  at (21,2) {turnout_right_backward};
+  \node[right,align=left] at (21,2.1) {\footnotesize W14};
+  % \pic at (21,2) {fouling_point_right_backward};
+  \pic  at (22,1) {turnout_right_backward};
+  \node at (22,0.8) {\footnotesize W15};
+  % \pic at (22,1) {fouling_point_left_backward};
+  \pic  at (23,1) {turnout_right_forward};
+  \node at (23,1.2) {\footnotesize W16};
+  % \pic at (23,1) {fouling_point_left_forward};
+  \pic  at (23,0) {turnout_left_backward};
+  \node at (23,0.2) {\footnotesize W17};
+  % \pic at (23,0) {fouling_point_left_backward};
+  \pic  at (24,0) {turnout_right_backward};
+  \node at (24,-0.2) {\footnotesize W18};
+  % \pic at (24,0) {fouling_point_left_backward};
+
+  \pic  at (32,0) {turnout_right_forward};
+  \node at (32,0.2) {\footnotesize W19};
+  % \pic at (23,0) {fouling_point_right_forward};
+  \pic  at (34. ,-1.5) {derailer_left_backward};
+  \node[right] at (34. ,-1.7) {\footnotesize Gs20};
+  \pic  at (35,0) {turnout_left_forward};
+  \node at (35,-0.2) {\footnotesize W21};
+  % \pic at (35,0) {fouling_point_left_forward};
+  \pic  at (36,1) {turnout_left_backward};
+  \node at (36,1.2) {\footnotesize W22};
+  % \pic at (36,1) {fouling_point_left_backward};
+}
+{ %% platforms
+  \pic  at (26,0) {platform_right=6};
+  \pic  at (26,1) {platform_left=6};
+}
+{ %% signals
+  \pic at ( 1,0) {route_signal_forward};
+  \node[left] at ( 1,-0.4) {A};
+  \pic at ( 1,1) {route_signal_forward};
+  \node[left] at ( 1, 0.6) {AA};
+  \pic at ( 3,0) {shunt_limit_backward};
+  \pic at ( 4,0) {shunt_signal_forward};
+  \node[left] at ( 4,-0.4) {W2X};
+  \pic at ( 4,1) {shunt_signal_forward};
+  \node[left] at ( 4, 0.6) {W1X};
+  \pic[rotate=-45] at (5.5,2.5) {shunt_signal_forward};
+  \node[left,rotate=-45] at (5.3,2.3) {W9X1};
+  \pic[rotate=-45] at (6. ,3. ) {shunt_signal_forward};
+  \node[left,rotate=-45] at (5.8,2.8) {W9X2};
+  \pic at (11,-1) {route_signal_backward};
+  \node[right] at (11,-0.6) {P10};
+  \pic at (11,0) {shunt_signal_backward};
+  \node[right] at (11, 0.4) {W5Y};
+  \pic at (11,1) {route_signal_backward};
+  \node[right] at (11, 1.4) {P12};
+  \pic at (12.5,2) {route_signal_backward};
+  \node[right] at (12.5, 2.4) {P13};
+  \pic at (13,3) {route_signal_backward};
+  \node[right] at (13, 3.4) {P14};
+  \pic at (13,4) {shunt_signal_backward};
+  \node[right] at (13, 4.4) {W10Y};
+
+  \pic at (18. , 4) {shunt_signal_forward};
+  \node[left] at (18, 3.6) {W11X};
+  \pic at (18.5, 3) {route_signal_forward};
+  \node[left] at (18.5, 2.6) {ZR14};
+  \pic at (19.5, 2) {route_signal_forward};
+  \node[left] at (19.5, 1.6) {ZR13};
+  \pic at (20.5, 1) {route_signal_forward};
+  \node[left] at (20.5, 0.6) {ZR12};
+  \pic at (20.5, 0) {route_signal_forward};
+  \node[left] at (20.5,-0.4) {ZR11};
+  \pic at (20.5,-1) {route_signal_forward};
+  \node[left] at (20.5,-1.4) {ZR10};
+  \pic at (21. , 4) {shunt_signal_backward};
+  \node[right] at (21. , 4.4) {W12Y};
+  \pic at (25. ,1) {route_signal_backward};
+  \node[right] at (25. , 1.4) {ZU2};
+  \pic at (25. ,0) {route_signal_backward};
+  \node[right] at (25. , 0.4) {ZU1};
+
+  \pic at (35. ,-1.5) {shunt_signal_backward};
+  \node[right] at (35. ,-1.1) {W20Y};
+  \pic at (33.5,0) {route_signal_forward};
+  \node[left] at (33.5,-0.4) {N1};
+  \pic at (33.5,1) {route_signal_forward};
+  \node[left] at (33.5, 0.6) {N2};
+  \pic at (37.5,1) {shunt_signal_backward};
+  \node[right] at (37.5,1.4) {W22Y};
+  \pic at (39.0,1) {shunt_limit_forward};
+  \pic at (41.0,0) {route_signal_backward};
+  \node[right] at (41.0, 0.4) {FF};
+  \pic at (41.0,1) {route_signal_backward};
+  \node[right] at (41.0, 1.4) {F};
+}
+{ %% hectometer posts
+  \tikzset{every node/.style={base00,rotate=-90},every path/.style={base00,dashed}};
+  % \draw    (01.0,-0.85) -- ++(0,-0.7) node [right,align= left] {15.000};
+}

@@ -76,7 +76,7 @@
   pics/distant_signal_forward/.style args={#1}{
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.4,0); % signal pole
-      \path[draw, line width=1pt] (0.7,-0.6) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
+      \path[draw, fill=background, line width=1pt] (0.7,-0.6) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
       \node[rotate=-90,font=\sffamily] at (0.9,-0.4) {#1}; % speed indicator
     }
   },
@@ -86,7 +86,7 @@
   pics/distant_signal_backward/.style args={#1}{
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.4,0); % signal pole
-      \path[draw, line width=1pt] (-0.7,0.6) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
+      \path[draw, fill=background, line width=1pt] (-0.7,0.6) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
       \node[rotate=90,font=\sffamily] at (-0.9,0.4) {#1}; % speed indicator
     }
   },
@@ -97,7 +97,7 @@
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.4,0); % signal pole
       \path[draw, line width=1pt] (0.4,-0.2) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
-      \node[rotate=-90,font=\sffamily] at (0.9,-0.4) {#1}; % speed indicator
+      \node[rotate=-90,font=\sffamily] at (1.0,-0.4) {#1}; % speed indicator
     }
   },
   pics/speed_signal_forward/.default=,
@@ -107,7 +107,7 @@
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.4,0); % signal pole
       \path[draw, line width=1pt] (-0.4,0.2) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
-      \node[rotate=90,font=\sffamily] at (-0.9,0.4) {#1}; % speed indicator
+      \node[rotate=90,font=\sffamily] at (-1.0,0.4) {#1}; % speed indicator
     }
   },
   pics/speed_signal_backward/.default=,
@@ -117,7 +117,7 @@
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
       \path[draw, line width=1pt] (0.7,-0.6) rectangle ++(0.4,0.4); % signal marker
-      \node[rotate=-90,font=\sffamily] at (1.2,-0.4) {#1}; % speed indicator
+      \node[rotate=-90,font=\sffamily] at (1.3,-0.4) {#1}; % speed indicator
     }
   },
   pics/block_signal_forward/.default=,
@@ -127,7 +127,7 @@
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
       \path[draw, line width=1pt] (-0.7,0.6) rectangle ++(-0.4,-0.4); % signal marker
-      \node[rotate=90,font=\sffamily] at (-1.2,0.4) {#1}; % speed indicator
+      \node[rotate=90,font=\sffamily] at (-1.3,0.4) {#1}; % speed indicator
     }
   },
   pics/block_signal_backward/.default=,
@@ -137,7 +137,7 @@
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
       \path[draw, line width=1pt] (0.9,-0.4) circle (0.2); % signal marker
-      \node[rotate=-90,font=\sffamily] at (1.2,-0.4) {#1}; % speed indicator
+      \node[rotate=-90,font=\sffamily] at (1.3,-0.4) {#1}; % speed indicator
     }
   },
   pics/route_signal_forward/.default=,
@@ -147,7 +147,7 @@
     code={
       \path[draw, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
       \path[draw, line width=1pt] (-0.9,0.4) circle (0.2); % signal marker
-      \node[rotate=90,font=\sffamily] at (-1.2,0.4) {#1}; % speed indicator
+      \node[rotate=90,font=\sffamily] at (-1.3,0.4) {#1}; % speed indicator
     }
   },
   pics/route_signal_backward/.default=,
@@ -213,10 +213,14 @@
   };
 }
 \tikzset{
-  clearing_point/.pic={
-    \path[draw, line width=1pt] (0  ,-0.1) -- ++( 0  ,0.2); % marker
-    \path[draw, line width=1pt] (0.1, 0.1) -- ++(-0.2,0  ); % sign
-  };
+  pics/clearing_point/.style args={#1}{
+    code={
+      \path[draw, line width=1pt] (0  ,-0.1) -- ++( 0  ,0.2); % marker
+      \path[draw, line width=1pt] (0.1, 0.1) -- ++(-0.2,0  ); % sign
+      \node[font=\sffamily] at (0,0.45) {#1}; % indicator
+    }
+  },
+  pics/clearing_point/.default=,
 }
 \tikzset{
   pics/transmitter_below/.style args={#1}{
@@ -224,7 +228,7 @@
       \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
     }
   },
-  pics/transmitter_below/.default=white,
+  pics/transmitter_below/.default=background,
 }
 \tikzset{
   pics/transmitter_below_forward/.style args={#1}{
@@ -233,7 +237,7 @@
       \path[draw] (0.1,-0.05) -- (0.2,-0.125) -- (0.1,-0.2) -- cycle;
     }
   },
-  pics/transmitter_below_forward/.default=white,
+  pics/transmitter_below_forward/.default=background,
 }
 \tikzset{
   pics/transmitter_below_backward/.style args={#1}{
@@ -242,7 +246,7 @@
       \path[draw] (-0.1,-0.05) -- (-0.2,-0.125) -- (-0.1,-0.2) -- cycle;
     }
   },
-  pics/transmitter_below_backward/.default=white,
+  pics/transmitter_below_backward/.default=background,
 }
 \tikzset{
   pics/transmitter_below_bidirectional/.style args={#1}{
@@ -252,7 +256,7 @@
       \path[draw] (-0.1,-0.05) -- (-0.2,-0.125) -- (-0.1,-0.2) -- cycle;
     }
   },
-  pics/transmitter_below_bidirectional/.default=white,
+  pics/transmitter_below_bidirectional/.default=background,
 }
 \tikzset{
   pics/transmitter_above/.style args={#1}{
@@ -260,7 +264,7 @@
       \path[draw,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
     }
   },
-  pics/transmitter_above/.default=white,
+  pics/transmitter_above/.default=background,
 }
 \tikzset{
   pics/transmitter_above_forward/.style args={#1}{
@@ -269,7 +273,7 @@
       \path[draw] (0.1,0.05) -- (0.2,0.125) -- (0.1,0.2) -- cycle;
     }
   },
-  pics/transmitter_above_forward/.default=white,
+  pics/transmitter_above_forward/.default=background,
 }
 \tikzset{
   pics/transmitter_above_backward/.style args={#1}{
@@ -278,7 +282,7 @@
       \path[draw] (-0.1,0.05) -- (-0.2,0.125) -- (-0.1,0.2) -- cycle;
     }
   },
-  pics/transmitter_above_backward/.default=white,
+  pics/transmitter_above_backward/.default=background,
 }
 \tikzset{
   pics/transmitter_above_bidirectional/.style args={#1}{
@@ -288,5 +292,5 @@
       \path[draw] (-0.1,0.05) -- (-0.2,0.125) -- (-0.1,0.2) -- cycle;
     }
   },
-  pics/transmitter_above_bidirectional/.default=white,
+  pics/transmitter_above_bidirectional/.default=background,
 }
