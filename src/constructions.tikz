@@ -7,8 +7,8 @@
 \tikzset{
   pics/platform_left/.style n args={1}{
     code={
-      \path[draw, line width=0.75pt] (0,0.5) -- ++(0,-0.3) -- ++(#1,0) -- ++(0,0.3);
-      \path[draw, line width=0.75pt] (0,0.3) -- ++(#1,0);
+      \path[draw, line width=0.75pt,foreground] (0,0.5) -- ++(0,-0.3) -- ++(#1,0) -- ++(0,0.3);
+      \path[draw, line width=0.75pt,foreground] (0,0.3) -- ++(#1,0);
     }
   },
   pics/platform_left/.default=4,
@@ -16,8 +16,8 @@
 \tikzset{
   pics/platform_right/.style n args={1}{
     code={
-      \path[draw, line width=0.75pt] (0,-0.5) -- ++(0,0.3) -- ++(#1,0) -- ++(0,-0.3);
-      \path[draw, line width=0.75pt] (0,-0.3) -- ++(#1,0);
+      \path[draw, line width=0.75pt,foreground] (0,-0.5) -- ++(0,0.3) -- ++(#1,0) -- ++(0,-0.3);
+      \path[draw, line width=0.75pt,foreground] (0,-0.3) -- ++(#1,0);
     }
   },
   pics/platform_right/.default=4,
@@ -25,39 +25,39 @@
 \tikzset{
   level_crossing_barrier_left/.pic={
     { % road
-      \path[draw, line width=1pt] (-0.2, 0.8) --  ++(0,-0.6);
-      \path[draw, line width=1pt] ( 0.2, 0.8) --  ++(0,-0.6);
+      \path[draw, line width=1pt,foreground] (-0.2, 0.8) --  ++(0,-0.6);
+      \path[draw, line width=1pt,foreground] ( 0.2, 0.8) --  ++(0,-0.6);
     }
     { % barrier
-      \filldraw (-0.4,0.5) circle (0.05);
-      \path[draw, line width=1pt] (-0.4,0.5) --  ++(0.39,0);
+      \filldraw[foreground] (-0.4,0.5) circle (0.05);
+      \path[draw, line width=1pt,foreground] (-0.4,0.5) --  ++(0.39,0);
     }
   };
 }
 \tikzset{
   level_crossing_barrier_right/.pic={
     { % road
-      \path[draw, line width=1pt] (-0.2,-0.8) --  ++(0, 0.6);
-      \path[draw, line width=1pt] ( 0.2,-0.8) --  ++(0, 0.6);
+      \path[draw, line width=1pt,foreground] (-0.2,-0.8) --  ++(0, 0.6);
+      \path[draw, line width=1pt,foreground] ( 0.2,-0.8) --  ++(0, 0.6);
     }
     { % barrier
-      \filldraw (0.4,-0.5) circle (0.05);
-      \path[draw, line width=1pt] (0.4,-0.5) --  ++(-0.39,0);
+      \filldraw[foreground] (0.4,-0.5) circle (0.05);
+      \path[draw, line width=1pt,foreground] (0.4,-0.5) --  ++(-0.39,0);
     }
   };
 }
 \tikzset{
   level_crossing/.pic={
     { % road
-      \path[draw, line width=1pt] (-0.2,-0.8) --  ++(0, 0.6);
-      \path[draw, line width=1pt] ( 0.2,-0.8) --  ++(0, 0.6);
+      \path[draw, line width=1pt,foreground] (-0.2,-0.8) --  ++(0, 0.6);
+      \path[draw, line width=1pt,foreground] ( 0.2,-0.8) --  ++(0, 0.6);
     }
   };
 }
 \tikzset{
   pics/bridge_left/.style n args={1}{
     code={
-      \path[draw, line width=0.75pt] (-0.1,0.48) --  ++(0.08,-0.08) -- ++(#1,0) -- ++(0.08,0.08);
+      \path[draw, line width=0.75pt,foreground] (-0.1,0.48) --  ++(0.08,-0.08) -- ++(#1,0) -- ++(0.08,0.08);
     }
   },
   pics/bridge_left/.default=3,
@@ -65,7 +65,7 @@
 \tikzset{
   pics/bridge_right/.style n args={1}{
     code={
-      \path[draw, line width=0.75pt] (-0.1,-0.48) --  ++(0.08,0.08) -- ++(#1,0) -- ++(0.08,-0.08);
+      \path[draw, line width=0.75pt,foreground] (-0.1,-0.48) --  ++(0.08,0.08) -- ++(#1,0) -- ++(0.08,-0.08);
     }
   },
   pics/bridge_right/.default=3,
@@ -73,30 +73,30 @@
 \tikzset{
   interlocking/.pic={
     {
-      \path[draw, line width=1pt] (-0.6,-0.4 ) rectangle ++(1.2,0.8); % building
-      \path[draw, fill]     (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
-      \path[draw, fill]     ( 0  , 0.15) circle      (0.15); % human dot
+      \path[draw, line width=1pt,foreground] (-0.6,-0.4 ) rectangle ++(1.2,0.8); % building
+      \path[draw, fill,foreground]     (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
+      \path[draw, fill,foreground]     ( 0  , 0.15) circle      (0.15); % human dot
     }
   };
 }
 \tikzset{
   hump/.pic={
     { % upper side
-      \path[draw, line width=0.75pt] (-0.3, 0.1) -- ++(0,0.05);
-      \path[draw, line width=0.75pt] (-0.2, 0.1) -- ++(0,0.15);
-      \path[draw, line width=0.75pt] (-0.1, 0.1) -- ++(0,0.25);
-      \path[draw, line width=0.75pt] ( 0.0, 0.1) -- ++(0,0.35);
-      \path[draw, line width=0.75pt] ( 0.1, 0.1) -- ++(0,0.25);
-      \path[draw, line width=0.75pt] ( 0.2, 0.1) -- ++(0,0.15);
-      \path[draw, line width=0.75pt] ( 0.3, 0.1) -- ++(0,0.05);
+      \path[draw, line width=0.75pt,foreground] (-0.3, 0.1) -- ++(0,0.05);
+      \path[draw, line width=0.75pt,foreground] (-0.2, 0.1) -- ++(0,0.15);
+      \path[draw, line width=0.75pt,foreground] (-0.1, 0.1) -- ++(0,0.25);
+      \path[draw, line width=0.75pt,foreground] ( 0.0, 0.1) -- ++(0,0.35);
+      \path[draw, line width=0.75pt,foreground] ( 0.1, 0.1) -- ++(0,0.25);
+      \path[draw, line width=0.75pt,foreground] ( 0.2, 0.1) -- ++(0,0.15);
+      \path[draw, line width=0.75pt,foreground] ( 0.3, 0.1) -- ++(0,0.05);
       % lower side
-      \path[draw, line width=0.75pt] (-0.3,-0.1) -- ++(0,-0.05);
-      \path[draw, line width=0.75pt] (-0.2,-0.1) -- ++(0,-0.15);
-      \path[draw, line width=0.75pt] (-0.1,-0.1) -- ++(0,-0.25);
-      \path[draw, line width=0.75pt] ( 0.0,-0.1) -- ++(0,-0.35);
-      \path[draw, line width=0.75pt] ( 0.1,-0.1) -- ++(0,-0.25);
-      \path[draw, line width=0.75pt] ( 0.2,-0.1) -- ++(0,-0.15);
-      \path[draw, line width=0.75pt] ( 0.3,-0.1) -- ++(0,-0.05);
+      \path[draw, line width=0.75pt,foreground] (-0.3,-0.1) -- ++(0,-0.05);
+      \path[draw, line width=0.75pt,foreground] (-0.2,-0.1) -- ++(0,-0.15);
+      \path[draw, line width=0.75pt,foreground] (-0.1,-0.1) -- ++(0,-0.25);
+      \path[draw, line width=0.75pt,foreground] ( 0.0,-0.1) -- ++(0,-0.35);
+      \path[draw, line width=0.75pt,foreground] ( 0.1,-0.1) -- ++(0,-0.25);
+      \path[draw, line width=0.75pt,foreground] ( 0.2,-0.1) -- ++(0,-0.15);
+      \path[draw, line width=0.75pt,foreground] ( 0.3,-0.1) -- ++(0,-0.05);
     }
   };
 }

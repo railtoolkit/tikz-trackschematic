@@ -1,17 +1,19 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2018 Martin Scheidt (ISC license)
+% Copyright 2019 Martin Scheidt (ISC license)
 
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\tikzset{MainTrack/.style={line width=2pt}}
-\tikzset{SideTrack/.style={line width=0.7pt}}
 \colorlet{background}{white}
+\colorlet{foreground}{black}
+
+\tikzset{MainTrack/.style={line width=2pt,foreground}}
+\tikzset{SideTrack/.style={line width=0.7pt,foreground}}
 
 \tikzset{
   pics/track_number/.style args={#1}{
     code={
-      \node[fill=background,font=\sffamily] at (0,0) {#1}; % speed indicator
+      \node[fill=background,font=\sffamily,text=foreground] at (0,0) {#1}; % speed indicator
     }
   },
   pics/track_number/.default=,
@@ -19,9 +21,9 @@
 \tikzset{
   pics/track_distance/.style args={#1}{
     code={
-      \fill (0,0.96) -- ++(-0.1,-0.15) -- ++(0.2,0) -- cycle; % upper triangle
-      \node[baseline=(current bounding box.center),font=\sffamily] at (0,0.5) {#1}; % distance indicator
-      \fill (0,0.04) -- ++(-0.1,0.15) -- ++(0.2,0) -- cycle; % lower triangle
+      \fill[foreground] (0,0.96) -- ++(-0.1,-0.15) -- ++(0.2,0) -- cycle; % upper triangle
+      \node[baseline=(current bounding box.center),font=\sffamily,text=foreground] at (0,0.5) {#1}; % distance indicator
+      \fill[foreground] (0,0.04) -- ++(-0.1,0.15) -- ++(0.2,0) -- cycle; % lower triangle
     }
   },
   pics/track_distance/.default=,
@@ -29,106 +31,178 @@
 \tikzset{
   pics/turnout_left_forward/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(0.4,0.4) -- ++(0,-0.4); % turnout marker
+      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(0.4,0.4) -- ++(0,-0.4); % turnout marker
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/turnout_left_forward/.default=foreground,
 }
 \tikzset{
   pics/turnout_left_backward/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(-0.4,-0.4) -- ++(0,0.4); % turnout marker
+      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(-0.4,-0.4) -- ++(0,0.4); % turnout marker
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/turnout_left_backward/.default=foreground,
 }
 \tikzset{
   pics/turnout_right_forward/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(0.4,-0.4) -- ++(0,0.4); % turnout marker
+      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(0.4,-0.4) -- ++(0,0.4); % turnout marker
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/turnout_right_forward/.default=foreground,
 }
 \tikzset{
   pics/turnout_right_backward/.style args={#1}{
     code={
-      \path[draw,line width=1pt,fill=#1] (0,0) --  ++(-0.4,0.4) -- ++(0,-0.4); % turnout marker
+      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(-0.4,0.4) -- ++(0,-0.4); % turnout marker
     }
   },
-  pics/turnout_left_forward/.default=black,
+  pics/turnout_right_backward/.default=foreground,
 }
 \tikzset{
   fouling_point_right_backward/.pic={
-    \path[draw,line width=0.75pt] (-0.7,0) --  ++(0,0.7); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (-0.7,0) --  ++(0,0.7); % fouling point indicator
   };
 }
 \tikzset{
   fouling_point_left_backward/.pic={
-    \path[draw,line width=0.75pt] (-0.7,0) --  ++(0,-0.7); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (-0.7,0) --  ++(0,-0.7); % fouling point indicator
   };
 }
 \tikzset{
   fouling_point_right_forward/.pic={
-    \path[draw,line width=0.75pt] (0.7,0) --  ++(0,-0.7); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (0.7,0) --  ++(0,-0.7); % fouling point indicator
   };
 }
 \tikzset{
   fouling_point_left_forward/.pic={
-    \path[draw,line width=0.75pt] (0.7,0) --  ++(0,0.7); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (0.7,0) --  ++(0,0.7); % fouling point indicator
   };
 }
 \tikzset{
   slip_left_forward/.pic={
-    \path[draw,line width=0.75pt] (-0.4,0.1) --  (0.3,0.4); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (-0.4,0.1) --  (0.3,0.4); % fouling point indicator
   };
 }
 \tikzset{
   slip_left_backward/.pic={
-    \path[draw,line width=0.75pt] (-0.3,-0.4) --  (0.4,-0.1); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (-0.3,-0.4) --  (0.4,-0.1); % fouling point indicator
   };
 }
 \tikzset{
   slip_right_forward/.pic={
-    \path[draw,line width=0.75pt] (-0.4,-0.1) --  (0.3,-0.4); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (-0.4,-0.1) --  (0.3,-0.4); % fouling point indicator
   };
 }
 \tikzset{
   slip_right_backward/.pic={
-    \path[draw,line width=0.75pt] (0.4,0.1) --  (-0.3,0.4); % fouling point indicator
+    \path[draw=foreground,line width=0.75pt] (0.4,0.1) --  (-0.3,0.4); % fouling point indicator
+  };
+}
+\tikzset{
+  turnout_left_forward_points_right/.pic={
+    \path[draw=foreground,line width=1.5pt] (0,-0.1) -- ++(0.3,0); % points indicator
+  };
+}
+\tikzset{
+  turnout_left_forward_points_left/.pic={
+    \path[draw=foreground,line width=1.5pt] (-0.035, 0.1) -- ++(0.2,0.2); % points indicator
+  };
+}
+\tikzset{
+  turnout_left_forward_points_moving/.pic={
+    \fill[foreground] (0.075,-0.1) circle (0.05); % points indicator left
+    \fill[foreground] (0.225,-0.1) circle (0.05);
+    \fill[foreground] (0.015, 0.15) circle (0.05); % points indicator right
+    \fill[foreground] (0.115, 0.25) circle (0.05);
+  };
+}
+\tikzset{
+  turnout_left_backward_points_right/.pic={
+    \path[draw=foreground,line width=1.5pt] (0,0.1) -- ++(-0.3,0); % points indicator
+  };
+}
+\tikzset{
+  turnout_left_backward_points_left/.pic={
+    \path[draw=foreground,line width=1.5pt] (0.035,-0.1) -- ++(-0.2,-0.2); % points indicator
+  };
+}
+\tikzset{
+  turnout_left_backward_points_moving/.pic={
+    \fill[foreground] (-0.075,0.1) circle (0.05); % points indicator left
+    \fill[foreground] (-0.225,0.1) circle (0.05);
+    \fill[foreground] (-0.015,-0.15) circle (0.05); % points indicator right
+    \fill[foreground] (-0.115,-0.25) circle (0.05);
+  };
+}
+\tikzset{
+  turnout_right_forward_points_right/.pic={
+    \path[draw=foreground,line width=1.5pt] (-0.035,-0.1) -- ++(0.2,-0.2); % points indicator
+  };
+}
+\tikzset{
+  turnout_right_forward_points_left/.pic={
+    \path[draw=foreground,line width=1.5pt] (0,0.1) -- ++(0.3,0); % points indicator
+  };
+}
+\tikzset{
+  turnout_right_forward_points_moving/.pic={
+    \fill[foreground] (0.075, 0.1) circle (0.05); % points indicator left
+    \fill[foreground] (0.225, 0.1) circle (0.05);
+    \fill[foreground] (0.015,-0.15) circle (0.05); % points indicator right
+    \fill[foreground] (0.115,-0.25) circle (0.05);
+  };
+}
+\tikzset{
+  turnout_right_backward_points_right/.pic={
+    \path[draw=foreground,line width=1.5pt] (0.035,0.1) -- ++(-0.2,0.2); % points indicator
+  };
+}
+\tikzset{
+  turnout_right_backward_points_left/.pic={
+    \path[draw=foreground,line width=1.5pt] (0,-0.1) -- ++(-0.3,0); % points indicator
+  };
+}
+\tikzset{
+  turnout_right_backward_points_moving/.pic={
+    \fill[foreground] (-0.075,-0.1) circle (0.05); % points indicator left
+    \fill[foreground] (-0.225,-0.1) circle (0.05);
+    \fill[foreground] (-0.015,0.15) circle (0.05); % points indicator right
+    \fill[foreground] (-0.115,0.25) circle (0.05);
   };
 }
 \tikzset{
   derailer_right_forward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,-0.4); % derailer arrow
+    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
+    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,-0.4); % derailer arrow
   };
 }
 \tikzset{
   derailer_right_backward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,0.4); % derailer arrow
+    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
+    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,0.4); % derailer arrow
   };
 }
 \tikzset{
   derailer_left_forward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,0.4); % derailer arrow
+    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
+    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,0.4); % derailer arrow
   };
 }
 \tikzset{
   derailer_left_backward/.pic={
-    \path[draw, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,-0.4); % derailer arrow
+    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
+    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,-0.4); % derailer arrow
   };
 }
 \tikzset{
   bufferstop_forward/.pic={
-    \path[draw, line width=1pt] (-0.1,0.2) --  ++(0.1,0) -- ++(0,-0.4) -- ++ (-0.1,0); % bufferstop marker
+    \path[draw=foreground, line width=1pt] (-0.1,0.2) --  ++(0.1,0) -- ++(0,-0.4) -- ++ (-0.1,0); % bufferstop marker
   };
 }
 \tikzset{
   bufferstop_backward/.pic={
-    \path[draw, line width=1pt] (0.1,0.2) --  ++(-0.1,0) -- ++(0,-0.4) -- ++ (0.1,0); % bufferstop marker
+    \path[draw=foreground, line width=1pt] (0.1,0.2) --  ++(-0.1,0) -- ++(0,-0.4) -- ++ (0.1,0); % bufferstop marker
   };
 }

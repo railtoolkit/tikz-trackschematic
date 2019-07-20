@@ -1,15 +1,14 @@
 %!TEX TS-program = pdflatexmk
 
-% Copyright 2018 Martin Scheidt (ISC license)
+% Copyright 2019 Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[a4paper,landscape]{article}
 
 \usepackage[margin=0pt]{geometry}
 \pagestyle{empty}
-\usepackage{tabu,longtable}
+\usepackage{longtable,siunitx}
 \usepackage{tikz,adjustbox}
-\usepackage{siunitx}
 \usepackage{listings}
 \lstset{
   language=TeX,
@@ -21,19 +20,13 @@
 \def\rootTrackschematic{../tikz-trackschematic}
 \def\srcTrackschematic{\rootTrackschematic/src}
 
-
 \renewcommand{\symbol}[1]{
   \adjustbox{valign=c}{\begin{tikzpicture}[scale=1.0,transform shape]
-    \input{examples/snippets/#1}
+    \input{\rootTrackschematic/snippets/#1}
     \path (-3,-1.1) rectangle (3,1.1); % background rectangle to unify every cell containing a symbol
   \end{tikzpicture}}
 }
-\newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/examples/snippets/#1}}
-\newcommand{\colorsquare}[1]{
-  \begin{tikzpicture}[anchor=base,baseline=-3]
-    \filldraw [#1] (-0.3,-0.3) rectangle (0.3,0.3);
-  \end{tikzpicture}
-}
+\newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/snippets/#1}}
 \newcounter{symbolNo}
 \def\No{\stepcounter{symbolNo}\arabic{symbolNo}}
 
@@ -44,9 +37,9 @@
 
 \begin{document}
   \centering
-  \begin{longtabu}{|r|l|c|l|c|}
+  \begin{longtable}{|r|l|c|l|c|}
     \hline
-      No. & Name                            & Symbol                                           & Code                                           & File                  \\
+      No. & Name                            & Symbol                                           & Code                                           & File                   \\
     \endhead
     \hline
       \No & main track                      & \symbol{main_track.tikz}                         & \code{main_track.tikz}                         & \texttt{topology.tikz} \\
@@ -57,8 +50,7 @@
     \hline
       \No & side track                      & \symbol{side_track.tikz}                         & \code{side_track.tikz}                         & \texttt{topology.tikz} \\
     \hline
-      \No & track number                    & \symbol{track_number.tikz}                       & \code{track_number.tikz}                  
-      & \texttt{topology.tikz} \\
+      \No & track number                    & \symbol{track_number.tikz}                       & \code{track_number.tikz}                       & \texttt{topology.tikz} \\
     \hline
       \No & turnout left (forward)          & \symbol{turnout_left_forward.tikz}               & \code{turnout_left_forward.tikz}               & \texttt{topology.tikz} \\
     \hline
@@ -88,6 +80,42 @@
     \hline
       \No & diamond crossing right          & \symbol{diamond_crossing_right.tikz}             & \code{diamond_crossing_right.tikz}             & \texttt{topology.tikz} \\
     \hline
+      \No & \parbox[c]{5cm}{turnout left (forward)\\with points in right position}
+                                            & \symbol{turnout_left_forward_right_position.tikz}& \code{turnout_left_forward_right_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout left (forward)\\with points in left position}
+                                            & \symbol{turnout_left_forward_left_position.tikz} & \code{turnout_left_forward_left_position.tikz} & \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout left (forward)\\with moving points}
+                                            & \symbol{turnout_left_forward_moving_points.tikz} & \code{turnout_left_forward_moving_points.tikz} & \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout left (backward)\\with points in right position}
+                                            &\symbol{turnout_left_backward_right_position.tikz}&\code{turnout_left_backward_right_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout left (backward)\\with points in left position}
+                                            & \symbol{turnout_left_backward_left_position.tikz}& \code{turnout_left_backward_left_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout left (backward)\\with moving points}
+                                            & \symbol{turnout_left_backward_moving_points.tikz}& \code{turnout_left_backward_moving_points.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (forward)\\with points in right position}
+                                            &\symbol{turnout_right_forward_right_position.tikz}&\code{turnout_right_forward_right_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (forward)\\with points in left position}
+                                            & \symbol{turnout_right_forward_left_position.tikz}& \code{turnout_right_forward_left_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (forward)\\with moving points}
+                                            & \symbol{turnout_right_forward_moving_points.tikz}& \code{turnout_right_forward_moving_points.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (backward)\\with points in right position}
+                                            &\symbol{turnout_right_backward_right_position.tikz}&\code{turnout_right_backward_right_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (backward)\\with points in left position}
+                                            &\symbol{turnout_right_backward_left_position.tikz}&\code{turnout_right_backward_left_position.tikz}& \texttt{topology.tikz} \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (backward)\\with moving points}
+                                            &\symbol{turnout_right_backward_moving_points.tikz}&\code{turnout_right_backward_moving_points.tikz}& \texttt{topology.tikz} \\
+    \hline
       \No & derailer left (forward)         & \symbol{derailer_left_forward.tikz}              & \code{derailer_left_forward.tikz}              & \texttt{topology.tikz} \\
     \hline
       \No & derailer left (backward)        & \symbol{derailer_left_backward.tikz}             & \code{derailer_left_backward.tikz}             & \texttt{topology.tikz} \\
@@ -100,9 +128,9 @@
     \hline
       \No & bufferstop (backward)           & \symbol{bufferstop_backward.tikz}                & \code{bufferstop_backward.tikz}                & \texttt{topology.tikz} \\
     \hline
-      \No & train (parked)                  & \symbol{train.tikz}                              & \code{train.tikz}                              & \texttt{vehicles.tikz} \\
+      \No & vehicles (parked)               & \symbol{vehicles.tikz}                           & \code{vehicles.tikz}                           & \texttt{vehicles.tikz} \\
     \hline
-      \No & short train (parked)            & \symbol{short_train.tikz}                        & \code{short_train.tikz}                        & \texttt{vehicles.tikz} \\
+      \No & vehicle (parked)                & \symbol{vehicle.tikz}                            & \code{vehicle.tikz}                            & \texttt{vehicles.tikz} \\
     \hline
       \No & train (direction forward)       & \symbol{train_direction_forward.tikz}            & \code{train_direction_forward.tikz}            & \texttt{vehicles.tikz} \\
     \hline
@@ -116,10 +144,28 @@
     \hline
       \No & train moving (backward)         & \symbol{train_moving_backward.tikz}              & \code{train_moving_backward.tikz}              & \texttt{vehicles.tikz} \\
     \hline
-      \No & \parbox[c]{4cm}{train drives automatic\\(direction forward)}
+      \No & train moving slow (forward)     & \symbol{train_moving_slow_forward.tikz}          & \code{train_moving_slow_forward.tikz}          & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train moving slow (backward)    & \symbol{train_moving_slow_backward.tikz}         & \code{train_moving_slow_backward.tikz}         & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train moving fast (forward)     & \symbol{train_moving_fast_forward.tikz}          & \code{train_moving_fast_forward.tikz}          & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train moving fast (backward)    & \symbol{train_moving_fast_backward.tikz}         & \code{train_moving_fast_backward.tikz}         & \texttt{vehicles.tikz} \\
+    \hline
+      \No & \parbox[c]{4cm}{train in shunting mode\\(direction forward)}
+                                            & \symbol{train_shunt_mode_forward.tikz}           & \code{train_shunt_mode_forward.tikz}           & \texttt{vehicles.tikz} \\
+    \hline
+      \No & \parbox[c]{4cm}{train in shunting mode\\(direction backward)}
+                                            & \symbol{train_shunt_mode_backward.tikz}          & \code{train_shunt_mode_backward.tikz}          & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train shunting (forward)        & \symbol{train_shunting_forward.tikz}             & \code{train_shunting_forward.tikz}             & \texttt{vehicles.tikz} \\
+    \hline
+      \No & train shunting (backward)       & \symbol{train_shunting_backward.tikz}            & \code{train_shunting_backward.tikz}            & \texttt{vehicles.tikz} \\
+    \hline
+      \No & \parbox[c]{4cm}{train operated automatic\\(direction forward)}
                                             & \symbol{train_drive_automatic.tikz}              & \code{train_drive_automatic.tikz}              & \texttt{vehicles.tikz} \\
     \hline
-      \No & \parbox[c]{4cm}{train drives by human\\(direction forward)}
+      \No & \parbox[c]{4cm}{train operated by human\\(direction forward)}
                                             & \symbol{train_drive_human.tikz}                  & \code{train_drive_human.tikz}                  & \texttt{vehicles.tikz} \\
     \hline
       \No & train berth sign (forward)      & \symbol{train_berth_sign_forward.tikz}           & \code{train_berth_sign_forward.tikz}           & \texttt{trafficControl.tikz}  \\
@@ -164,6 +210,10 @@
       \No & shunt signal (forward)          & \symbol{shunt_signal_forward.tikz}               & \code{shunt_signal_forward.tikz}               & \texttt{trafficControl.tikz} \\
     \hline
       \No & shunt signal (backward)         & \symbol{shunt_signal_backward.tikz}              & \code{shunt_signal_backward.tikz}              & \texttt{trafficControl.tikz} \\
+    \hline
+      \No & shunt signal locked (forward)   & \symbol{shunt_signal_forward_locked.tikz}        & \code{shunt_signal_forward_locked.tikz}        & \texttt{trafficControl.tikz} \\
+    \hline
+      \No & shunt signal locked (backward)  & \symbol{shunt_signal_backward_locked.tikz}       & \code{shunt_signal_backward_locked.tikz}       & \texttt{trafficControl.tikz} \\
     \hline
       \No & shunt limit (forward)           & \symbol{shunt_limit_forward.tikz}                & \code{shunt_limit_forward.tikz}                & \texttt{trafficControl.tikz} \\
     \hline
@@ -219,5 +269,5 @@
     \hline
       \No & interlocking                    & \symbol{interlocking.tikz}                       & \code{interlocking.tikz}                       & \texttt{constructions.tikz} \\
     \hline
-  \end{longtabu}
+  \end{longtable}
 \end{document}

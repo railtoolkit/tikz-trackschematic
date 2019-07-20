@@ -1,6 +1,6 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2018 Martin Scheidt (ISC license)
+% Copyright 2019 Martin Scheidt (ISC license)
 
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
@@ -9,120 +9,272 @@
 \tikzset{
   distant_signal_forward/.pic={
     {   % signal pole
-      \path[draw, line width=1pt] (0,-0.3) -- ++(0,-0.2);
-      \path[draw, line width=1pt] (0,-0.4) -- ++(0.5,0);
+      \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+      \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.5,0);
     }
     {   % signal marker
-      \path[draw, fill] (0.7,-0.6) rectangle ++(0.2,0.4);
-      \path[draw, fill] (0.7,-0.2) arc (90:270:0.2);
+      \path[draw, fill,foreground] (0.7,-0.6) rectangle ++(0.2,0.4);
+      \path[draw, fill,foreground] (0.7,-0.2) arc (90:270:0.2);
     }
   };
 }
 \tikzset{
   distant_signal_backward/.pic={
     {   % signal pole
-      \path[draw, line width=1pt] (0,0.3) -- ++(0,0.2);
-      \path[draw, line width=1pt] (0,0.4) -- ++(-0.5,0);
+      \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+      \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.5,0);
     }
     {   % signal marker
-      \path[draw, fill] (-0.7,0.6) rectangle ++(-0.2,-0.4);
-      \path[draw, fill] (-0.7,0.2) arc (90:270:-0.2);
+      \path[draw, fill,foreground] (-0.7,0.6) rectangle ++(-0.2,-0.4);
+      \path[draw, fill,foreground] (-0.7,0.2) arc (90:270:-0.2);
     }
   };
 }
 \tikzset{
   route_signal_forward/.pic={
     {   % signal pole
-      \path[draw, line width=1pt] (0,-0.3) -- ++(0,-0.2);
-      \path[draw, line width=1pt] (0,-0.4) -- ++(0.7,0);
+      \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+      \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.7,0);
     }
     {   % signal marker
-      \path[draw, fill] (0.7,-0.6) rectangle ++(0.3,0.4);
-      \path[draw, fill] (1.0,-0.6) arc (90:270:-0.2);
+      \path[draw, fill,foreground] (0.7,-0.6) rectangle ++(0.3,0.4);
+      \path[draw, fill,foreground] (1.0,-0.6) arc (90:270:-0.2);
     }
   };
 }
 \tikzset{
   route_signal_backward/.pic={
     {   % signal pole
-      \path[draw, line width=1pt] (0,0.3) -- ++(0,0.2);
-      \path[draw, line width=1pt] (0,0.4) -- ++(-0.7,0);
+      \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+      \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.7,0);
     }
     {   % signal marker
-      \path[draw, fill] (-0.7,0.6) rectangle ++(-0.3,-0.4);
-      \path[draw, fill] (-1.0,0.6) arc (90:270:0.2);
+      \path[draw, fill,foreground] (-0.7,0.6) rectangle ++(-0.3,-0.4);
+      \path[draw, fill,foreground] (-1.0,0.6) arc (90:270:0.2);
     }
   };
 }
 \tikzset{
-  route_passanger_forward/.pic={
-    \fill (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  block_signal_forward/.pic={
+    {   % signal pole
+      \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+      \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.7,0);
+    }
+    {   % signal marker
+      \path[draw, fill,foreground] (0.7,-0.6) rectangle ++(0.3,0.4);
+      \path[draw, fill,foreground] (1.0,-0.6) arc (90:270:-0.2);
+    }
   };
 }
 \tikzset{
-  route_passanger_backward/.pic={
-    \fill (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  block_signal_backward/.pic={
+    {   % signal pole
+      \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+      \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.7,0);
+    }
+    {   % signal marker
+      \path[draw, fill,foreground] (-0.7,0.6) rectangle ++(-0.3,-0.4);
+      \path[draw, fill,foreground] (-1.0,0.6) arc (90:270:0.2);
+    }
   };
 }
 \tikzset{
-  route_freight_forward/.pic={
-    \fill (-0.35,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
-    \fill ( 0   ,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  main_route_forward/.pic={
+    \draw[foreground] (-0.06,0) circle (0.19);
+    \fill[foreground] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
   };
 }
 \tikzset{
-  route_freight_backward/.pic={
-    \fill (0.35,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
-    \fill (0   ,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
-  };
-}
-% \tikzset{
-%     speed_signal_forward/.pic={
-%         \path[draw, line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.4,0); % signal pole
-%         \path[draw, line width=1pt] (0.4,-0.2) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
-%     };
-% }
-% \tikzset{
-%     speed_signal_backward/.pic={
-%         \path[draw, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.4,0); % signal pole
-%         \path[draw, line width=1pt] (-0.4,0.2) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
-%     };
-% }
-% \tikzset{
-%     shunt_signal_forward/.pic={
-%         \path[draw, line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
-%         \path[draw, line width=1pt] (0.6,-0.3) circle (0.1); % signal marker
-%     };
-% }
-\tikzset{
-  clearing_point/.pic={
-    \path[draw, line width=1pt] (0,-0.1) -- ++(0,0.2); % signal pole
-    \path[draw, line width=1pt] (0.1,0.1) -- ++(-0.2,0); % signal marker
+  main_route_backward/.pic={
+    \draw[foreground] (0.06,0) circle (0.19);
+    \fill[foreground] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
   };
 }
 \tikzset{
-  axle_counter_left/.pic={
-    \path[draw, line width=1pt] (-0.25,0.16) -- ++(0.5,0);
-    \path[draw, line width=1pt, fill] (-0.1,0.16) circle (0.07);
-    \path[draw, line width=1pt, fill] ( 0.1,0.16) circle (0.07);
+  passanger_route_forward/.pic={
+    \fill[foreground] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
   };
 }
 \tikzset{
-  axle_counter_right/.pic={
-    \path[draw, line width=1pt] (-0.25,-0.16) -- ++(0.5,0);
-    \path[draw, line width=1pt, fill] (-0.1,-0.16) circle (0.07);
-    \path[draw, line width=1pt, fill] ( 0.1,-0.16) circle (0.07);
+  passanger_route_backward/.pic={
+    \fill[foreground] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
   };
+}
+\tikzset{
+  commuter_route_forward/.pic={
+    \fill[foreground] (-0.2,0) circle (0.15);
+    \fill[foreground] ( 0   ,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  commuter_route_backward/.pic={
+    \fill[foreground] (0.2,0) circle (-0.15);
+    \fill[foreground] (0   ,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  freight_route_forward/.pic={
+    \fill[foreground] (-0.35,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+    \fill[foreground] ( 0   ,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  freight_route_backward/.pic={
+    \fill[foreground] (0.35,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+    \fill[foreground] (0   ,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  shunting_route_forward/.pic={
+    \fill[foreground] ( 0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+    \fill[foreground] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+    \fill[foreground] (-0.525,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  shunting_route_backward/.pic={
+    \fill[foreground] ( 0.525,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+    \fill[foreground] ( 0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+    \fill[foreground] (-0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+\tikzset{
+  pics/speed_signal_forward/.style args={#1}{
+    code={
+      {   % signal pole
+        \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+        \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.4,0);
+      }
+      \path[draw, line width=1pt,foreground] (0.4,-0.2) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
+      \node[rotate=-90,font=\sffamily,text=foreground] at (1.0,-0.4) {#1}; % speed indicator
+    }
+  },
+  pics/speed_signal_forward/.default=,
+}
+\tikzset{
+  pics/speed_signal_backward/.style args={#1}{
+    code={
+      {   % signal pole
+        \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+        \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.4,0);
+      }
+      \path[draw, line width=1pt,foreground] (-0.4,0.2) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
+      \node[rotate=90,font=\sffamily,text=foreground] at (-1.0,0.4) {#1}; % speed indicator
+    }
+  },
+  pics/speed_signal_backward/.default=,
+}
+\tikzset{
+  pics/speed_distant_signal_forward/.style args={#1}{
+    code={
+      {   % signal pole
+        \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+        \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.4,0);
+      }
+      \path[draw, line width=1pt,foreground] (0.75,-0.2) -- ++(0,-0.4) -- ++ (-0.35,0.2) -- cycle; % signal marker
+      \node[rotate=-90,font=\sffamily,text=foreground] at (1.0,-0.4) {#1}; % speed indicator
+    }
+  },
+  pics/speed_distant_signal_forward/.default=,
+}
+\tikzset{
+  pics/speed_distant_signal_backward/.style args={#1}{
+    code={
+      {   % signal pole
+        \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+        \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.4,0);
+      }
+      \path[draw, line width=1pt,foreground] (-0.75,0.2) -- ++(0,0.4) -- ++ (0.35,-0.2) -- cycle; % signal marker
+      \node[rotate=90,font=\sffamily,text=foreground] at (-1.0,0.4) {#1}; % speed indicator
+    }
+  },
+  pics/speed_distant_signal_backward/.default=,
+}
+\tikzset{
+  shunt_signal_forward/.pic={
+    { % signal pole
+      \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+      \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.6,0);
+    }
+    { % signal marker
+      \path[draw, line width=1pt, fill=background,foreground] (0.6,-0.55) rectangle ++(0.3,0.3);
+      \path[draw, line width=1pt,foreground] (0.75,-0.55) -- ++(0,0.3);
+    }
+  };
+}
+\tikzset{
+  shunt_signal_backward/.pic={
+    { % signal pole
+      \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+      \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.6,0);
+    }
+    { % signal marker
+      \path[draw, line width=1pt, fill=background,foreground] (-0.6,0.55) rectangle ++(-0.3,-0.3);
+      \path[draw, line width=1pt,foreground] (-0.75,0.55) -- ++(0,-0.3);
+    }
+  };
+}
+\tikzset{
+  shunt_limit_forward/.pic={
+    {   % signal pole
+      \path[draw, line width=1pt,foreground] (0,-0.3) -- ++(0,-0.2);
+      \path[draw, line width=1pt,foreground] (0,-0.4) -- ++(0.5,0);
+    }
+    \path[draw, line width=1pt,foreground] (0.5,-0.25) arc (270:90:-0.15) -- cycle;; % signal marker
+  };
+}
+\tikzset{
+  shunt_limit_backward/.pic={
+    {   % signal pole
+      \path[draw, line width=1pt,foreground] (0,0.3) -- ++(0,0.2);
+      \path[draw, line width=1pt,foreground] (0,0.4) -- ++(-0.5,0);
+    }
+    \path[draw, line width=1pt,foreground] (-0.5,0.55) arc (90:270:0.15) -- cycle;; % signal marker
+  };
+}
+\tikzset{
+  pics/axle_counter_left/.style args={#1}{
+    code={
+      \path[draw, line width=1pt,foreground] (-0.25,0.16) -- ++(0.5,0);
+      \path[draw, line width=1pt, fill,foreground] (-0.1,0.16) circle (0.07);
+      \path[draw, line width=1pt, fill,foreground] ( 0.1,0.16) circle (0.07);
+      \node[font=\sffamily,text=foreground] at (0,0.4) {#1}; % indicator
+    }
+  },
+  pics/axle_counter_left/.default=,
+}
+\tikzset{
+  pics/axle_counter_right/.style args={#1}{
+    code={
+      \path[draw, line width=1pt,foreground] (-0.25,-0.16) -- ++(0.5,0);
+      \path[draw, line width=1pt, fill,foreground] (-0.1,-0.16) circle (0.07);
+      \path[draw, line width=1pt, fill,foreground] ( 0.1,-0.16) circle (0.07);
+      \node[font=\sffamily,text=foreground] at (0,-0.4) {#1}; % indicator
+    }
+  },
+  pics/axle_counter_right/.default=,
 }
 \tikzset{
   derailer_right_forward/.pic={
-    \fill (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
-    \path[draw,->,>=latex,line width=1pt] (-0.2,0.2) -- (0.4,-0.4); % derailer marker
+    \fill[foreground] (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
+    \path[draw,->,>=latex,line width=1pt,foreground] (-0.2,0.2) -- (0.4,-0.4); % derailer marker
   };
 }
 \tikzset{
   derailer_left_forward/.pic={
-    \fill (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
-    \path[draw,->,>=latex,line width=1pt] (-0.2,-0.2) -- (0.4,0.4); % derailer marker
+    \fill[foreground] (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
+    \path[draw,->,>=latex,line width=1pt,foreground] (-0.2,-0.2) -- (0.4,0.4); % derailer marker
+  };
+}
+\tikzset{
+  derailer_right_backward/.pic={
+    \fill[foreground] (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
+    \path[draw,->,>=latex,line width=1pt,foreground] (0.2,-0.2) -- (-0.4,0.4); % derailer marker
+  };
+}
+\tikzset{
+  derailer_left_backward/.pic={
+    \fill[foreground] (-0.1,0.2) -- ++(0,-0.4) -- ++(0.2,0) -- ++(0,0.4) -- cycle; % signal pole
+    \path[draw,->,>=latex,line width=1pt,foreground] (0.2,0.2) -- (-0.4,-0.4); % derailer marker
   };
 }

@@ -1,6 +1,16 @@
 tikz-trackschematic
 ======
 
+Version 0.3
+------
+
+  * moved snippet folder to root folder
+  * added shunting movements
+  * added points to turnouts
+  * added moving trains
+  * defined and used color foreground and background
+
+
 Version 0.2
 ------
 
