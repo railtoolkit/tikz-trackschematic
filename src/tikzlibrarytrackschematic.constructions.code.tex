@@ -1,27 +1,34 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2018 Martin Scheidt (ISC license)
-
+% Copyright 2019 Martin Scheidt (ISC license)
+%
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
+\ProvidesFileRCS{tikzlibrarytrackschematic.construction.code.tex}
+
+\colorlet{background}{white}
+\colorlet{foreground}{black}
+
 \tikzset{
+  pics/platform_left/.default=4,
   pics/platform_left/.style n args={1}{
     code={
       \path[draw, line width=0.75pt,foreground] (0,0.5) -- ++(0,-0.3) -- ++(#1,0) -- ++(0,0.3);
       \path[draw, line width=0.75pt,foreground] (0,0.3) -- ++(#1,0);
     }
   },
-  pics/platform_left/.default=4,
 }
+
 \tikzset{
+  pics/platform_right/.default=4,
   pics/platform_right/.style n args={1}{
     code={
       \path[draw, line width=0.75pt,foreground] (0,-0.5) -- ++(0,0.3) -- ++(#1,0) -- ++(0,-0.3);
       \path[draw, line width=0.75pt,foreground] (0,-0.3) -- ++(#1,0);
     }
   },
-  pics/platform_right/.default=4,
 }
+
 \tikzset{
   level_crossing_barrier_left/.pic={
     { % road
@@ -34,6 +41,7 @@
     }
   };
 }
+
 \tikzset{
   level_crossing_barrier_right/.pic={
     { % road
@@ -46,6 +54,7 @@
     }
   };
 }
+
 \tikzset{
   level_crossing/.pic={
     { % road
@@ -54,6 +63,7 @@
     }
   };
 }
+
 \tikzset{
   pics/bridge_left/.style n args={1}{
     code={
@@ -62,14 +72,16 @@
   },
   pics/bridge_left/.default=3,
 }
+
 \tikzset{
+  pics/bridge_right/.default=3,
   pics/bridge_right/.style n args={1}{
     code={
       \path[draw, line width=0.75pt,foreground] (-0.1,-0.48) --  ++(0.08,0.08) -- ++(#1,0) -- ++(0.08,-0.08);
     }
   },
-  pics/bridge_right/.default=3,
 }
+
 \tikzset{
   interlocking/.pic={
     {
@@ -79,6 +91,7 @@
     }
   };
 }
+
 \tikzset{
   hump/.pic={
     { % upper side
@@ -101,3 +114,4 @@
   };
 }
 
+\endinput

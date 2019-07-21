@@ -1,22 +1,26 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2018 Martin Scheidt (ISC license)
-
+% Copyright 2019 Martin Scheidt (ISC license)
+%
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\ProvidesFileRCS{tikzlibrarytrackschematic.vehicles.code.tex}
 
 \colorlet{background}{white}
 \colorlet{foreground}{black}
 
 \tikzset{
+  pics/vehicles/.default=4,
   pics/vehicles/.style args={#1}{
     code={
       \path[draw=foreground, double, line width=0.3pt, fill=background] (0,-0.3) -- ++(#1,0) -- ++(0,0.6) -- ++(-#1,0) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/vehicles/.default=4,
 }
+
 \tikzset{
+  pics/train_moving_forward/.default=4,
   pics/train_moving_forward/.style args={#1}{
     code={
       \fill[fill=background]                 (-0.3,0.3) -- ( 0.1,0.3) -- (0.4,0) -- ( 0.1,-0.3) -- (-0.3,-0.3) -- cycle;
@@ -27,9 +31,10 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_moving_forward/.default=4,
 }
+
 \tikzset{
+  pics/train_moving_backward/.default=4,
   pics/train_moving_backward/.style args={#1}{
     code={
       \fill[fill=background]                 ( 0.3 ,0.3) -- (-0.1,0.3) -- (-0.4,0) -- (-0.1,-0.3) -- ( 0.3 ,-0.3) -- cycle;
@@ -40,9 +45,10 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_moving_backward/.default=4,
 }
+
 \tikzset{
+  pics/train_moving_slow_forward/.default=4,
   pics/train_moving_slow_forward/.style args={#1}{
     code={
       \fill[fill=background]                 (-0.3 ,0.3) -- (-0.1,0.3) -- (0.2,0) -- (-0.1,-0.3) -- (-0.3 ,-0.3) -- cycle;
@@ -52,9 +58,10 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_moving_slow_forward/.default=4,
 }
+
 \tikzset{
+  pics/train_moving_slow_backward/.default=4,
   pics/train_moving_slow_backward/.style args={#1}{
     code={
       \fill[fill=background]                 ( 0.3 ,0.3) -- ( 0.1,0.3) -- (-0.2,0) -- ( 0.1,-0.3) -- ( 0.3 ,-0.3) -- cycle;
@@ -64,9 +71,10 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_moving_slow_backward/.default=4,
 }
+
 \tikzset{
+  pics/train_moving_fast_forward/.default=4,
   pics/train_moving_fast_forward/.style args={#1}{
     code={
       \fill[fill=background]                 (-0.3 ,0.3) -- ( 0.3,0.3) -- (0.6,0) -- ( 0.3,-0.3) -- (-0.3 ,-0.3) -- cycle;
@@ -78,9 +86,10 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_moving_fast_forward/.default=4,
 }
+
 \tikzset{
+  pics/train_moving_fast_backward/.default=4,
   pics/train_moving_fast_backward/.style args={#1}{
     code={
       \fill[fill=background]                 ( 0.3 ,0.3) -- (-0.3,0.3) -- (-0.6,0) -- (-0.3,-0.3) -- ( 0.3 ,-0.3) -- cycle;
@@ -92,63 +101,70 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_moving_fast_backward/.default=4,
 }
+
 \tikzset{
+  pics/train_direction_forward/.default=4,
   pics/train_direction_forward/.style args={#1}{
     code={
       \path[draw=foreground, line width=1pt, fill=background] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_direction_forward/.default=4,
 }
+
 \tikzset{
+  pics/train_direction_backward/.default=4,
   pics/train_direction_backward/.style args={#1}{
     code={
       \path[draw=foreground, line width=1pt, fill=background] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_direction_backward/.default=4,
 }
+
 \tikzset{
+  pics/ghost_train_direction_forward/.default=4,
   pics/ghost_train_direction_forward/.style args={#1}{
     code={
       \path[draw=foreground, line width=1pt, dashed] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/ghost_train_direction_forward/.default=4,
 }
+
 \tikzset{
+  pics/ghost_train_direction_backward/.default=4,
   pics/ghost_train_direction_backward/.style args={#1}{
     code={
       \path[draw=foreground, line width=1pt, dashed] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/ghost_train_direction_backward/.default=4,
 }
+
 \tikzset{
+  pics/train_shunt_mode_forward/.default=4,
   pics/train_shunt_mode_forward/.style args={#1}{
     code={
       \path[draw=foreground, double, line width=0.3pt, fill=background] (0,0) -- +(-0.3,0.3) -- +(-#1,0.3) -- +(-#1,-0.3) -- +(-0.3,-0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_shunt_mode_forward/.default=4,
 }
+
 \tikzset{
+  pics/train_shunt_mode_backward/.default=4,
   pics/train_shunt_mode_backward/.style args={#1}{
     code={
       \path[draw=foreground, double, line width=0.3pt, fill=background] (0,0) -- +(0.3,-0.3) -- +(#1,-0.3) -- +(#1,0.3) -- +(0.3,0.3) -- cycle; % train shape
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_shunt_mode_backward/.default=4,
 }
+
 \tikzset{
+  pics/train_shunting_forward/.default=4,
   pics/train_shunting_forward/.style args={#1}{
     code={
       \fill[fill=background]                 (-0.3 ,0.3) -- (-0.1,0.3) -- (0.2,0) -- (-0.1,-0.3) -- (-0.3 ,-0.3) -- cycle;
@@ -158,9 +174,10 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_shunting_forward/.default=4,
 }
+
 \tikzset{
+  pics/train_shunting_backward/.default=4,
   pics/train_shunting_backward/.style args={#1}{
     code={
       \fill[fill=background]                 ( 0.3 ,0.3) -- ( 0.1,0.3) -- (-0.2,0) -- ( 0.1,-0.3) -- ( 0.3 ,-0.3) -- cycle;
@@ -170,25 +187,30 @@
       % \node at (-2,0) {\emph{#2}}; %label of train
     }
   },
-  pics/train_shunting_backward/.default=4,
 }
+
 \tikzset{
   train_automatic_forward/.pic={
     \path[draw=foreground, fill] (-0.15,0) -- ++(-0.15,0.15) -- ++(0,-0.3) -- cycle; % triangle
   };
 }
+
 \tikzset{
   train_automatic_backward/.pic={
     \path[draw=foreground, fill] (0.15,0) -- ++(0.15,0.15) -- ++(0,-0.3) -- cycle; % triangle
   };
 }
+
 \tikzset{
   train_human_forward/.pic={
     \path[draw=foreground, fill] (-0.4,0) circle (0.15); % dot
   };
 }
+
 \tikzset{
   train_human_backward/.pic={
     \path[draw=foreground, fill] (0.4,0) circle (0.15); % dot
   };
 }
+
+\endinput

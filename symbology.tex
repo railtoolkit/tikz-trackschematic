@@ -1,0 +1,148 @@
+%!TEX TS-program = pdflatexmk
+
+% Copyright 2019 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\documentclass[a4paper]{article}
+
+\usepackage[margin=0pt]{geometry}
+\pagestyle{empty}
+\usepackage{longtable,siunitx,tikz,adjustbox}
+\usepackage{listings}
+\lstset{
+  language=TeX,
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  breaklines=true
+}
+
+\def\rootTrackschematic{../tikz-trackschematic}
+
+\renewcommand{\symbol}[1]{
+  \adjustbox{valign=c}{\begin{tikzpicture}[scale=1.0,transform shape]
+    \input{\rootTrackschematic/snippets/#1}
+    \path (-3,-1.1) rectangle (3,1.1); % background rectangle to unify every cell containing a symbol
+  \end{tikzpicture}}
+}
+\newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/snippets/#1}}
+\newcounter{symbolNo}
+\def\No{\stepcounter{symbolNo}\arabic{symbolNo}}
+
+\def\srcTrackschematic{\rootTrackschematic/src/tikzlibrarytrackschematic}
+\input{\srcTrackschematic.topology.code.tex}
+\input{\srcTrackschematic.trafficcontrol.code.tex}
+\input{\srcTrackschematic.vehicles.code.tex}
+\input{\srcTrackschematic.constructions.code.tex}
+
+\title{Symbology}\author{}\date{}
+
+\begin{document}
+  \maketitle
+  \centering
+  \begin{longtable}{|r|l|c|}
+    \hline 
+      No. & Name                            & Symbol                                              \\
+    \endhead
+    \hline
+      \No & main track                      & \symbol{main_track.tikz}                            \\
+    \hline
+      \No & track distance (in \si{\metre}) & \symbol{track_distance.tikz}                        \\
+    \hline
+      \No & side track                      & \symbol{side_track.tikz}                            \\
+    \hline
+      \No & track number                    & \symbol{track_number.tikz}                          \\
+    \hline
+      \No & turnout                         & \symbol{turnout_left_forward.tikz}                  \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout\\with fouling point indicator}
+                                            & \symbol{turnout_with_fouling_left_forward.tikz}     \\
+    \hline
+      \No & double-slip turnout             & \symbol{double-slip_turnout_left.tikz}              \\
+    \hline
+      \No & diamond crossing                & \symbol{diamond_crossing_left.tikz}                 \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout\\with points in right position}
+                                            & \symbol{turnout_left_forward_right_position.tikz}   \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout\\with points in left position}
+                                            & \symbol{turnout_left_forward_left_position.tikz}    \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout\\with moving points}
+                                            & \symbol{turnout_left_forward_moving_points.tikz}    \\
+    \hline
+      \No & derailer                        & \symbol{derailer_left_forward.tikz}                 \\
+    \hline
+      \No & bufferstop                      & \symbol{bufferstop_forward.tikz}                    \\
+    \hline
+      \No & vehicles                        & \symbol{vehicles.tikz}                              \\
+    \hline
+      \No & train                           & \symbol{train_direction_forward.tikz}               \\
+    \hline
+      \No & ghost train                     & \symbol{ghost_train_direction_forward.tikz}         \\
+    \hline
+      \No & train moving                    & \symbol{train_moving_forward.tikz}                  \\
+    \hline
+      \No & train moving slow               & \symbol{train_moving_slow_forward.tikz}             \\
+    \hline
+      \No & train moving fast               & \symbol{train_moving_fast_forward.tikz}             \\
+    \hline
+      \No & train in shunting mode          & \symbol{train_shunt_mode_forward.tikz}              \\
+    \hline
+      \No & train shunting                  & \symbol{train_shunting_forward.tikz}                \\
+    \hline
+      \No & train operated automatic        & \symbol{train_drive_automatic.tikz}                 \\
+    \hline
+      \No & train operated by human         & \symbol{train_drive_human.tikz}                     \\
+    \hline
+      \No & view point                      & \symbol{view_point_forward.tikz}                    \\
+    \hline
+      \No & distant signal                  & \symbol{distant_signal_forward.tikz}                \\
+    \hline
+      \No & \parbox[c]{4cm}{distant signal\\with speed indicator}
+                                            & \symbol{distant_speed_signal_forward.tikz}          \\
+    \hline
+      \No & speed signal                    & \symbol{speed_signal_forward.tikz}                  \\
+    \hline
+      \No & block signal                    & \symbol{block_signal_forward.tikz}                  \\
+    \hline
+      \No & route signal                    & \symbol{route_signal_forward.tikz}                  \\
+    \hline
+      \No & \parbox[c]{4cm}{combined signal\\(distant and block signal)}
+                                            & \symbol{combined_signal_forward.tikz}               \\
+    \hline
+      \No & shunt signal                    & \symbol{shunt_signal_forward.tikz}                  \\
+    \hline
+      \No & shunt signal locked             & \symbol{shunt_signal_forward_locked.tikz}           \\
+    \hline
+      \No & shunt limit                     & \symbol{shunt_limit_forward.tikz}                   \\
+    \hline
+      \No & transmitter                     & \symbol{transmitter_below.tikz}                     \\
+    \hline
+      \No & transmitter effective forward   & \symbol{transmitter_below_forward.tikz}             \\
+    \hline
+      \No & transmitter bidirectional       & \symbol{transmitter_below_bidirectional.tikz}       \\
+    \hline
+      \No & block end marker                & \symbol{block_end_marker_forward.tikz}              \\
+    \hline
+      \No & block clearing point            & \symbol{block_clearing_point_forward.tikz}          \\
+    \hline
+      \No & route clearing point            & \symbol{route_clearing_point_forward.tikz}          \\
+    \hline
+      \No & clearing point                  & \symbol{clearing_point.tikz}                        \\
+    \hline
+      \No & train berth sign                & \symbol{train_berth_sign_forward.tikz}              \\
+    \hline
+      \No & train berth shape               & \symbol{train_berth_shape.tikz}                     \\
+    \hline
+      \No & platform                        & \symbol{platform_left.tikz}                         \\
+    \hline
+      \No & level crossing                  & \symbol{level_crossing_single.tikz}                 \\
+    \hline
+      \No & bridge                          & \symbol{bridge.tikz}                                \\
+    \hline
+      \No & hump                            & \symbol{hump.tikz}                                  \\
+    \hline
+      \No & interlocking                    & \symbol{interlocking.tikz}                          \\
+    \hline
+  \end{longtable}
+\end{document}

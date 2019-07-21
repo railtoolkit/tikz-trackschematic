@@ -1,6 +1,6 @@
 %!TEX TS-program = pdflatexmk
 
-% Copyright 2018 Martin Scheidt (ISC license)
+% Copyright 2019 Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[tikz,border=2]{standalone}
@@ -9,12 +9,12 @@
 \usepackage[prefix=]{xcolor-solarized}
 
 \def\rootTrackschematic{../../tikz-trackschematic}
-\def\srcTrackschematic{\rootTrackschematic/src}
-\input{\srcTrackschematic/topology.tikz}
-\input{\srcTrackschematic/constructions.tikz}
-\input{\srcTrackschematic/vehicles.tikz}
-\input{\srcTrackschematic/trafficControl.tikz}   % Order 1
-\input{\srcTrackschematic/layoutSymbols_DE.tikz} % Order 2 (important)
+\def\srcTrackschematic{\rootTrackschematic/src/tikzlibrarytrackschematic}
+\input{\srcTrackschematic.topology.code.tex}
+\input{\srcTrackschematic.vehicles.code.tex}
+\input{\srcTrackschematic.constructions.code.tex}
+\input{\srcTrackschematic.trafficcontrol.code.tex}% Order 1
+\input{\rootTrackschematic/src/layoutSymbols_DE.tikz} % Order 2 (important)
 
 \begin{document}
   \begin{tikzpicture}[font=\sffamily]
