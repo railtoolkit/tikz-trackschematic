@@ -27,11 +27,11 @@
   \draw[MainTrack] ( 5, 0) -- ++(  1, 1); % track W2/W3
   \draw[MainTrack] (16, 1) -- ++(  1,-1); % track W4/W5
   \draw[MainTrack] (18, 0) -- ++(  1, 1); % track W6/W7
-  \draw[SideTrack] (23, 2) -- ++( -5, 0); % track 41
+  \draw[SecondaryTrack] (23, 2) -- ++( -5, 0); % track 41
   \draw[MainTrack] (22, 0) -- ++(  1,-1) -- ++(13. ,0) -- ++( 1. , 1); % track 1
   \draw[MainTrack] (22, 1) -- ++(  1, 1) -- ++(13. ,0) -- ++( 1. ,-1); % track 4
-  \draw[SideTrack] (24, 2) -- ++(  1, 1) -- ++(10. ,0) -- ++( 1. ,-1); % track 5
-  \draw[SideTrack] (36,-1) -- ++(  5, 0); % track 11
+  \draw[SecondaryTrack] (24, 2) -- ++(  1, 1) -- ++(10. ,0) -- ++( 1. ,-1); % track 5
+  \draw[SecondaryTrack] (36,-1) -- ++(  5, 0); % track 11
   \draw[MainTrack] (38, 1) -- ++(  1,-1); % track W18/W19
 }
 { %% track numbers

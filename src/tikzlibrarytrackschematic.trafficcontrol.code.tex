@@ -349,4 +349,40 @@
   },
 }
 
+\tikzset{
+  opposing_protection_forward/.pic={
+    \path[draw=foreground, fill=background] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+
+\tikzset{
+  opposing_protection_backward/.pic={
+    \path[draw=foreground, fill=background] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+
+\tikzset{
+  opposing_protection_granted_forward/.pic={
+    \fill[foreground] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+
+\tikzset{
+  opposing_protection_granted_backward/.pic={
+    \fill[foreground] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+
+\tikzset{
+  opposing_protection_declined_forward/.pic={
+    \path[draw=foreground, fill=background, densely dotted] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
+  };
+}
+
+\tikzset{
+  opposing_protection_declined_backward/.pic={
+    \path[draw=foreground, fill=background, densely dotted] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
+  };
+}
+
 \endinput

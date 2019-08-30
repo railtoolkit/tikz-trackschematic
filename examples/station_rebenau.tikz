@@ -23,15 +23,15 @@
   \draw[MainTrack] (R2W-1) --   (R2O-1); % track 1
   \draw[MainTrack] ( 5, 0) -- ++( 1, 1);
   \draw[MainTrack] (R2W-2) -- ++( 8, 0) -- ++(2,2) -- ++(26,0) -- ++(2,-2) -- (R2O-2);  % track 3
-  \draw[SideTrack] ( 9, 1) -- ++( 6, 0); % track 21
-  \draw[SideTrack] ( 8, 4) -- ++( 7, 0); % track 41
-  \draw[SideTrack] (12, 4) -- ++( 1,-1);
+  \draw[SecondaryTrack] ( 9, 1) -- ++( 6, 0); % track 21
+  \draw[SecondaryTrack] ( 8, 4) -- ++( 7, 0); % track 41
+  \draw[SecondaryTrack] (12, 4) -- ++( 1,-1);
   \draw[MainTrack] (14, 3) --   (15, 4) --   (R2P);   % track 4
   \draw[MainTrack] (14, 0) -- ++( 1, 1) -- ++(18, 0); % track 2
   \draw[MainTrack] (15, 3) -- ++( 2,-2);
   \draw[MainTrack] (16, 4) --   (17, 5) --   (29, 5) -- ++(5,-5); % track 5
   \draw[MainTrack] (28, 1) -- ++( 1, 1) -- ++( 5, 0) -- ++(2, 2);
-  \draw[SideTrack] (26, 5) -- ++( 1, 1) -- ++( 3, 0);  % track 51
+  \draw[SecondaryTrack] (26, 5) -- ++( 1, 1) -- ++( 3, 0);  % track 51
 }
 { %% track numbers
   \node[fill=background] at ( 9.0, 4) {41};

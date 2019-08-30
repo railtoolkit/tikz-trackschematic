@@ -25,15 +25,15 @@
   \draw[MainTrack] (O2R-2) --   (O2S-2); % track 2
   \draw[MainTrack] ( 5, 1) -- ++( 1,-1); % track W1/W2
   \draw[MainTrack] ( 7, 0) -- ++( 1, 1); % track W3/W4
-  \draw[SideTrack] ( 7, 2) -- ++(-3, 3) -- ++(-0.5,0); % track 132
+  \draw[SecondaryTrack] ( 7, 2) -- ++(-3, 3) -- ++(-0.5,0); % track 132
   \draw[MainTrack] ( 8, 0) -- ++( 1,-1) -- ++(13. ,0) -- ++( 1. , 1); % track 10
   \draw[MainTrack] ( 9, 1) -- ++( 1, 1) -- ++(11. ,0) -- ++( 1. ,-1); % track 13
-  \draw[SideTrack] (10, 2) -- ++(-4, 0) -- ++(-2. ,2) -- ++(-0.5, 0); % track 131
+  \draw[SecondaryTrack] (10, 2) -- ++(-4, 0) -- ++(-2. ,2) -- ++(-0.5, 0); % track 131
   \draw[MainTrack] (10, 2) -- ++( 1, 1) -- ++( 9. ,0) -- ++( 1. ,-1); % track 14
-  \draw[SideTrack] (11, 3) -- ++( 1, 1) -- ++( 7. ,0) -- ++( 1. ,-1); % track 15
-  \draw[SideTrack] (19, 4) -- ++( 4, 0); % track 215
+  \draw[SecondaryTrack] (11, 3) -- ++( 1, 1) -- ++( 7. ,0) -- ++( 1. ,-1); % track 15
+  \draw[SecondaryTrack] (19, 4) -- ++( 4, 0); % track 215
   \draw[MainTrack] (23, 1) -- ++( 1,-1); % track W16/W18
-  \draw[SideTrack] (32, 0) -- ++( 1.5,-1.5) -- ++( 4, 0); % track 410
+  \draw[SecondaryTrack] (32, 0) -- ++( 1.5,-1.5) -- ++( 4, 0); % track 410
   \draw[MainTrack] (35, 0) -- ++( 1, 1); % track W21/W22
 }
 { %% track numbers

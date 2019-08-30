@@ -22,7 +22,7 @@
   \draw[MainTrack] ( 5,0) -- ++(1,1) -- ++(14,0) -- ++(1,-1); % track 2
   \draw[MainTrack] ( 7,1) -- ++(1,1) -- ++(11,0) -- ++(1,-1); % track 3
   \draw[MainTrack] ( P2M) -- ++(5,5);
-  \draw[SideTrack] (22,0) -- ++(1.5,-1.5) -- ++(3,0); % track 10
+  \draw[SecondaryTrack] (22,0) -- ++(1.5,-1.5) -- ++(3,0); % track 10
 }
 { %% track numbers
   \node[fill=background] at (13.5, 0) { 1};

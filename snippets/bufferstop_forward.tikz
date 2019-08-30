@@ -4,5 +4,5 @@
 % Copyright 2019 Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\draw[SideTrack] (-2.5,0) -- ++(2.5,0);
+\draw[SecondaryTrack] (-2.5,0) -- ++(2.5,0);
 \pic at (0,0) {bufferstop_forward};
