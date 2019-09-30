@@ -10,13 +10,14 @@ todo
 \begin{document}
 
   \begin{tikzpicture}
+
     \coordinate (A)   at (0,0);
     \coordinate (B)   at (6,0);
-
     \coordinate (T)   at (5,0);
 
-    \draw[MainTrack] (A) -- (B);
-    \pic at (T) {train_moving_forward};
+    \maintrack (A) -- (B);
+    \train[moving,forward] at (T) label (train);
+
   \end{tikzpicture}
 
 \end{document}
@@ -24,6 +25,10 @@ todo
 
 ------------
 # History
+
+## Version 0.5
+  
+  * new improved syntax
 
 ## Version 0.4
 
@@ -53,7 +58,5 @@ todo
 ------------
 # Roadmap
 
-  * encapsulation of symbols in package for tex infrastructure
   * provide option for internationalziation (i18n)
   * write usefull documentation
-  * re-think syntax

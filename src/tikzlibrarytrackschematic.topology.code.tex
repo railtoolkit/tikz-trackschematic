@@ -6,237 +6,499 @@
 
 \ProvidesFileRCS{tikzlibrarytrackschematic.topology.code.tex}
 
-\colorlet{background}{white}
-\colorlet{foreground}{black}
+%%%%%%%%%%%%%%%
+% local
+%%%%%%%%%%%%%%%
+
+\RequirePackage{etoolbox}
+\usetikzlibrary{calc,patterns,arrows.meta}
+
+%%%%%%%%%%%%%%%
+% symbol track
+%%%%%%%%%%%%%%%
+
+% tracks
+\newcommand\maintrack{}% just for safety
+\def\maintrack{\path[draw,MainTrack]}%
+\newcommand\secondarytrack{}% just for safety
+\def\secondarytrack{\path[draw,SecondaryTrack]}%
+\newcommand\sidetrack{}% just for safety
+\def\sidetrack{\path[draw,SecondaryTrack]}% alias for \secondarytrack
 
 \tikzset{MainTrack/.style={line width=2pt,foreground}}%
 \tikzset{SecondaryTrack/.style={line width=0.7pt,foreground}}%
 
-\tikzset{
-  pics/track_number/.default=,
-  pics/track_number/.style args={#1}{%
-    code={%
-      \node[fill=background,font=\sffamily,text=foreground] at (0,0) {#1}; % speed indicator
-    }
-  },
+%%%%%%%%%%%%%%%
+% symbol track number
+%%%%%%%%%%%%%%%
+
+%% command
+\newcommand\tracklabel{}% just for safety
+\def\tracklabel#1(#2)#3(#4){% \tracknumber[options] at (coord) label (name);
+  \pic at (#2) {track_label={#1/#3/#4}};% symbol
+}%
+%% tikz keys
+% \pgfkeys{%
+%   /tikz/trackschematic/.is family,%
+%   /tikz/trackschematic/.cd,%
+% }%
+%% symbol definition
+\tikzset{%
+  pics/track_label/.default=,%
+  pics/track_label/.style args={#1/#2/#3}{code={%
+      %% settings
+      \def\coordcommand{#1} % beware of leading and tailing spaces!
+      \def\labelcommand{#2} % beware of leading and tailing spaces!
+      \def\labelcontent{#3}
+      %% label
+      \node[fill=background,text=foreground] at (0,0) {\labelcontent};% label
+  }%
+  },%
 }%
 
-\tikzset{
-  pics/track_distance/.default=,
-  pics/track_distance/.style args={#1}{
-    code={
-      \fill[foreground] (0,0.96) -- ++(-0.1,-0.15) -- ++(0.2,0) -- cycle; % upper triangle
-      \node[baseline=(current bounding box.center),font=\sffamily,text=foreground] at (0,0.5) {#1}; % distance indicator
-      \fill[foreground] (0,0.04) -- ++(-0.1,0.15) -- ++(0.2,0) -- cycle; % lower triangle
+%%%%%%%%%%%%%%%
+% symbol track distance
+%%%%%%%%%%%%%%%
+
+%% command
+\newcommand\trackdistance{}% just for safety
+\def\trackdistance#1(#2)#3(#4)#5(#6){% \trackdistance between (coord1) and (coord2) label (distance);
+  \path[draw=background,<->,>={Stealth[foreground,inset=0pt,angle=50:0.3cm]},shorten <=1pt,shorten >=1pt] (#2) -- (#4)% arrow tips
+  node[baseline=(current bounding box.center),text=foreground,midway,sloped,rotate=90] {#6};% label
+}%
+
+%%%%%%%%%%%%%%%
+% symbol turnout
+%%%%%%%%%%%%%%%
+
+% command
+\newcommand\turnout{}% just for safety
+\def\turnout[#1]#2(#3)#4(#5){% \turnout[type] at (coord) label (name);
+  \pic[#1] at (#3) {turnout={#2/#4/#5}};% symbol
+}%
+% options
+\newtoggle{fouling_point}\settoggle{fouling_point}{false}
+\newtoggle{manual_operated}\settoggle{fouling_point}{false}
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/turnout/.is family,%
+  /tikz/trackschematic/turnout/.cd,%
+  %
+  %% branch
+  branch/.value required,% left OR right
+  branch/.store in=\branch,% left OR right
+  /tikz/branch/.forward to=/tikz/trackschematic/turnout/branch,%
+  %
+  %% fouling point
+  fouling point/.value forbidden,%
+  fouling point/.code={\settoggle{fouling_point}{true}},%
+  /tikz/fouling point/.forward to=/tikz/trackschematic/turnout/fouling point,%
+  %
+  %% points
+  points/.store in=\points,% moving, left, right OR none
+  points=none,% moving, left, right OR none
+  /tikz/points/.forward to=/tikz/trackschematic/turnout/points,%
+  %
+  %% manual operated
+  manual operated/.value forbidden,%
+  manual operated/.code={\settoggle{manual_operated}{true}},%
+  /tikz/manual operated/.forward to=/tikz/trackschematic/turnout/manual operated,%
+  %
+}%
+% symbol definition
+\tikzset{%
+  pics/turnout/.default=,
+  pics/turnout/.style args={#1/#2/#3}{code={
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    \def\labelcommand{#2} % beware of leading and tailing spaces!
+    \def\labelcontent{#3}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{forward OR backward as key required}}
+      }%
+    }% end \ifdefstring{\face}
+    %% branch setup
+    \ifdefstring{\branch}{left}{% branch
+      \ifdefstring{\face}{forward}{%
+        \pgfmathsetmacro{\branchfactor}{1}%
+      }{%
+        \pgfmathsetmacro{\branchfactor}{-1}%
+      }%
+    }{%
+      \ifdefstring{\branch}{right}{% branch
+        \ifdefstring{\face}{forward}{%
+          \pgfmathsetmacro{\branchfactor}{-1}%
+        }{%
+          \pgfmathsetmacro{\branchfactor}{1}%
+        }%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/turnout/branch}{left OR right as key required}}
+      }%
+    }% end \ifdefstring{\branch}
+    %% turnout marker
+    \iftoggle{manual_operated}{% manual operated
+      \ifdefstring{\branch}{left}{% branch
+        \def\patterntype{north west lines}%
+      }{%
+        \def\patterntype{north east lines}%
+      }%
+      \path[draw,pattern=\patterntype, pattern color=foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
+    }{% operated automaticly
+      \path[fill=foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
+    }%
+    %
+    %% label
+    %TODO
+    % \ifdefstring{\labelcommand}{label}{% label
+      \node at ($\branchfactor*(0,-8pt)$) {\footnotesize \labelcontent};%
+    % }{
+    %   \node[red] at ($\branchfactor*(0,-8pt)$) {\tiny +\labelcommand+ != +label+};%
+    % }%
+    %
+    %% fouling point indicator
+    \iftoggle{fouling_point}{%
+      \path[draw=foreground] ($\facefactor*(0.7,0)$) -- ++($\branchfactor*(0,0.7)$);% fouling point indicator
+    }{}%
+    %
+    %% points
+    \ifdefstring{\points}{left}{% points left
+      \ifdefstring{\branch}{left}{%
+        \path[draw=foreground,line width=1.5pt] ($\facefactor*(-0.035,0) + \branchfactor*(0,0.1)$) -- ++($\branchfactor*(0.2,0.2)$);%
+      }{%
+        \path[draw=foreground,line width=1.5pt] ($\facefactor*( 0.035,0.1)$) -- ++($\facefactor*(0.265,0)$);%
+      }%
+    }{%
+      \ifdefstring{\points}{right}{% points right
+        \ifdefstring{\branch}{left}{%
+          \path[draw=foreground,line width=1.5pt] ($\facefactor*( 0.035,-0.1)$) -- ++($\facefactor*(0.265,0)$);
+        }{%
+          \path[draw=foreground,line width=1.5pt] ($\facefactor*(-0.035,0) + \branchfactor*(0,0.1)$) -- ++($\branchfactor*(-0.2,0.2)$);%
+        }%
+      }{%
+        \ifdefstring{\points}{moving}{% moving points
+          \fill[foreground] ($\facefactor*(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($\facefactor*(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($\facefactor*(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
+          \fill[foreground] ($\facefactor*(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
+        }{% error message
+          \ifdefstring{\points}{none}{%
+          }{%
+            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/points}{left, right OR moving as key required}}
+          }%
+        }%
+      }%
+    }% end \ifdefstring{\points}
+    %
+  }},% end pics/turnout/.style args={#1/#2/#3}
+}%
+
+
+%%%%%%%%%%%%%%%
+% symbol crossing - using parts of turnout
+%%%%%%%%%%%%%%%
+
+\newcommand\crossing{}% just for safety
+\def\crossing[#1]#2(#3)#4(#5){% \crossing[type] at (coord) label (name);
+  \pic[#1] at (#3) {crossing={#2/#4/#5}};% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/crossing/.default=,
+  pics/crossing/.style args={#1/#2/#3}{code={
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    \def\labelcommand{#2} % beware of leading and tailing spaces!
+    \def\labelcontent{#3}
+    %% face setup
+    %% branch setup
+    \ifdefstring{\branch}{left}{% branch
+      \pgfmathsetmacro{\branchfactor}{1}%
+    }{%
+      \ifdefstring{\branch}{right}{% branch
+        \pgfmathsetmacro{\branchfactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/branch}{left OR right as key required}}
+      }%
+    }%
+    %
+    %% crossing marker
+    \path[draw=foreground] (0,0) -- ++( 0.4,0) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
+    \path[draw=foreground] (0,0) -- ++(-0.4,0) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
+    %
+    %% label
+    %TODO
+    % \ifdefstring{\labelcommand}{label}{% label
+      \node[right] at ($(2pt,0) + \branchfactor*(0,-9pt)$) {\footnotesize \labelcontent};%
+    % }{
+    %   \node[red] at ($\branchfactor*(0,-8pt)$) {\tiny +\labelcommand+ != +label+};%
+    % }%
+    %
+    %% fouling point indicator
+    \iftoggle{fouling_point}{%
+      \path[draw=foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
+      \path[draw=foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
+    }{}%
+    %
+  }},% end of  pics/crossing/.style args={#1/#2/#3}{
+}%
+
+%%%%%%%%%%%%%%%
+% symbol slip switch turnout - using parts of turnout
+%%%%%%%%%%%%%%%
+
+\newcommand\slipturnout{}% just for safety
+\def\slipturnout[#1]#2(#3)#4(#5)(#6){% \crossing[type] at (coord) label (name);
+  \pic[slip=double,#1] at (#3) {slipturnout={#2/#4/#5/#6}};% symbol
+}%
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/slipturnout/.is family,%
+  /tikz/trackschematic/slipturnout/.cd,%
+  %
+  %% points
+  forward points/.store in=\forwardpoints,% moving, left, right OR none
+  forward points=none,% moving, left, right OR none
+  /tikz/forward points/.forward to=/tikz/trackschematic/slipturnout/forward points,%
+  backward points/.store in=\backwardpoints,% moving, left, right OR none
+  backward points=none,% moving, left, right OR none
+  /tikz/backward points/.forward to=/tikz/trackschematic/slipturnout/backward points,%
+  %
+  %% slips
+  slip/.store in=\slip,% double, left, right OR none
+  slip=none,% double, left, right OR none
+  /tikz/slip/.forward to=/tikz/trackschematic/slipturnout/slip,%
+  %
+}%
+% symbol definition
+\tikzset{%
+  pics/slipturnout/.default=,
+  pics/slipturnout/.style args={#1/#2/#3/#4}{code={
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    \def\labelcommand{#2} % beware of leading and tailing spaces!
+    \def\labelcontentA{#3}
+    \def\labelcontentB{#4}
+    %% branch setup
+    \ifdefstring{\branch}{left}{% branch
+      \pgfmathsetmacro{\branchfactor}{1}%
+    }{%
+      \ifdefstring{\branch}{right}{% branch
+        \pgfmathsetmacro{\branchfactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/turnout/branch}{left OR right as key required}}
+      }%
+    }% end \ifdefstring{\branch}
+    %% turnout marker
+    \iftoggle{manual_operated}{% manual operated
+      \ifdefstring{\branch}{left}{% branch
+        \def\patterntype{north west lines}%
+      }{%
+        \def\patterntype{north east lines}%
+      }%
+      \path[draw,pattern=\patterntype, pattern color=foreground] (0,0) -- ++($( 0.4,0)$) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
+      \path[draw,pattern=\patterntype, pattern color=foreground] (0,0) -- ++($(-0.4,0)$) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
+    }{% operated automaticly
+      \path[fill=foreground] (0,0) -- ++($( 0.4,0)$) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
+      \path[fill=foreground] (0,0) -- ++($(-0.4,0)$) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
     }
-  },
-}
+    %
+    %% label
+    %TODO
+    % \ifdefstring{\labelcommand}{label}{% label
+      \node[right] at ($(2pt,0) + \branchfactor*(0,-9pt)$) {\footnotesize \labelcontentA};%
+      \node[left]  at ($(2pt,0) + \branchfactor*(0,10pt)$) {\footnotesize \labelcontentB};%
+    % }{
+    %   \node[red] at ($\branchfactor*(0,-8pt)$) {\tiny +\labelcommand+ != +label+};%
+    % }%
+    %
+    %% fouling point indicator
+    \iftoggle{fouling_point}{%
+      \path[draw=foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
+      \path[draw=foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
+    }{}%
+    %
+    %% points
+    \ifdefstring{\forwardpoints}{left}{% points left
+      \ifdefstring{\branch}{left}{%
+        \path[draw=foreground,line width=1.5pt] (-0.035,0.1) -- ++(0.2,0.2);%
+      }{%
+        \path[draw=foreground,line width=1.5pt] ( 0.035,0.1) -- ++(0.265,0);%
+      }%
+    }{%
+      \ifdefstring{\forwardpoints}{right}{% points right
+        \ifdefstring{\branch}{left}{%
+          \path[draw=foreground,line width=1.5pt] ( 0.035,-0.1) -- ++(0.265,0);
+        }{%
+          \path[draw=foreground,line width=1.5pt] (-0.035,-0.1) -- ++(0.2,-0.2);%
+        }%
+      }{%
+        \ifdefstring{\forwardpoints}{moving}{% moving points
+          \fill[foreground] ($(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
+          \fill[foreground] ($(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
+        }{% error message
+          \ifdefstring{\forwardpoints}{none}{%
+          }{%
+            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/slipturnout/forward points}{left, right OR moving as key required}}
+          }%
+        }%
+      }%
+    }% end of  \ifdefstring{\forwardpoints}
+    \ifdefstring{\backwardpoints}{left}{% points left
+      \ifdefstring{\branch}{left}{%
+        \path[draw=foreground,line width=1.5pt] (0.035,-0.1) -- ++(-0.2,-0.2);%
+      }{%
+        \path[draw=foreground,line width=1.5pt] (-0.035,-0.1) -- ++(-0.265,0);%
+      }%
+    }{%
+      \ifdefstring{\backwardpoints}{right}{% points right
+        \ifdefstring{\branch}{left}{%
+          \path[draw=foreground,line width=1.5pt] (-0.035,0.1) -- ++(-0.265,0);
+        }{%
+          \path[draw=foreground,line width=1.5pt] (0.035,0.1) -- ++(-0.2,0.2);%
+        }%
+      }{%
+        \ifdefstring{\backwardpoints}{moving}{% moving points
+          \fill[foreground] ($(-0.075,0) + \branchfactor*(0, 0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(-0.225,0) + \branchfactor*(0, 0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(-0.015,0) + \branchfactor*(0,-0.15)$) circle (0.05);% points indicator right
+          \fill[foreground] ($(-0.115,0) + \branchfactor*(0,-0.25)$) circle (0.05);% points indicator right
+        }{% error message
+          \ifdefstring{\backwardpoints}{none}{%
+          }{%
+            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/slipturnout/forward points}{left, right OR moving as key required}}
+          }%
+        }%
+      }%
+    }% end of  \ifdefstring{\backwardpoints}
+    %
+    %% slips
+    \ifdefstring{\slip}{double}{% slip
+      \path[draw=foreground,line width=0.75pt] ($\branchfactor*(-0.4,0) + (0, 0.1)$) --  ($\branchfactor*( 0.3,0) + (0, 0.4)$);% slip
+      \path[draw=foreground,line width=0.75pt] ($\branchfactor*( 0.4,0) + (0,-0.1)$) --  ($\branchfactor*(-0.3,0) + (0,-0.4)$);% slip
+    }{%
+      \ifdefstring{\slip}{left}{%
+        \path[draw=foreground,line width=0.75pt] ($\branchfactor*(-0.4,0) + (0,0.1)$) --  ($\branchfactor*(0.3,0) + (0,0.4)$);% slip
+      }{%
+        \ifdefstring{\slip}{right}{%
+          \path[draw=foreground,line width=0.75pt] ($\branchfactor*(0.4,0) + (0,-0.1)$) --  ($\branchfactor*(-0.3,0) + (0,-0.4)$);% slip
+        }{%
+          \ifdefstring{\slip}{none}{%
+            %
+          }{%error message
+            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/slipturnout/slip}{double, left, right OR none as key required}}
+          }%
+        }%
+      }%
+    }%
+    %
+  }},% end of  pics/slipturnout/.style args={#1/#2/#3/#4}{
+}%
 
-\tikzset{
-  pics/turnout_left_forward/.default=foreground,
-  pics/turnout_left_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(0.4,0.4) -- ++(0,-0.4); % turnout marker
-    }
-  },
-}
 
-\tikzset{
-  pics/turnout_left_backward/.default=foreground,
-  pics/turnout_left_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(-0.4,-0.4) -- ++(0,0.4); % turnout marker
-    }
-  },
-}
+%%%%%%%%%%%%%%%
+% symbol derailer
+%%%%%%%%%%%%%%%
 
-\tikzset{
-  pics/turnout_right_forward/.default=foreground,
-  pics/turnout_right_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(0.4,-0.4) -- ++(0,0.4); % turnout marker
-    }
-  },
-}
-
-\tikzset{
-  pics/turnout_right_backward/.default=foreground,
-  pics/turnout_right_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (0,0) --  ++(-0.4,0.4) -- ++(0,-0.4); % turnout marker
-    }
-  },
-}
-
-\tikzset{
-  fouling_point_right_backward/.pic={
-    \path[draw=foreground,line width=0.75pt] (-0.7,0) --  ++(0,0.7); % fouling point indicator
-  };
-}
-
-\tikzset{
-  fouling_point_left_backward/.pic={
-    \path[draw=foreground,line width=0.75pt] (-0.7,0) --  ++(0,-0.7); % fouling point indicator
-  };
-}
-
-\tikzset{
-  fouling_point_right_forward/.pic={
-    \path[draw=foreground,line width=0.75pt] (0.7,0) --  ++(0,-0.7); % fouling point indicator
-  };
-}
-
-\tikzset{
-  fouling_point_left_forward/.pic={
-    \path[draw=foreground,line width=0.75pt] (0.7,0) --  ++(0,0.7); % fouling point indicator
-  };
-}
-
-\tikzset{
-  slip_left_forward/.pic={
-    \path[draw=foreground,line width=0.75pt] (-0.4,0.1) --  (0.3,0.4); % fouling point indicator
-  };
-}
-
-\tikzset{
-  slip_left_backward/.pic={
-    \path[draw=foreground,line width=0.75pt] (-0.3,-0.4) --  (0.4,-0.1); % fouling point indicator
-  };
-}
-
-\tikzset{
-  slip_right_forward/.pic={
-    \path[draw=foreground,line width=0.75pt] (-0.4,-0.1) --  (0.3,-0.4); % fouling point indicator
-  };
-}
-
-\tikzset{
-  slip_right_backward/.pic={
-    \path[draw=foreground,line width=0.75pt] (0.4,0.1) --  (-0.3,0.4); % fouling point indicator
-  };
-}
-\tikzset{
-  turnout_left_forward_points_right/.pic={
-    \path[draw=foreground,line width=1.5pt] (0,-0.1) -- ++(0.3,0); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_left_forward_points_left/.pic={
-    \path[draw=foreground,line width=1.5pt] (-0.035, 0.1) -- ++(0.2,0.2); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_left_forward_points_moving/.pic={
-    \fill[foreground] (0.075,-0.1) circle (0.05); % points indicator left
-    \fill[foreground] (0.225,-0.1) circle (0.05);
-    \fill[foreground] (0.015, 0.15) circle (0.05); % points indicator right
-    \fill[foreground] (0.115, 0.25) circle (0.05);
-  };
-}
-
-\tikzset{
-  turnout_left_backward_points_right/.pic={
-    \path[draw=foreground,line width=1.5pt] (0,0.1) -- ++(-0.3,0); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_left_backward_points_left/.pic={
-    \path[draw=foreground,line width=1.5pt] (0.035,-0.1) -- ++(-0.2,-0.2); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_left_backward_points_moving/.pic={
-    \fill[foreground] (-0.075,0.1) circle (0.05); % points indicator left
-    \fill[foreground] (-0.225,0.1) circle (0.05);
-    \fill[foreground] (-0.015,-0.15) circle (0.05); % points indicator right
-    \fill[foreground] (-0.115,-0.25) circle (0.05);
-  };
-}
-
-\tikzset{
-  turnout_right_forward_points_right/.pic={
-    \path[draw=foreground,line width=1.5pt] (-0.035,-0.1) -- ++(0.2,-0.2); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_right_forward_points_left/.pic={
-    \path[draw=foreground,line width=1.5pt] (0,0.1) -- ++(0.3,0); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_right_forward_points_moving/.pic={
-    \fill[foreground] (0.075, 0.1) circle (0.05); % points indicator left
-    \fill[foreground] (0.225, 0.1) circle (0.05);
-    \fill[foreground] (0.015,-0.15) circle (0.05); % points indicator right
-    \fill[foreground] (0.115,-0.25) circle (0.05);
-  };
-}
-
-\tikzset{
-  turnout_right_backward_points_right/.pic={
-    \path[draw=foreground,line width=1.5pt] (0.035,0.1) -- ++(-0.2,0.2); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_right_backward_points_left/.pic={
-    \path[draw=foreground,line width=1.5pt] (0,-0.1) -- ++(-0.3,0); % points indicator
-  };
-}
-
-\tikzset{
-  turnout_right_backward_points_moving/.pic={
-    \fill[foreground] (-0.075,-0.1) circle (0.05); % points indicator left
-    \fill[foreground] (-0.225,-0.1) circle (0.05);
-    \fill[foreground] (-0.015,0.15) circle (0.05); % points indicator right
-    \fill[foreground] (-0.115,0.25) circle (0.05);
-  };
-}
-
-\tikzset{
-  derailer_right_forward/.pic={
+% command
+\newcommand\derailer{}% just for safety
+\def\derailer[#1]#2(#3)#4(#5){% \bufferstop[options] at (coord) label (name);
+  \pic[#1] at (#3) {derailer={#2/#4/#5}};% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/derailer/.default=,%
+  pics/derailer/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    \def\labelcommand{#2} % beware of leading and tailing spaces!
+    \def\labelcontent{#3}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{forward OR backward as key required}}
+      }%
+    }% end \ifdefstring{\face}
+    %% branch setup
+    \ifdefstring{\branch}{left}{% branch
+      \ifdefstring{\face}{forward}{%
+        \pgfmathsetmacro{\branchfactor}{1}%
+      }{%
+        \pgfmathsetmacro{\branchfactor}{-1}%
+      }%
+    }{%
+      \ifdefstring{\branch}{right}{% branch
+        \ifdefstring{\face}{forward}{%
+          \pgfmathsetmacro{\branchfactor}{-1}%
+        }{%
+          \pgfmathsetmacro{\branchfactor}{1}%
+        }%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/turnout/branch}{left OR right as key required}}
+      }%
+    }% end \ifdefstring{\branch}
+    %% symbol
     \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,-0.4); % derailer arrow
-  };
-}
+    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++($\facefactor*(0.4,0) + \branchfactor*(0,0.4)$); % derailer arrow
+  }},%
+}%
 
-\tikzset{
-  derailer_right_backward/.pic={
-    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,0.4); % derailer arrow
-  };
-}
+%%%%%%%%%%%%%%%
+% symbol buffer stop
+%%%%%%%%%%%%%%%
 
-\tikzset{
-  derailer_left_forward/.pic={
-    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(0.4,0.4); % derailer arrow
-  };
-}
+% command
+\newcommand\bufferstop{}% just for safety
+\def\bufferstop[#1]#2(#3){% \bufferstop[options] at (coord);
+  \pic[#1] at (#3) {bufferstop={#2}};% symbol
+}%
+\newlength{\friction}\setlength{\friction}{0cm}
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/bufferstop/.is family,%
+  /tikz/trackschematic/bufferstop/.cd,%
+  %
+  %% points
+  friction/.store in=\friction,% length OR none
+  friction=none,% length OR none
+  /tikz/friction/.forward to=/tikz/trackschematic/bufferstop/friction,%
+  %
+}%
+% symbol definition
+\tikzset{%
+  pics/bufferstop/.default=,%
+  pics/bufferstop/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{forward OR backward as key required}}
+      }%
+    }% end \ifdefstring{\face}
+    %% symbol
+    \ifdefstring{\friction}{none}{% friction
+      \path[draw=foreground, line width=1pt] ($\facefactor*(-0.1,0) + (0,0.2)$) --  ++($\facefactor*( 0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*(-0.1,0)$); % bufferstop marker
+    }{
+      \path[draw=foreground, line width=1pt] ($\facefactor*(-\friction,0) + \facefactor*( 0.1,0) + (0,0.2)$) --  ++($\facefactor*(-0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*( 0.1,0)$); % bufferstop marker
+    }
+  }},%
+}%
 
-\tikzset{
-  derailer_left_backward/.pic={
-    \path[draw=foreground, line width=1pt] (0,0.2) -- ++(0,-0.4); % derailer marker
-    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++(-0.4,-0.4); % derailer arrow
-  };
-}
-
-\tikzset{
-  bufferstop_forward/.pic={
-    \path[draw=foreground, line width=1pt] (-0.1,0.2) --  ++(0.1,0) -- ++(0,-0.4) -- ++ (-0.1,0); % bufferstop marker
-  };
-}
-
-\tikzset{
-  bufferstop_backward/.pic={
-    \path[draw=foreground, line width=1pt] (0.1,0.2) --  ++(-0.1,0) -- ++(0,-0.4) -- ++ (0.1,0); % bufferstop marker
-  };
-}
-
+%%%%%%%%%%%%%%%
 \endinput

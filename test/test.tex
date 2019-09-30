@@ -1,0 +1,26 @@
+%!TEX TS-program = pdflatexmk
+
+% Copyright 2019 Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\documentclass[tikz,border=2]{standalone}
+
+\usepackage{lmodern,siunitx}
+\usepackage[prefix=]{xcolor-solarized}
+
+\usetikzlibrary{trackschematic}
+
+\begin{document}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{turnout.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{crossing.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{slipturnout.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{misc_topology.tikz}
+  \end{tikzpicture}
+\end{document}

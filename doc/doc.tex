@@ -1,0 +1,130 @@
+%% symbol library for TikZ track schematics
+%
+% Copyright 2018,2019 Martin Scheidt (ISC license)
+
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\documentclass[
+  draft,
+  paper=a4,
+  version=3.25,
+  pagesize=pdftex,
+  twoside=false,
+  toc=listof,
+]{scrartcl}
+% --------[  Coding and Language  ]----------
+\usepackage{scrhack}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[main=english]{babel}
+% --------[   revision history    ]----------
+\usepackage[tocentry]{vhistory}
+\input{authors.tex}
+% --------[ Layout  ]-----------
+\pretolerance=8000
+\tolerance=9500
+\hbadness=8000
+\vbadness=10000
+\displaywidowpenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+\usepackage{lmodern,microtype,mathptmx,courier}
+\usepackage[scaled=0.92]{helvet}
+\usepackage[
+  automark,
+  headsepline,
+  draft=false
+]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+% -----------[ PDF linking ]----------------
+\usepackage[
+  pdftex,
+  pdfpagelabels, % modify PDF page labels
+  hyperindex,
+  hyperfigures,
+  bookmarksopen,
+  bookmarksnumbered,
+  draft=false,
+  pageanchor=true, % Determines whether every page is given an implicit anchor at the top left corner
+  %pagebackref, % Adds backlink text to the end of each item in the bibliography, as a list of page numbers
+  %linktocpage, % make page number, not text, be link on TOC, LOF and LOT
+  breaklinks=true, % allow links to break over lines by making links over multiple lines into PDF links to the same target
+  colorlinks=true, % Colors the text of links and anchors
+  linkcolor=base01, % Color for normal internal links
+  urlcolor=blue, % Color for web links
+]{hyperref} % PDF with a linked TableOfContent
+\usepackage{bookmark} % Adding package bookmark improves bookmarks handling.
+\usepackage{url}
+% -------[ PDF Informations ]---------
+\hypersetup{%
+  pdftitle={tikz/trackschematic},
+  pdfsubject={A tikz toolbox for track schematics},
+  pdfauthor={Martin Scheidt},
+  pdfkeywords={latex, tikz, library, railway, track, layout}
+}
+
+\usepackage[inline]{enumitem}
+\usepackage{tikz}
+
+\usepackage[prefix=]{xcolor-solarized}
+\def\rootTrackschematic{../../tikz-trackschematic}
+\def\srcTrackschematic{\rootTrackschematic/src/tikzlibrarytrackschematic}
+\input{\srcTrackschematic.topology.code.tex}
+\input{\srcTrackschematic.trafficcontrol.code.tex}
+\input{\srcTrackschematic.vehicles.code.tex}
+\input{\srcTrackschematic.constructions.code.tex}
+
+\begin{document}
+
+\title{\tikz\node[scale=1.2]{\color{gray}\Huge\sffamily \{\textcolor{black}{Ti\textcolor{orange}{\emph{k}}Z}/\textcolor{blue}{trackschematic}\}};}
+\subtitle{A Ti\emph{k}Z library for track schematics}
+\author{\vhListAllAuthorsLong}
+\date{Version \vhCurrentVersion~ from \vhCurrentDate}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}\label{sec:intro}
+
+\subsection[About]{About tikz/trackschematic}
+
+  The Ti\emph{k}Z \emph{trackschematic} library is a toolbox of symbols geared primarily towards creating track schematic for either research or educational purposes.
+  It provides a tikz frontends to some of the symbols which maybe needed to describe situations and layouts in railway operation.
+  The library is divided into four sublibraries:
+  \begin{itemize*}[label={}]
+    \item topology,
+    \item traffic control,
+    \item vehicles, and
+    \item constructions.
+  \end{itemize*}
+
+
+\subsection{Requirements}\label{sec:require}
+
+  The library uses Ti\emph{k}Z and it is based the following packages:
+  \begin{itemize*}[label={}]
+    \item tikz,
+    \item xcolor, and
+    \item etoolbox.
+  \end{itemize*}
+  Further more it uses the following Ti\emph{k}Z libraries:
+  \begin{itemize*}[label={}]
+    \item calc,
+    \item patterns, and
+    \item arrows.meta.
+  \end{itemize*}
+
+
+\subsection{License}
+
+  Copyright 2018, 2019 \MS. Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies (\href{https://www.tldrlegal.com/l/isc}{ISC license}).
+
+\section{Usage}\label{sec:use}
+
+  loading ther library
+
+% \appendix
+\input{versionhistory.tex}
+\vhListAllAuthorsLongWithAbbrev
+\end{document}

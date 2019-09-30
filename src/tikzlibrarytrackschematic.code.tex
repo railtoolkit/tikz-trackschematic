@@ -6,9 +6,32 @@
 
 \ProvidesFileRCS{tikzlibrarytrackschematic.code.tex}
 
+%%%%%%%%%%%%%%%
+% global settings
+%%%%%%%%%%%%%%%
+\RequirePackage{tikz,xcolor}
+
+\colorlet{background}{white}
+\colorlet{foreground}{black}
+
+\pgfkeys{%
+  /tikz/trackschematic/.is family,%
+  /tikz/trackschematic/.cd,%
+  %% face
+  face/.value required,% forward OR backward
+  face/.store in=\face,
+  /tikz/face/.forward to=/tikz/trackschematic/face,%
+  /tikz/forward/.code={\pgfkeys{/tikz/trackschematic/face=forward}},%
+  /tikz/backward/.code={\pgfkeys{/tikz/trackschematic/face=backward}},%
+  %
+}
+
+%%%%%%%%%%%%%%%
+% symbol definitions
+%%%%%%%%%%%%%%%
 \usetikzlibrary{trackschematic.topology}%
 \usetikzlibrary{trackschematic.trafficcontrol}%
 \usetikzlibrary{trackschematic.vehicles}%
-\usetikzlibrary{trackschematic.construction}%
+\usetikzlibrary{trackschematic.constructions}%
 
 \endinput
