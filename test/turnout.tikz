@@ -1,7 +1,7 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = test.tex
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \node[blue] at (4,0) {\large test turnouts};
@@ -28,16 +28,16 @@
 
 \foreach \i in {1,2,...,5}{% coordinates for testing symbols
   \maintrack  (Y\i-1) -- ++( 0.75, 0.75);
-  \maintrack  (Y\i-2) -- ++(-0.75,-0.75);
+  \maintrack  (Y\i-2) -- ++(-0.75, 0.75);
   \maintrack  (Y\i-3) -- ++( 0.75,-0.75);
-  \maintrack  (Y\i-4) -- ++(-0.75, 0.75);
+  \maintrack  (Y\i-4) -- ++(-0.75,-0.75);
 }
 
 \foreach \i in {6,7,...,10}{% coordinates for testing symbols
   \secondarytrack  (Y\i-1) -- ++( 0.75, 0.75);
-  \secondarytrack  (Y\i-2) -- ++(-0.75,-0.75);
+  \secondarytrack  (Y\i-2) -- ++(-0.75, 0.75);
   \secondarytrack  (Y\i-3) -- ++( 0.75,-0.75);
-  \secondarytrack  (Y\i-4) -- ++(-0.75, 0.75);
+  \secondarytrack  (Y\i-4) -- ++(-0.75,-0.75);
 }
 
 \turnout[forward ,branch=left ] at (Y1-1) label (Y1-1);
@@ -61,23 +61,23 @@
 \turnout[forward ,branch=right,points=moving] at (Y5-3) label (Y5-3);
 \turnout[backward,branch=right,points=moving] at (Y5-4) label (Y5-4);
 
-\turnout[forward ,branch=left ,manual operated] at (Y6-1) label (Y6-1);
-\turnout[backward,branch=left ,manual operated] at (Y6-2) label (Y6-2);
-\turnout[forward ,branch=right,manual operated] at (Y6-3) label (Y6-3);
-\turnout[backward,branch=right,manual operated] at (Y6-4) label (Y6-4);
-\turnout[forward ,branch=left ,manual operated,fouling point] at (Y7-1) label (Y7-1);
-\turnout[backward,branch=left ,manual operated,fouling point] at (Y7-2) label (Y7-2);
-\turnout[forward ,branch=right,manual operated,fouling point] at (Y7-3) label (Y7-3);
-\turnout[backward,branch=right,manual operated,fouling point] at (Y7-4) label (Y7-4);
-\turnout[forward ,branch=left ,manual operated,points=right] at (Y8-1) label (Y8-1);
-\turnout[backward,branch=left ,manual operated,points=right] at (Y8-2) label (Y8-2);
-\turnout[forward ,branch=right,manual operated,points=right] at (Y8-3) label (Y8-3);
-\turnout[backward,branch=right,manual operated,points=right] at (Y8-4) label (Y8-4);
-\turnout[forward ,branch=left ,manual operated,points=left ] at (Y9-1) label (Y9-1);
-\turnout[backward,branch=left ,manual operated,points=left ] at (Y9-2) label (Y9-2);
-\turnout[forward ,branch=right,manual operated,points=left ] at (Y9-3) label (Y9-3);
-\turnout[backward,branch=right,manual operated,points=left ] at (Y9-4) label (Y9-4);
-\turnout[forward ,branch=left ,manual operated,points=moving] at (Y10-1) label (Y10-1);
-\turnout[backward,branch=left ,manual operated,points=moving] at (Y10-2) label (Y10-2);
-\turnout[forward ,branch=right,manual operated,points=moving] at (Y10-3) label (Y10-3);
-\turnout[backward,branch=right,manual operated,points=moving] at (Y10-4) label (Y10-4);
+\turnout[forward ,branch=left ,operation=manual] at (Y6-1) label (Y6-1);
+\turnout[backward,branch=left ,operation=manual] at (Y6-2) label (Y6-2);
+\turnout[forward ,branch=right,operation=manual] at (Y6-3) label (Y6-3);
+\turnout[backward,branch=right,operation=manual] at (Y6-4) label (Y6-4);
+\turnout[forward ,branch=left ,operation=manual,fouling point] at (Y7-1) label (Y7-1);
+\turnout[backward,branch=left ,operation=manual,fouling point] at (Y7-2) label (Y7-2);
+\turnout[forward ,branch=right,operation=manual,fouling point] at (Y7-3) label (Y7-3);
+\turnout[backward,branch=right,operation=manual,fouling point] at (Y7-4) label (Y7-4);
+\turnout[forward ,branch=left ,operation=manual,points=right] at (Y8-1) label (Y8-1);
+\turnout[backward,branch=left ,operation=manual,points=right] at (Y8-2) label (Y8-2);
+\turnout[forward ,branch=right,operation=manual,points=right] at (Y8-3) label (Y8-3);
+\turnout[backward,branch=right,operation=manual,points=right] at (Y8-4) label (Y8-4);
+\turnout[forward ,branch=left ,operation=manual,points=left ] at (Y9-1) label (Y9-1);
+\turnout[backward,branch=left ,operation=manual,points=left ] at (Y9-2) label (Y9-2);
+\turnout[forward ,branch=right,operation=manual,points=left ] at (Y9-3) label (Y9-3);
+\turnout[backward,branch=right,operation=manual,points=left ] at (Y9-4) label (Y9-4);
+\turnout[forward ,branch=left ,operation=manual,points=moving] at (Y10-1) label (Y10-1);
+\turnout[backward,branch=left ,operation=manual,points=moving] at (Y10-2) label (Y10-2);
+\turnout[forward ,branch=right,operation=manual,points=moving] at (Y10-3) label (Y10-3);
+\turnout[backward,branch=right,operation=manual,points=moving] at (Y10-4) label (Y10-4);

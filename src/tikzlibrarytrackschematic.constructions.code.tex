@@ -1,117 +1,389 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
-
-\ProvidesFileRCS{tikzlibrarytrackschematic.construction.code.tex}
-
-\colorlet{background}{white}
-\colorlet{foreground}{black}
-
-\tikzset{
-  pics/platform_left/.default=4,
-  pics/platform_left/.style n args={1}{
-    code={
-      \path[draw, line width=0.75pt,foreground] (0,0.5) -- ++(0,-0.3) -- ++(#1,0) -- ++(0,0.3);
-      \path[draw, line width=0.75pt,foreground] (0,0.3) -- ++(#1,0);
-    }
-  },
-}
-
-\tikzset{
-  pics/platform_right/.default=4,
-  pics/platform_right/.style n args={1}{
-    code={
-      \path[draw, line width=0.75pt,foreground] (0,-0.5) -- ++(0,0.3) -- ++(#1,0) -- ++(0,-0.3);
-      \path[draw, line width=0.75pt,foreground] (0,-0.3) -- ++(#1,0);
-    }
-  },
-}
-
-\tikzset{
-  level_crossing_barrier_left/.pic={
-    { % road
-      \path[draw, line width=1pt,foreground] (-0.2, 0.8) --  ++(0,-0.6);
-      \path[draw, line width=1pt,foreground] ( 0.2, 0.8) --  ++(0,-0.6);
-    }
-    { % barrier
-      \filldraw[foreground] (-0.4,0.5) circle (0.05);
-      \path[draw, line width=1pt,foreground] (-0.4,0.5) --  ++(0.39,0);
-    }
-  };
-}
-
-\tikzset{
-  level_crossing_barrier_right/.pic={
-    { % road
-      \path[draw, line width=1pt,foreground] (-0.2,-0.8) --  ++(0, 0.6);
-      \path[draw, line width=1pt,foreground] ( 0.2,-0.8) --  ++(0, 0.6);
-    }
-    { % barrier
-      \filldraw[foreground] (0.4,-0.5) circle (0.05);
-      \path[draw, line width=1pt,foreground] (0.4,-0.5) --  ++(-0.39,0);
-    }
-  };
-}
-
-\tikzset{
-  level_crossing/.pic={
-    { % road
-      \path[draw, line width=1pt,foreground] (-0.2,-0.8) --  ++(0, 0.6);
-      \path[draw, line width=1pt,foreground] ( 0.2,-0.8) --  ++(0, 0.6);
-    }
-  };
-}
-
-\tikzset{
-  pics/bridge_left/.style n args={1}{
-    code={
-      \path[draw, line width=0.75pt,foreground] (-0.1,0.48) --  ++(0.08,-0.08) -- ++(#1,0) -- ++(0.08,0.08);
-    }
-  },
-  pics/bridge_left/.default=3,
-}
-
-\tikzset{
-  pics/bridge_right/.default=3,
-  pics/bridge_right/.style n args={1}{
-    code={
-      \path[draw, line width=0.75pt,foreground] (-0.1,-0.48) --  ++(0.08,0.08) -- ++(#1,0) -- ++(0.08,-0.08);
-    }
-  },
-}
-
-\tikzset{
-  interlocking/.pic={
-    {
-      \path[draw, line width=1pt,foreground] (-0.6,-0.4 ) rectangle ++(1.2,0.8); % building
-      \path[draw, fill,foreground]     (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
-      \path[draw, fill,foreground]     ( 0  , 0.15) circle      (0.15); % human dot
-    }
-  };
-}
-
-\tikzset{
-  hump/.pic={
-    { % upper side
-      \path[draw, line width=0.75pt,foreground] (-0.3, 0.1) -- ++(0,0.05);
-      \path[draw, line width=0.75pt,foreground] (-0.2, 0.1) -- ++(0,0.15);
-      \path[draw, line width=0.75pt,foreground] (-0.1, 0.1) -- ++(0,0.25);
-      \path[draw, line width=0.75pt,foreground] ( 0.0, 0.1) -- ++(0,0.35);
-      \path[draw, line width=0.75pt,foreground] ( 0.1, 0.1) -- ++(0,0.25);
-      \path[draw, line width=0.75pt,foreground] ( 0.2, 0.1) -- ++(0,0.15);
-      \path[draw, line width=0.75pt,foreground] ( 0.3, 0.1) -- ++(0,0.05);
-      % lower side
-      \path[draw, line width=0.75pt,foreground] (-0.3,-0.1) -- ++(0,-0.05);
-      \path[draw, line width=0.75pt,foreground] (-0.2,-0.1) -- ++(0,-0.15);
-      \path[draw, line width=0.75pt,foreground] (-0.1,-0.1) -- ++(0,-0.25);
-      \path[draw, line width=0.75pt,foreground] ( 0.0,-0.1) -- ++(0,-0.35);
-      \path[draw, line width=0.75pt,foreground] ( 0.1,-0.1) -- ++(0,-0.25);
-      \path[draw, line width=0.75pt,foreground] ( 0.2,-0.1) -- ++(0,-0.15);
-      \path[draw, line width=0.75pt,foreground] ( 0.3,-0.1) -- ++(0,-0.05);
-    }
-  };
-}
-
-\endinput
+%
+\ProvidesFileRCS{tikzlibrarytrackschematic.construction.code.tex}%
+%
+%%%%%%%%%%%%%%%
+% global settings
+%%%%%%%%%%%%%%%
+\RequirePackage{tikz,etoolbox,lmodern}%
+\usetikzlibrary{calc}%
+%
+\ifdeflength{\objectlength}{}{% Not defined, so define it!
+  \newlength{\objectlength}%
+}%
+\setlength{\objectlength}{4cm}%
+%
+%%%%%%%%%%%%%%%
+% tikz keys for multiple use
+%%%%%%%%%%%%%%%
+\pgfkeys{%
+  /tikz/trackschematic/.is family,%
+  /tikz/trackschematic/.cd,%
+  %% color foreground
+  foreground/.store in=\foreground,%
+  foreground=black,% DEFAULT
+  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
+  %% color background
+  background/.store in=\background,%
+  background=white,% DEFAULT
+  /tikz/background/.forward to=/tikz/trackschematic/background,%
+  %% length
+  length/.store in=\objectlength,% default length 4cm
+  /tikz/length/.forward to=/tikz/trackschematic/length,%
+  %% traffic practice
+  traffic practice/.value required,% left OR right
+  traffic practice/.store in=\trafficpractice,%
+  traffic practice=right,% DEFAULT
+  /tikz/traffic practice/.forward to=/tikz/trackschematic/traffic practice,%
+  /tikz/position/.forward to=/tikz/trackschematic/traffic practice,%
+}%
+\newlength{\objectwidth}\setlength{\objectwidth}{0.5cm}%
+\pgfkeys{%
+  /tikz/trackschematic/constructions/.is family,%
+  /tikz/trackschematic/constructions/.cd,%
+  %% side
+  side/.value required,% left, right OR both
+  side/.store in=\side,% left, right OR both
+  /tikz/side/.forward to=/tikz/trackschematic/constructions/side,%
+  %% width
+  width/.store in=\objectwidth,% default width 0.5cm
+  /tikz/width/.forward to=/tikz/trackschematic/constructions/width,%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol platform
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\platform{}% just for safety
+\def\platform[#1]#2(#3){% \platform[options] at (coord);
+  \pic[#1] at (#3) {platform={#2}}% symbol
+}%
+%% symbol definition
+\tikzset{%
+  pics/platform/.default=,%
+  pics/platform/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    %
+    \ifdefstring{\side}{left}{% side
+      \pgfmathsetmacro{\sidefactor}{1}%
+    }{%
+      \ifdefstring{\side}{right}{% side
+        \pgfmathsetmacro{\sidefactor}{-1}%
+      }{%
+        \ifdefstring{\side}{both}{% side
+        }{% error message
+          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/constructions/side}{“left“, “right“ OR “both“ as key required}}%
+        }%
+      }%
+    }% end \ifdefstring{\side}
+    %% platform shape
+    \tikzset{every path/.style={draw=\foreground,line width=0.75pt}};%
+    \ifdefstring{\side}{both}{% double side
+      \path ($-0.5*(\objectlength,0) + (0, \objectwidth)$) --%
+            ($-0.5*(\objectlength,0) + (0, 0.2)$) --%
+            ($ 0.5*(\objectlength,0) + (0, 0.2)$) --%
+            ($ 0.5*(\objectlength,0) + (0, \objectwidth)$);% part 1
+      \path ($-0.5*(\objectlength,0) + (0, 0.3)$) --%
+            ($ 0.5*(\objectlength,0) + (0, 0.3)$);% part 2
+      \path ($-0.5*(\objectlength,0) + (0,-\objectwidth)$) --%
+            ($-0.5*(\objectlength,0) + (0,-0.2)$) --%
+            ($ 0.5*(\objectlength,0) + (0,-0.2)$) --%
+            ($ 0.5*(\objectlength,0) + (0,-\objectwidth)$);% part 3
+      \path ($-0.5*(\objectlength,0) + (0,-0.3)$) --%
+            ($ 0.5*(\objectlength,0) + (0,-0.3)$);% part 4
+    }{% single side
+      \path ($-0.5*(\objectlength,0) + \sidefactor*(0,\objectwidth)$) --%
+            ($-0.5*(\objectlength,0) + \sidefactor*(0,0.2)$) --%
+            ($ 0.5*(\objectlength,0) + \sidefactor*(0,0.2)$) --%
+            ($ 0.5*(\objectlength,0) + \sidefactor*(0,\objectwidth)$);% part 1
+      \path ($-0.5*(\objectlength,0) + \sidefactor*(0,0.3)$) --%
+            ($ 0.5*(\objectlength,0) + \sidefactor*(0,0.3)$);% part 2
+    }%
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol level crossing
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\levelcrossing{}% just for safety
+\def\levelcrossing[#1]#2(#3){% \levelcrossing[options] at (coord);
+  \pic[side=both,#1] at (#3) {level_crossing={#2}}% symbol
+}%
+%% tikz keys
+\newlength{\roadwidth}\setlength{\roadwidth}{0.4cm}%
+\newtoggle{show_road}\settoggle{show_road}{true}%
+\pgfkeys{%
+  /tikz/trackschematic/constructions/level crossing/.is family,%
+  /tikz/trackschematic/constructions/level crossing/.cd,%
+  %% barrier
+  barrier/.store in=\barrier,% full, semi OR none
+  barrier=none,% DEFAULT
+  /tikz/barrier/.forward to=/tikz/trackschematic/constructions/level crossing/barrier,%
+  /tikz/barrier side/.forward to=/tikz/trackschematic/constructions/side,%
+  %% show road
+  no road/.value forbidden,%
+  no road/.code={\settoggle{show_road}{false}},%
+  /tikz/no road/.forward to=/tikz/trackschematic/constructions/level crossing/no road,%
+  %% road width
+  road width/.store in=\roadwidth,% default width 0.4cm
+  /tikz/road width/.forward to=/tikz/trackschematic/constructions/level crossing/road width,%
+}%
+%% symbol definition
+\tikzset{%
+  pics/level_crossing/.default=,%
+  pics/level_crossing/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% symbol
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \iftoggle{show_road}{% true
+      \path ($0.5*(-\roadwidth,0) + (0,-0.1)$) --%
+            ++($(0,-\objectwidth)$);% road part 1
+      \path ($0.5*( \roadwidth,0) + (0,-0.1)$) --%
+            ++($(0,-\objectwidth)$);% road part 2
+      \path ($0.5*(-\roadwidth,0) + (0, 0.1)$) --%
+            ++($(0, \objectwidth)$);% road part 3
+      \path ($0.5*( \roadwidth,0) + (0, 0.1)$) --%
+            ++($(0, \objectwidth)$);% road part 4
+    }{}% END \iftoggle{show_road}
+    \ifdefstring{\barrier}{full}{% full barrier
+      \ifdefstring{\side}{both}{%
+        \filldraw[\foreground]% left barrier part 1
+          ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) circle (0.05);%
+        \filldraw[\foreground]% left barrier part 2
+          ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) circle (0.05);%
+        \path ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) --%
+              ++($( 0.45\roadwidth,0)+( 0.2,0)$);% left barrier part 3
+        \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) --%
+              ++($(-0.45\roadwidth,0)+(-0.2,0)$);% left barrier part 4
+        %
+        \filldraw[\foreground]% right barrier part 1
+          ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) circle (0.05);%
+        \filldraw[\foreground]% right barrier part 2
+          ($(-0.5\roadwidth,0)+(-0.2,0)+(0,-0.35)$) circle (0.05);%
+        \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) --%
+              ++($(-0.45\roadwidth,0)+(-0.2,0)$);% right barrier part 3
+        \path ($(-0.5\roadwidth,0)+(-0.2,0)+(0,-0.35)$) --%
+              ++($( 0.45\roadwidth,0)+( 0.2,0)$);% right barrier part 4
+      }{%
+        \ifdefstring{\side}{left}{%
+          \filldraw[\foreground]% left barrier part 1
+            ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) circle (0.05);%
+          \filldraw[\foreground]% left barrier part 2
+            ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) circle (0.05);%
+          \path ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) --%
+                ++($( 0.45\roadwidth,0)+( 0.2,0)$);% left barrier part 3
+          \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) --%
+                ++($(-0.45\roadwidth,0)+(-0.2,0)$);% left barrier part 4
+        }{%
+          \ifdefstring{\side}{right}{%
+            \filldraw[\foreground]% right barrier part 1
+              ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) circle (0.05);%
+            \filldraw[\foreground]% right barrier part 2
+              ($(-0.5\roadwidth,0)+(-0.2,0)+(0,-0.35)$) circle (0.05);%
+            \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) --%
+                  ++($(-0.45\roadwidth,0)+(-0.2,0)$);% right barrier part 3
+            \path ($(-0.5\roadwidth,0)+(-0.2,0)+(0,-0.35)$) --%
+                  ++($( 0.45\roadwidth,0)+( 0.2,0)$);% right barrier part 4
+          }{%% error message
+            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/constructions/side}{“left“, “right“ OR “both“ as key required}}%
+          }% END \ifdefstring{\side}{right}
+        }% END \ifdefstring{\side}{left}
+      }% END \ifdefstring{\side}{both}
+    }{%
+      \ifdefstring{\barrier}{semi}{% semi barrier
+        \ifdefstring{\side}{both}{%
+          \filldraw[\foreground]% left barrier part 1
+            ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) circle (0.05);%
+          \path ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) --%
+                ++($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)$);% left barrier part 2
+          %
+          \filldraw[\foreground]% right barrier part 1
+            ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) circle (0.05);%
+          \path ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) --%
+                ++($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)$);% right barrier part 2
+        }{%
+          \ifdefstring{\side}{left}{%
+            \filldraw[\foreground]% left barrier part 1
+              ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) circle (0.05);%
+            \path ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) --%
+                  ++($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)$);% left barrier part 2
+          }{%
+            \ifdefstring{\side}{right}{%
+              \filldraw[\foreground]% right barrier part 1
+                ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) circle (0.05);%
+              \path ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) --%
+                    ++($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)$);% right barrier part 2
+            }{%% error message
+              \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/constructions/side}{“left“, “right“ OR “both“ as key required}}%
+            }% END \ifdefstring{\side}{right}
+          }% END \ifdefstring{\side}{left}
+        }% END \ifdefstring{\side}{both}
+      }{%
+        \ifdefstring{\barrier}{none}{% no barriers
+        }{% error message
+          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/constructions/level crossing/barrier}{“full“, “semi“ OR “none“ as key required}}%
+        }%
+      }% END \ifdefstring{\barrier}{semi}
+    }% END \ifdefstring{\barrier}{full}
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol bridge
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\bridge{}% just for safety
+\def\bridge[#1]#2(#3){% \bridge[options] at (coord);
+  \pic[side=both,#1] at (#3) {bridge={#2}}% symbol
+}%
+\newlength{\shiftleft}\setlength{\shiftleft}{0cm}%
+\newlength{\shiftright}\setlength{\shiftright}{0cm}%
+\newtoggle{show_background}\settoggle{show_background}{true}%
+%% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/constructions/bridge/.is family,%
+  /tikz/trackschematic/constructions/bridge/.cd,%
+  % shift
+  shift left/.store in=\shiftleft,% default shift 0cm
+  /tikz/shift left/.forward to=/tikz/trackschematic/constructions/bridge/shift left,%
+  shift right/.store in=\shiftright,% default shift 0cm
+  /tikz/shift right/.forward to=/tikz/trackschematic/constructions/bridge/shift right,%
+  %% show road
+  no background/.value forbidden,%
+  no background/.code={\settoggle{show_background}{false}},%
+  /tikz/no background/.forward to=/tikz/trackschematic/constructions/bridge/no background,%
+}%
+%% symbol definition
+\tikzset{%
+  pics/bridge/.default=,%
+  pics/bridge/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    %% symbol
+    \iftoggle{show_background}{% true
+      \fill[\background]%
+        ($(-0.5\objectlength,\objectwidth)+(0,-0.1)$) rectangle%
+        ($(0.5\objectlength,-\objectwidth)+(0,0.1)$);%
+    }{}%
+    \tikzset{every path/.style={draw=\foreground,line width=0.75pt}};%
+    \ifdefstring{\side}{both}{%
+      \path ($-0.5*(\objectlength,0)+(-0.1,0)+(\shiftleft,\objectwidth)$) --%
+            ++($(0.1,-0.1)$) --%
+            ++($(\objectlength,0)$) --%
+            ++($(0.1,0.1)$);% left bridge
+      \path ($-0.5*(\objectlength,0)+(-0.1,0)+(\shiftright,-\objectwidth)$) --%
+            ++($(0.1,0.1)$) --%
+            ++($(\objectlength,0)$) --%
+            ++($(0.1,-0.1)$);% right bridge
+    }{%
+      \ifdefstring{\side}{left}{%
+        \path ($-0.5*(\objectlength,0)+(-0.1,0)+(\shiftleft,\objectwidth)$) --%
+              ++($(0.1,-0.1)$) --%
+              ++($(\objectlength,0)$) --%
+              ++($(0.1,0.1)$);% left bridge
+      }{%
+        \ifdefstring{\side}{right}{%
+          \path ($-0.5*(\objectlength,0)+(-0.1,0)+(\shiftright,-\objectwidth)$) --%
+                ++($(0.1,0.1)$) --%
+                ++($(\objectlength,0)$) --%
+                ++($(0.1,-0.1)$);% right bridge
+        }{%% error message
+          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/constructions/side}{“left“, “right“ OR “both“ as key required}}%
+        }% END \ifdefstring{\side}{right}
+      }% END \ifdefstring{\side}{left}
+    }% END \ifdefstring{\side}{both}
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol interlocking
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\interlocking{}% just for safety
+\def\interlocking#1(#2){% \interlocking at (coord);
+  \pic at (#2) {interlocking={#1}}% symbol
+}%
+%% tikz keys
+% \pgfkeys{%
+%   /tikz/trackschematic/.is family,%
+%   /tikz/trackschematic/.cd,%
+% }%
+%% symbol definition
+\tikzset{%
+  pics/interlocking/.default=,%
+  pics/interlocking/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    %% symbol
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \path (-0.6,-0.4 ) rectangle ++(1.2,0.8); % building
+    \path[fill=\foreground] (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
+    \path[fill=\foreground] ( 0  , 0.15) circle      (0.15); % human dot
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol hump
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\hump{}% just for safety
+\def\hump#1(#2){% \hump at (coord);
+  \pic at (#2) {hump={#1}}% symbol
+}%
+%% tikz keys
+% \pgfkeys{%
+%   /tikz/trackschematic/.is family,%
+%   /tikz/trackschematic/.cd,%
+% }%
+%% symbol definition
+\tikzset{%
+  pics/hump/.default=,%
+  pics/hump/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    %% symbol
+    \tikzset{every path/.style={draw=\foreground,line width=0.75pt}};%
+    % left side
+    \path (-0.3, 0.1) -- ++(0,0.05);
+    \path (-0.2, 0.1) -- ++(0,0.15);
+    \path (-0.1, 0.1) -- ++(0,0.25);
+    \path ( 0.0, 0.1) -- ++(0,0.35);
+    \path ( 0.1, 0.1) -- ++(0,0.25);
+    \path ( 0.2, 0.1) -- ++(0,0.15);
+    \path ( 0.3, 0.1) -- ++(0,0.05);
+    % right side
+    \path (-0.3,-0.1) -- ++(0,-0.05);
+    \path (-0.2,-0.1) -- ++(0,-0.15);
+    \path (-0.1,-0.1) -- ++(0,-0.25);
+    \path ( 0.0,-0.1) -- ++(0,-0.35);
+    \path ( 0.1,-0.1) -- ++(0,-0.25);
+    \path ( 0.2,-0.1) -- ++(0,-0.15);
+    \path ( 0.3,-0.1) -- ++(0,-0.05);
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+\endinput%
+%

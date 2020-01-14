@@ -1,10 +1,15 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = ../snippets.tex
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\draw[MainTrack] (-2.5,0) -- ++(5,0);
-\pic at (0,0) {block_signal_forward={S}}; % Order 1
-% replace the S with desired speed or remove
-\pic at (0,0) {distant_signal_forward};   % Order 2
+\coordinate (A) at (0,0);
+\coordinate (B) at (6,0);
+\coordinate (S) at (3,0);
+
+\maintrack (A) -- (B);
+
+\signal[distant,block,route,forward,distant speed=8,speed=8]
+  at (S) label (K1);
+% replace the 8 with desired speed or remove tikz key

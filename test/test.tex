@@ -1,11 +1,11 @@
 %!TEX TS-program = pdflatexmk
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[tikz,border=2]{standalone}
 
-\usepackage{lmodern,siunitx}
+\usepackage{siunitx}
 \usepackage[prefix=]{xcolor-solarized}
 
 \usetikzlibrary{trackschematic}
@@ -22,5 +22,38 @@
   \end{tikzpicture}
   \begin{tikzpicture}[font=\sffamily]
     \input{misc_topology.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{shunting.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{train.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{bend_vehicles.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{signals.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{clearingpoints.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{transmitter.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{platform.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{level_crossing.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{bridge.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{berth.tikz}
+  \end{tikzpicture}
+  \begin{tikzpicture}[font=\sffamily]
+    \input{messure.tikz}
   \end{tikzpicture}
 \end{document}

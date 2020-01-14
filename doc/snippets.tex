@@ -1,58 +1,56 @@
 %!TEX TS-program = pdflatexmk
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[a4paper,landscape]{article}
 
 \usepackage[margin=0pt]{geometry}
 \pagestyle{empty}
-\usepackage{longtable,siunitx,tikz,adjustbox}
-\usepackage{listings}
-\lstset{
-  language=TeX,
-  basicstyle=\ttfamily,
-  columns=fullflexible,
-  breaklines=true
-}
 
-\def\rootTrackschematic{../tikz-trackschematic}
+\usepackage{doc}
 
-\renewcommand{\symbol}[1]{
-  \adjustbox{valign=c}{\begin{tikzpicture}[scale=1.0,transform shape]
-    \input{\rootTrackschematic/snippets/#1}
-    \path (-3,-1.1) rectangle (3,1.1); % background rectangle to unify every cell containing a symbol
-  \end{tikzpicture}}
-}
-\newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/snippets/#1}}
-\newcounter{symbolNo}
-\def\No{\stepcounter{symbolNo}\arabic{symbolNo}}
-
-\def\srcTrackschematic{\rootTrackschematic/src/tikzlibrarytrackschematic}
-\input{\srcTrackschematic.topology.code.tex}
-\input{\srcTrackschematic.trafficcontrol.code.tex}
-\input{\srcTrackschematic.vehicles.code.tex}
-\input{\srcTrackschematic.constructions.code.tex}
-
-\title{Snippets}\author{}\date{}
+\lstset{%
+  language         = TeX,%
+  basicstyle       = \bfseries\scriptsize\ttfamily,%
+  keywordstyle     = \bfseries\color{black},%
+  commentstyle     = \itshape\color{green},%
+  backgroundcolor  = \color{white},%
+  showstringspaces = false,%
+  columns          = fullflexible,%
+  breaklines       = true,%
+  frame            = none,%
+}%
 
 \begin{document}
+
+  \title{Snippets}\author{}\date{}
+
   \maketitle
   \centering
+
   \begin{longtable}{|r|l|c|l|c|}
     \hline 
-      No. & Name                            & Symbol                                              & Code                                              & Sub library             \\
+      No. & Name                            & Symbol                                              & Code                                              & Sublibrary              \\
     \endhead
     \hline
       \No & main track                      & \symbol{main_track.tikz}                            & \code{main_track.tikz}                            & \texttt{topology}       \\
     \hline
       \No & main line (double track)        & \symbol{main_line.tikz}                             & \code{main_line.tikz}                             & \texttt{topology}       \\
     \hline
-      \No & track distance (in \si{\metre}) & \symbol{track_distance.tikz}                        & \code{track_distance.tikz}                        & \texttt{topology}       \\
-    \hline
       \No & secondary track                 & \symbol{secondary_track.tikz}                       & \code{secondary_track.tikz}                       & \texttt{topology}       \\
     \hline
       \No & track number                    & \symbol{track_number.tikz}                          & \code{track_number.tikz}                          & \texttt{topology}       \\
+    \hline
+      \No & bufferstop (forward)            & \symbol{bufferstop_forward.tikz}                    & \code{bufferstop_forward.tikz}                    & \texttt{topology}       \\
+    \hline
+      \No & bufferstop (backward)           & \symbol{bufferstop_backward.tikz}                   & \code{bufferstop_backward.tikz}                   & \texttt{topology}       \\
+    \hline
+      \No & friction bufferstop (forward)   & \symbol{friction_bufferstop_forward.tikz}           & \code{friction_bufferstop_forward.tikz}           & \texttt{topology}       \\
+    \hline
+      \No & friction bufferstop (backward)  & \symbol{friction_bufferstop_backward.tikz}          & \code{friction_bufferstop_backward.tikz}          & \texttt{topology}       \\
+    \hline
+      \No & track closure                   & \symbol{track_closure.tikz}                         & \code{track_closure.tikz}                         & \texttt{topology}       \\
     \hline
       \No & turnout left (forward)          & \symbol{turnout_left_forward.tikz}                  & \code{turnout_left_forward.tikz}                  & \texttt{topology}       \\
     \hline
@@ -118,6 +116,18 @@
       \No & \parbox[c]{5cm}{turnout right (backward)\\with moving points}
                                             & \symbol{turnout_right_backward_moving_points.tikz}  & \code{turnout_right_backward_moving_points.tikz}  & \texttt{topology}       \\
     \hline
+      \No & \parbox[c]{5cm}{turnout left (forward)\\operated manually}
+                                            & \symbol{turnout_left_forward_manually.tikz}         & \code{turnout_left_forward_manually.tikz}         & \texttt{topology}       \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (forward)\\operated manually}
+                                            & \symbol{turnout_right_forward_manually.tikz}        & \code{turnout_right_forward_manually.tikz}        & \texttt{topology}       \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout left (backward)\\operated manually}
+                                            & \symbol{turnout_left_backward_manually.tikz}        & \code{turnout_left_backward_manually.tikz}        & \texttt{topology}       \\
+    \hline
+      \No & \parbox[c]{5cm}{turnout right (backward)\\operated manually}
+                                            & \symbol{turnout_right_backward_manually.tikz}       & \code{turnout_right_backward_manually.tikz}       & \texttt{topology}       \\
+    \hline
       \No & derailer left (forward)         & \symbol{derailer_left_forward.tikz}                 & \code{derailer_left_forward.tikz}                 & \texttt{topology}       \\
     \hline
       \No & derailer left (backward)        & \symbol{derailer_left_backward.tikz}                & \code{derailer_left_backward.tikz}                & \texttt{topology}       \\
@@ -126,23 +136,25 @@
     \hline
       \No & derailer right (backward)       & \symbol{derailer_right_backward.tikz}               & \code{derailer_right_backward.tikz}               & \texttt{topology}       \\
     \hline
-      \No & bufferstop (forward)            & \symbol{bufferstop_forward.tikz}                    & \code{bufferstop_forward.tikz}                    & \texttt{topology}       \\
+      \No & vehicles (parked)               & \symbol{parked_vehicles.tikz}                       & \code{parked_vehicles.tikz}                       & \texttt{vehicles}       \\
     \hline
-      \No & bufferstop (backward)           & \symbol{bufferstop_backward.tikz}                   & \code{bufferstop_backward.tikz}                   & \texttt{topology}       \\
+      \No & vehicles with label (parked)    & \symbol{parked_vehicles_with_label.tikz}            & \code{parked_vehicles_with_label.tikz}            & \texttt{vehicles}       \\
     \hline
-      \No & vehicles (parked)               & \symbol{vehicles.tikz}                              & \code{vehicles.tikz}                              & \texttt{vehicles}       \\
+      \No & vehicle (parked)                & \symbol{parked_vehicle.tikz}                        & \code{parked_vehicle.tikz}                        & \texttt{vehicles}       \\
     \hline
-      \No & vehicles with label (parked)    & \symbol{vehicles_with_label.tikz}                   & \code{vehicles_with_label.tikz}                   & \texttt{vehicles}       \\
+      \No & \parbox[c]{4cm}{train in shunting mode\\(direction forward)}
+                                            & \symbol{train_shunt_mode_forward.tikz}              & \code{train_shunt_mode_forward.tikz}              & \texttt{vehicles}       \\
     \hline
-      \No & vehicle (parked)                & \symbol{vehicle.tikz}                               & \code{vehicle.tikz}                               & \texttt{vehicles}       \\
+      \No & \parbox[c]{4cm}{train in shunting mode\\(direction backward)}
+                                            & \symbol{train_shunt_mode_backward.tikz}             & \code{train_shunt_mode_backward.tikz}             & \texttt{vehicles}       \\
+    \hline
+      \No & train shunting (forward)        & \symbol{train_shunting_forward.tikz}                & \code{train_shunting_forward.tikz}                & \texttt{vehicles}       \\
+    \hline
+      \No & train shunting (backward)       & \symbol{train_shunting_backward.tikz}               & \code{train_shunting_backward.tikz}               & \texttt{vehicles}       \\
     \hline
       \No & train (direction forward)       & \symbol{train_direction_forward.tikz}               & \code{train_direction_forward.tikz}               & \texttt{vehicles}       \\
     \hline
       \No & train (direction backward)      & \symbol{train_direction_backward.tikz}              & \code{train_direction_backward.tikz}              & \texttt{vehicles}       \\
-    \hline
-      \No & ghost train (direction forward) & \symbol{ghost_train_direction_forward.tikz}         & \code{ghost_train_direction_forward.tikz}         & \texttt{vehicles}       \\
-    \hline
-      \No & ghost train (direction backward)& \symbol{ghost_train_direction_backward.tikz}        & \code{ghost_train_direction_backward.tikz}        & \texttt{vehicles}       \\
     \hline
       \No & train moving (forward)          & \symbol{train_moving_forward.tikz}                  & \code{train_moving_forward.tikz}                  & \texttt{vehicles}       \\
     \hline
@@ -156,21 +168,17 @@
     \hline
       \No & train moving fast (backward)    & \symbol{train_moving_fast_backward.tikz}            & \code{train_moving_fast_backward.tikz}            & \texttt{vehicles}       \\
     \hline
-      \No & \parbox[c]{4cm}{train in shunting mode\\(direction forward)}
-                                            & \symbol{train_shunt_mode_forward.tikz}              & \code{train_shunt_mode_forward.tikz}              & \texttt{vehicles}       \\
+      \No & train ghost (direction forward) & \symbol{train_ghost_direction_forward.tikz}         & \code{train_ghost_direction_forward.tikz}         & \texttt{vehicles}       \\
     \hline
-      \No & \parbox[c]{4cm}{train in shunting mode\\(direction backward)}
-                                            & \symbol{train_shunt_mode_backward.tikz}             & \code{train_shunt_mode_backward.tikz}             & \texttt{vehicles}       \\
-    \hline
-      \No & train shunting (forward)        & \symbol{train_shunting_forward.tikz}                & \code{train_shunting_forward.tikz}                & \texttt{vehicles}       \\
-    \hline
-      \No & train shunting (backward)       & \symbol{train_shunting_backward.tikz}               & \code{train_shunting_backward.tikz}               & \texttt{vehicles}       \\
+      \No & train ghost (direction backward)& \symbol{train_ghost_direction_backward.tikz}        & \code{train_ghost_direction_backward.tikz}        & \texttt{vehicles}       \\
     \hline
       \No & \parbox[c]{4cm}{train operated automatic\\(direction forward)}
                                             & \symbol{train_drive_automatic.tikz}                 & \code{train_drive_automatic.tikz}                 & \texttt{vehicles}       \\
     \hline
       \No & \parbox[c]{4cm}{train operated by human\\(direction forward)}
                                             & \symbol{train_drive_human.tikz}                     & \code{train_drive_human.tikz}                     & \texttt{vehicles}       \\
+    \hline
+      \No & train running over a junction   & \symbol{bend_train.tikz}                            & \code{bend_train.tikz}                            & \texttt{vehicles}       \\
     \hline
       \No & view point (forward)            & \symbol{view_point_forward.tikz}                    & \code{view_point_forward.tikz}                    & \texttt{trafficcontrol} \\
     \hline
@@ -198,7 +206,7 @@
     \hline
       \No & route signal (backward)         & \symbol{route_signal_backward.tikz}                 & \code{route_signal_backward.tikz}                 & \texttt{trafficcontrol} \\
     \hline
-      \No & \parbox[c]{4cm}{combined signal\\(distant and block signal)}
+      \No & \parbox[c]{4cm}{combined signal\\(distant, block and route signal)}
                                             & \symbol{combined_signal_forward.tikz}               & \code{combined_signal_forward.tikz}               & \texttt{trafficcontrol} \\
     \hline
       \No & shunt signal (forward)          & \symbol{shunt_signal_forward.tikz}                  & \code{shunt_signal_forward.tikz}                  & \texttt{trafficcontrol} \\
@@ -213,23 +221,11 @@
     \hline
       \No & shunt limit (backward)          & \symbol{shunt_limit_backward.tikz}                  & \code{shunt_limit_backward.tikz}                  & \texttt{trafficcontrol} \\
     \hline
-      \No & transmitter (below \& above)    & \symbol{transmitter.tikz}                           & \code{transmitter.tikz}                           & \texttt{trafficcontrol} \\
-    \hline
-      \No & \parbox[c]{4.5cm}{transmitter (below)\\with signal}
-                                            & \symbol{transmitter_below_with_signal.tikz}         & \code{transmitter_below_with_signal.tikz}         & \texttt{trafficcontrol} \\
-    \hline
-      \No & \parbox[c]{4.5cm}{transmitter (below \& above)\\ effective forward}
-                                            & \symbol{transmitter_forward.tikz}                   & \code{transmitter_forward.tikz}                   & \texttt{trafficcontrol} \\
-    \hline
-      \No & \parbox[c]{4.5cm}{transmitter (below \& above)\\ effective backward}
-                                            & \symbol{transmitter_backward.tikz}                  & \code{transmitter_backward.tikz}                  & \texttt{trafficcontrol} \\
-    \hline
-      \No & \parbox[c]{4.5cm}{transmitter (below \& above)\\ effective bidirectional}
-                                            & \symbol{transmitter_bidirectional.tikz}             & \code{transmitter_bidirectional.tikz}             & \texttt{trafficcontrol} \\
-    \hline
       \No & block end marker (forward)      & \symbol{block_end_marker_forward.tikz}              & \code{block_end_marker_forward.tikz}              & \texttt{trafficcontrol} \\
     \hline
       \No & block end marker (backward)     & \symbol{block_end_marker_backward.tikz}             & \code{block_end_marker_backward.tikz}             & \texttt{trafficcontrol} \\
+    \hline
+      \No & route (forward \& backward)     & \symbol{route.tikz}                                 & \code{route.tikz}                                 & \texttt{trafficcontrol} \\
     \hline
       \No & block clearing point (forward)  & \symbol{block_clearing_point_forward.tikz}          & \code{block_clearing_point_forward.tikz}          & \texttt{trafficcontrol} \\
     \hline
@@ -245,13 +241,23 @@
     \hline
       \No & train berth sign (backward)     & \symbol{train_berth_sign_backward.tikz}             & \code{train_berth_sign_backward.tikz}             & \texttt{trafficcontrol} \\
     \hline
-      \No & train berth shape               & \symbol{train_berth_shape.tikz}                     & \code{train_berth_shape.tikz}                     & \texttt{trafficcontrol} \\
+      \No & train berth                     & \symbol{train_berth.tikz}                           & \code{train_berth.tikz}                           & \parbox[c]{3cm}{\centering\texttt{trafficcontrol} \\ \& \\ \texttt{messures}} \\
     \hline
-      \No & train berth shape bidirectional & \symbol{train_berth_shape_bidirectional.tikz}       & \code{train_berth_shape_bidirectional.tikz}       & \texttt{trafficcontrol} \\
+      \No & transmitter (right \& left)     & \symbol{transmitter.tikz}                           & \code{transmitter.tikz}                           & \texttt{trafficcontrol} \\
     \hline
-      \No & train berth with different shape& \symbol{train_berth_shape_different.tikz}           & \code{train_berth_shape_different.tikz}           & \texttt{trafficcontrol} \\
+      \No & \parbox[c]{4.5cm}{transmitter (right)\\with signal}
+                                            & \symbol{transmitter_right_with_signal.tikz}         & \code{transmitter_right_with_signal.tikz}         & \texttt{trafficcontrol} \\
     \hline
-      \No & train berth                     & \symbol{train_berth.tikz}                           & \code{train_berth.tikz}                           & \texttt{trafficcontrol} \\
+      \No & \parbox[c]{4.5cm}{transmitter (right \& left)\\ effective forward}
+                                            & \symbol{transmitter_forward.tikz}                   & \code{transmitter_forward.tikz}                   & \texttt{trafficcontrol} \\
+    \hline
+      \No & \parbox[c]{4.5cm}{transmitter (right \& left)\\ effective backward}
+                                            & \symbol{transmitter_backward.tikz}                  & \code{transmitter_backward.tikz}                  & \texttt{trafficcontrol} \\
+    \hline
+      \No & \parbox[c]{4.5cm}{transmitter (right \& left)\\ effective bidirectional}
+                                            & \symbol{transmitter_bidirectional.tikz}             & \code{transmitter_bidirectional.tikz}             & \texttt{trafficcontrol} \\
+    \hline
+      \No & loop transmitter                & \symbol{loop_transmitter.tikz}                      & \code{loop_transmitter.tikz}                      & \texttt{trafficcontrol} \\
     \hline
       \No & platform (left)                 & \symbol{platform_left.tikz}                         & \code{platform_left.tikz}                         & \texttt{constructions}  \\
     \hline
@@ -274,6 +280,16 @@
       \No & hump                            & \symbol{hump.tikz}                                  & \code{hump.tikz}                                  & \texttt{constructions}  \\
     \hline
       \No & interlocking                    & \symbol{interlocking.tikz}                          & \code{interlocking.tikz}                          & \texttt{constructions}  \\
+    \hline
+      \No & train berth shape               & \symbol{train_berth_shape.tikz}                     & \code{train_berth_shape.tikz}                     & \texttt{messures}       \\
+    \hline
+      \No & train berth shape bidirectional & \symbol{train_berth_shape_bidirectional.tikz}       & \code{train_berth_shape_bidirectional.tikz}       & \texttt{messures}       \\
+    \hline
+      \No & train berth with special shape  & \symbol{train_berth_shape_special.tikz}             & \code{train_berth_shape_special.tikz}             & \texttt{messures}       \\
+    \hline
+      \No & track distance (in \si{\metre}) & \symbol{track_distance.tikz}                        & \code{track_distance.tikz}                        & \texttt{messures}       \\
+    \hline
+      \No & hectometer (in \si{\kilo\metre}) & \symbol{hectometer.tikz}                           & \code{hectometer.tikz}                            & \texttt{messures}       \\
     \hline
   \end{longtable}
 \end{document}

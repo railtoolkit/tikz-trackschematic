@@ -1,147 +1,154 @@
 %!TEX TS-program = pdflatexmk
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[tikz,border=2]{standalone}
-
-\usepackage{lmodern}
-\usepackage[prefix=]{xcolor-solarized}
-
-\def\rootTrackschematic{../../tikz-trackschematic}
-\def\srcTrackschematic{\rootTrackschematic/src/tikzlibrarytrackschematic}
-\input{\srcTrackschematic.topology.code.tex}
-\input{\srcTrackschematic.vehicles.code.tex}
-\input{\srcTrackschematic.constructions.code.tex}
-\input{\srcTrackschematic.trafficcontrol.code.tex}% Order 1
-\input{\rootTrackschematic/src/layoutSymbols_DE.tikz} % Order 2 (important)
+\usetikzlibrary{trackschematic}
 
 \begin{document}
   \begin{tikzpicture}[font=\sffamily]
-  {   % stations
-    \tikzset{every node/.style={base00}};
+  { % station names
+    \tikzset{every node/.style={\foreground!50!\background}};
     \node[right,align=left] at ( 2,1.3) {to and from\\ Arnau};
     \node                   at (21,3.3) {{\LARGE Bf Berg}};
     \node[left,align=right] at (38,1.3) {to and from\\ Chamstadt};
   }
-  {   % tracks
-    \draw[MainTrack] ( 1.5, 0) -- ++(37,0);
-    \draw[MainTrack] (15  , 0) -- ++( 1,1) -- ++(10,0) -- ++(1,-1);
-    \draw[SecondaryTrack] (11  ,-1) -- ++( 2,0) -- ++( 1,1);
-    \draw[SecondaryTrack] ( 9  , 1) -- ++( 7,0);
-    \draw[SecondaryTrack] (14  , 1) -- ++( 1,1) -- ++(10,0);
+  % coordinates
+  \coordinate (A)  at ( 1.5, 0);
+  \coordinate (B)  at (38.5, 0);
+
+  \coordinate (E1) at ( 9  , 1);
+  \coordinate (E2) at (11  ,-1);
+  \coordinate (E3) at (25  , 2);
+  \coordinate (H1) at (15  , 2);
+  \coordinate (H2) at (26  , 1);
+
+  \coordinate (Y1) at (14  , 0);
+  \coordinate (Y2) at (15  , 0);
+  \coordinate (Y3) at (14  , 1);
+  \coordinate (Y4) at (16  , 1);
+  \coordinate (Y5) at (27  , 0);
+  \coordinate (Y6) at (12.8,-1);
+
+  \coordinate (S1) at ( 7  , 0);
+  \coordinate (S2) at (10  , 0);
+  \coordinate (S3) at (18  , 0);
+  \coordinate (S4) at (18  , 1);
+  \coordinate (S5) at (24  , 0);
+  \coordinate (S6) at (24  , 1);
+  \coordinate (S7) at (30  , 0);
+  \coordinate (S8) at (33  , 0);
+
+  \coordinate (T1) at ( 6  , 0);
+  \coordinate (T2) at (10.2, 1);
+  \coordinate (T3) at (23  , 2);
+  \coordinate (T4) at (34  , 0);
+
+  \coordinate (P1) at (21  , 0);
+  \coordinate (P2) at (21  , 1);
+
+  \coordinate (HM) at (0,-1.85);
+
+  { %% topology
+    % tracks
+    \maintrack (A) -- (B);
+    \maintrack (Y2) -- (Y4) -- (H2) -- (Y5);
+    \secondarytrack (E1) -- (Y4);
+    \secondarytrack (E2) -- ++( 2,0) -- (Y1);
+    \secondarytrack (Y3) -- (H1) -- (E3);
+
     % track numbers
-    \node[fill=background] at (11.7, 1) {12};
-    \node[fill=background] at (11.7,-1) {10};
-    \node[fill=background] at (21.0, 2) { 3};
-    \node[fill=background] at (21.0, 1) { 2};
-    \node[fill=background] at (21.0, 0) { 1};
+    \tracklabel at (11.7, 1) label (12);
+    \tracklabel at (11.7,-1) label (10);
+    \tracklabel at (21  , 2) label (3);
+    \tracklabel at (P2) label (2);
+    \tracklabel at (P1) label (1);
+
     % bufferstops
-    \pic at ( 9, 1) {bufferstop_backward};
-    \pic at (11,-1) {bufferstop_backward};
-    \pic at (25, 2) {bufferstop_forward};
+    \bufferstop[backward] at (E1);
+    \bufferstop[backward] at (E2);
+    \bufferstop[forward]  at (E3);
+
     % turnouts
-    \pic  at (12.8,-1) {derailer_right_forward};
-    \node at (12.7,-1.4) {\footnotesize Gs7};
-    \pic  at (14,0) {turnout_left_backward};
-    \pic  at (14,0) {fouling_point_left_backward};
-    \node at (14,0.2) {\footnotesize W1};
-    \pic  at (14,1) {turnout_left_forward};
-    \pic  at (14,1) {fouling_point_left_forward};
-    \node at (14,0.8) {\footnotesize W4};
-    \pic  at (15,0) {turnout_left_forward};
-    \pic  at (15,0) {fouling_point_left_forward};
-    \node at (15,-0.2) {\footnotesize W2};
-    \pic  at (16,1) {turnout_left_backward};
-    \pic  at (16,1) {fouling_point_left_backward};
-    \node at (16,1.2) {\footnotesize W3};
-    \pic  at (27,0) {turnout_right_backward};
-    \pic  at (27,0) {fouling_point_right_backward};
-    \node at (27,-0.2) {\footnotesize W6};
-    % platforms
-    \pic at (19,0) {platform_left};
-    \pic at (19,1) {platform_right};
+    \tikzset{every node/.style={fouling point}};
+    \turnout[backward,branch=right] at (Y1) label (W1);
+    \turnout[forward ,branch=left ] at (Y2) label (W2);
+    \turnout[forward ,branch=left ] at (Y3) label (W3);
+    \turnout[backward,branch=right] at (Y4) label (W4);
+    \turnout[backward,branch=left ] at (Y5) label (W5);
+    \derailer[forward,branch=right] at (Y6) label (Gs6);
   }
-  {   % signals
-    \pic         at ( 7, 0  ) {distant_signal_forward};
-    \node[left]  at ( 7,-0.4) {Va};
-    \pic         at (10, 0  ) {route_signal_forward};
-    \pic         at (10, 0  ) {distant_signal_forward};
-    \node[left]  at (10,-0.4) {A};
-    \pic         at (18, 1  ) {route_signal_backward};
-    \node[right] at (18, 1.4) {P2};
-    \pic         at (18, 0  ) {route_signal_backward};
-    \node[right] at (18, 0.4) {P1};
-    \pic         at (24, 1  ) {route_signal_forward};
-    \node[left]  at (24, 0.6) {N2};
-    \pic         at (24, 0  ) {route_signal_forward};
-    \node[left]  at (24,-0.4) {N1};
-    \pic         at (30, 0  ) {route_signal_backward};
-    \pic         at (30, 0  ) {distant_signal_backward};
-    \node[right] at (30, 0.4) {F};
-    \pic         at (33, 0  ) {distant_signal_backward};
-    \node[right] at (33, 0.4) {Vf};
+  { %% traffic control
+    % signals
+    \distantsignal[forward]  at (S1) label (Va);
+
+    \signal[distant,route,forward] at (S2) label (A);
+
+    \routesignal[backward]   at (S3) label (P1);
+    \routesignal[backward]   at (S4) label (P2);
+
+    \routesignal[forward]    at (S5) label (N1);
+    \routesignal[forward]    at (S6) label (N2);
+
+    \signal[distant,route,backward] at (S7) label (F);
+
+    \distantsignal[backward] at (S8) label (Vf);
+    
     % routes
-    \pic at (20,0) {route_backward};
-    \pic at (22,0) {route_forward};
-    \pic at (20,1) {route_backward};
-    \pic at (22,1) {route_forward};
+    \route[backward] at (20,0);
+    \route[forward]  at (22,0);
+    \route[backward] at (20,1);
+    \route[forward]  at (22,1);
+
+    % clearing points
+    \tikzset{every node/.style={backward}};
+    \clearingpoint[] at (10  , 0) label ();
+    \clearingpoint[] at (12.3,-1) label ();
+    \clearingpoint[] at (12.8, 0) label ();
+    \clearingpoint[] at (13.4, 1) label ();
+    \clearingpoint[] at (14.9, 1) label ();
+    \coordinate (H3) at ($(Y2)!0.5!(Y4)$); % using tikz calc library
+    \clearingpoint[rotate=45] at (H3) label ();
+    \coordinate (H4) at ($(Y3)!0.8!(H1)$); % using tikz calc library
+    \clearingpoint[rotate=45] at (H4) label ();
+    \clearingpoint[] at (16  , 0) label ();
+    \clearingpoint[] at (18  , 1) label ();
+    \clearingpoint[] at (18  , 0) label ();
+    \clearingpoint[] at (24  , 1) label ();
+    \clearingpoint[] at (24  , 0) label ();
+    \clearingpoint[] at (26  , 0) label ();
+    \clearingpoint[] at (27.5, 0) label ();
+    \coordinate (H5) at ($(Y5)!0.8!(H2)$); % using tikz calc library
+    \clearingpoint[rotate=315] at (H5) label ();
+    \clearingpoint[] at (30  , 0) label ();
   }
-  {   % axle counters
-    \pic at (10  , 0) {axle_counter_right};
-    \pic at (12.3,-1) {axle_counter_right};
-    \pic at (12.8, 0) {axle_counter_right};
-    \pic at (13.4, 1) {axle_counter_right};
-    \pic at (14.9, 1) {axle_counter_right};
-    \pic [rotate=45] at (14.5, 2  ) {axle_counter_right};
-    \pic [rotate=45] at (15.9, 0.4) {axle_counter_left};
-    \pic at (16  , 0) {axle_counter_right};
-    \pic at (18  , 1) {axle_counter_right};
-    \pic at (18  , 0) {axle_counter_right};
-    \pic at (24  , 1) {axle_counter_right};
-    \pic at (24  , 0) {axle_counter_right};
-    \pic at (26  , 0) {axle_counter_right};
-    \pic at (27.5, 0) {axle_counter_right};
-    \pic [rotate=315] at (26.2, 0.8) {axle_counter_left};
-    \pic at (30  , 0) {axle_counter_right};
+  { %% vehicles
+    \train[run=normal,forward] at (T1) label (RB);
+    \train[run=fast,backward]  at (T4) label (IC);
+    \parkedvehicles[length=3cm] at (T3) label (WG);
+    \parkedvehicles[length=1cm] at (T2) label (Tfz);
   }
-  {   % vehicles
-    \pic  at ( 6  ,0) {train_moving_forward};
-    \node at ( 4  ,0) {\emph{RB}};
-    \pic  at (21.5,2) {train=3};
-    \node at (23  ,2) {\emph{WG}};
-    \pic  at (10.2,1) {train=1};
-    \node at (10.7,1) {\emph{Tfz}};
-    \pic  at (34  ,0) {train_moving_backward};
-    \node at (36  ,0) {\emph{IC}};
+  { %% constructions
+    % platforms
+    \platform[side=right] at (P2);
+    \platform[side=left ] at (P1);
   }
-  {   % hectometer posts
-    \tikzset{every node/.style={left,base00,rotate=-90},every path/.style={base00,dashed}};
-    \node at (07.0,-2.75) { 7.200};
-    \draw    (07.0,-1.55) -- ++(0,0.7);
-    \node at (10.0,-2.75) { 8.200};
-    \draw    (10.0,-1.55) -- ++(0,0.7);
-    \node at (12.8,-2.75) { 8.400};
-    \draw    (12.8,-1.70) -- ++(0,0.1);
-    \draw    (12.8,-0.70) -- ++(0,0.3);
-    \node at (16.0,-2.75) { 8.600};
-    \draw    (16.0,-1.55) -- ++(0,1.1);
-    \node at (18.0,-2.75) { 8.700};
-    \draw    (18.0,-1.55) -- ++(0,1.1);
-    \node at (19.0,-2.75) { 8.750};
-    \draw    (19.0,-1.55) -- ++(0,1.3);
-    \node at (23.0,-2.75) { 9.000};
-    \draw    (23.0,-1.55) -- ++(0,1.3);
-    \node at (24.0,-2.75) { 9.100};
-    \draw    (24.0,-1.55) -- ++(0,0.7);
-    \node at (26.0,-2.75) { 9.200};
-    \draw    (26.0,-1.55) -- ++(0,1.1);
-    \node at (27.5,-2.75) { 9.300};
-    \draw    (27.5,-1.55) -- ++(0,1.1);
-    \node at (30.0,-2.75) { 9.500};
-    \draw    (30.0,-1.55) -- ++(0,1.1);
-    \node at (33.0,-2.75) {10.500};
-    \draw    (33.0,-1.55) -- ++(0,1.3);
+  { %% messures
+    % hectometer posts
+    \tikzset{hectometer base={(HM)},orientation=right};
+    \hectometer[] at (S1)      label ( 7.200);
+    \hectometer[] at (S2)      label ( 8.200);
+    \hectometer[] at (12.8,-1) label ( 8.400);
+    \hectometer[] at (16  , 0) label ( 8.600);
+    \hectometer[] at (S3)      label ( 8.700);
+    \hectometer[] at (19  , 0) label ( 8.750);
+    \hectometer[] at (23  , 0) label ( 9.000);
+    \hectometer[] at (S5)      label ( 9.100);
+    \hectometer[] at (26  , 0) label ( 9.200);
+    \hectometer[] at (27.5, 0) label ( 9.300);
+    \hectometer[] at (S7)      label ( 9.500);
+    \hectometer[] at (S8)      label (10.500);
   }
   \end{tikzpicture}
 \end{document}

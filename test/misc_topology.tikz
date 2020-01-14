@@ -1,25 +1,25 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = test.tex
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \node[blue] at (4,0) {\large test misc. topology symbols};
 
-\foreach \i in {1,2,...,3}{% base coordinate
+\foreach \i in {1,2,...,5}{% base coordinate
   \coordinate (A\i) at ($(0,0) + 2*(0,-\i)$);% base coordinate
   \coordinate (B\i) at ($(8,0) + 2*(0,-\i)$);% base coordinate
 }
 
-\foreach \i in {1}{% draw main tracks on base coordinate
+\foreach \i in {1,4}{% draw main tracks on base coordinate
   \maintrack (A\i) --   (B\i);
 }
 
-\foreach \i in {2,3}{% draw secondary tracks on base coordinate
+\foreach \i in {2,3,5}{% draw secondary tracks on base coordinate
   \secondarytrack (A\i) --   (B\i);
 }
 
-\foreach \i in {1,2,...,3}{% coordinates for testing symbols
+\foreach \i in {1,2,...,5}{% coordinates for testing symbols
   \coordinate (X\i-1) at ($(1,0) + 2*(0,-\i)$);
   \coordinate (X\i-2) at ($(3,0) + 2*(0,-\i)$);
   \coordinate (X\i-3) at ($(5,0) + 2*(0,-\i)$);
@@ -29,8 +29,6 @@
 \tracklabel at (X1-1) label (12);
 \tracklabel at (X1-3) label (really long text);
 \tracklabel at (X2-2) label (22);
-\trackdistance between (X1-2) and (X2-3) label (\SI[math-rm=\mathsf]{6,50}{\metre});
-\trackdistance between (X1-4) and (X2-4) label (4,50);
 
 \derailer[forward ,branch=left ] at (X3-1) label (X3-1);
 \derailer[backward,branch=left ] at (X3-2) label (X3-2);
@@ -43,3 +41,8 @@
 \bufferstop[forward ,friction=.5]  at (B2);
 \bufferstop[backward] at (A3);
 \bufferstop[forward]  at (B3);
+
+\trackclosure at (A4);
+\trackclosure at (B4);
+\trackclosure at (A5);
+\trackclosure at (B5);

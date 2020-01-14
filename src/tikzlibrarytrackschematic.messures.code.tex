@@ -1,0 +1,253 @@
+%% symbol library for TikZ track schematics
+%
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+%
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+%
+\ProvidesFileRCS{tikzlibrarytrackschematic.messures.code.tex}%
+%
+%%%%%%%%%%%%%%%
+% global settings
+%%%%%%%%%%%%%%%
+\RequirePackage{tikz,etoolbox,lmodern}%
+\usetikzlibrary{calc,intersections,arrows.meta}%
+%
+% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
+\providecommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}%
+%
+%%%%%%%%%%%%%%%
+% tikz keys for multiple use
+%%%%%%%%%%%%%%%
+\ifdeflength{\objectlength}{}{% Not defined, so define it!
+  \newlength{\objectlength}%
+}%
+\setlength{\objectlength}{4cm}%
+%
+\pgfkeys{%
+  /tikz/trackschematic/.is family,%
+  /tikz/trackschematic/.cd,%
+  %% color foreground
+  foreground/.store in=\foreground,%
+  foreground=black,% DEFAULT
+  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
+  %% color background
+  background/.store in=\background,%
+  background=white,% DEFAULT
+  /tikz/background/.forward to=/tikz/trackschematic/background,%
+  %% face
+  face/.value required,% forward, backward OR bidirectional
+  face/.store in=\face,% forward, backward OR bidirectional
+  /tikz/face/.forward to=/tikz/trackschematic/face,%
+  /tikz/forward/.code={\pgfkeys{/tikz/trackschematic/face=forward}},%
+  /tikz/backward/.code={\pgfkeys{/tikz/trackschematic/face=backward}},%
+  /tikz/bidirectional/.code={\pgfkeys{/tikz/trackschematic/face=bidirectional}},%
+  %% length
+  length/.store in=\objectlength,% default length 4cm
+  /tikz/length/.forward to=/tikz/trackschematic/length,%
+  %% traffic practice
+  traffic practice/.value required,% left OR right
+  traffic practice/.store in=\trafficpractice,%
+  /tikz/traffic practice/.forward to=/tikz/trackschematic/traffic practice,%
+  /tikz/position/.forward to=/tikz/trackschematic/traffic practice,%
+  %% label
+  shift label/.store in=\labelcoord,% (coord)
+  shift label=(none),% DEFAULT
+  /tikz/shift label/.forward to=/tikz/trackschematic/shift label,%
+}%
+\tikzset{traffic practice=right}%
+%
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/messures/.is family,%
+  /tikz/trackschematic/messures/.cd,%
+  %% color hectometer
+  color/.store in=\hectometercolor,%
+  color=\foreground!50!\background,% DEFAULT
+  /tikz/hectometer color/.forward to=/tikz/trackschematic/messures/color,%
+}%
+%%%%%%%%%%%%%%%%
+% symbol train berth
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\berth{}% just for safety
+\def\berth[#1]#2(#3)#4(#5){% \berth[options] at (coord) length (usable length);
+  \pic[#1] at (#3) {train_berth={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/train_berth/.default=,%
+  pics/train_berth/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% face setup
+    \ifdefstring{\face}{bidirectional}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{forward}{% face
+        \pgfmathsetmacro{\facefactor}{1}%
+      }{%
+        \ifdefstring{\face}{backward}{% face
+          \pgfmathsetmacro{\facefactor}{-1}%
+        }{% error message
+          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“, “backward“ OR “bidirectional“ as key required}}%
+        }%
+      }%
+    }% end \ifdefstring{\face}
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %
+    \tikzset{every path/.style={draw=\foreground,line width=0.75pt,line cap=round,dash pattern=on 0pt off 2.4\pgflinewidth}};%
+    \path% berth shape forward
+      ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
+      ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
+      ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.35) + (\pgflinewidth,0)$) --%
+      ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
+      ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
+      ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$);% berth shape forward
+    \path[draw=none,fill=\foreground]% arrow front
+      ($\facefactor*0.5*(\objectlength,0) + \facefactor*(-0.1,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
+      ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
+    \path[draw=none,fill=\foreground]% arrow back
+      ($\facefactor*-0.5*(\objectlength,0) + \facefactor*(0.2,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
+      ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
+    \ifdefstring{\face}{bidirectional}{% bidirectional
+      \pgfmathsetmacro{\facefactor}{-1}%
+      \path% berth shape forward
+        ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
+        ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
+        ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.35) + (\pgflinewidth,0)$) --%
+        ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
+        ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
+        ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$);% berth shape forward
+      \path[draw=none,fill=\foreground]% arrow front
+        ($\facefactor*0.5*(\objectlength,0) + \facefactor*(-0.1,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
+        ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
+      \path[draw=none,fill=\foreground]% arrow back
+        ($\facefactor*-0.5*(\objectlength,0) + \facefactor*(0.2,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
+        ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
+    }{}%
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \node[fill=\background,text=\foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
+      \ifdefstring{\face}{bidirectional}{% bidirectional
+        \pgfmathsetmacro{\facefactor}{1}%
+        \node[fill=\background,text=\foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
+      }{}%
+    }%
+  }},% end pics/train_berth/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol track distance
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\trackdistance{}% just for safety
+\def\trackdistance#1(#2)#3(#4)#5(#6){% \trackdistance between (coord1) and (coord2) label (distance);
+  \path[draw=\background,<->,>={Stealth[\foreground,inset=0pt,angle=50:0.2cm]},shorten <=1pt,shorten >=1pt] (#2) -- (#4)% arrow tips
+  node[hectometer base=(current bounding box.center),text=\foreground,midway,sloped,rotate=90] {#6};% label
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol hectometer posts
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\hectometer{}% just for safety
+\def\hectometer[#1]#2(#3)#4(#5){% \hectometer[options] at (coord) label (name);
+  \pic[#1] at (#3) {hectometer_posts={#2/#4/#5}}% symbol
+}%
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/messures/hectometer/.is family,%
+  /tikz/trackschematic/messures/hectometer/.cd,%
+  %% hectometer base
+  base/.value required,%
+  base/.store in=\basecoord,%
+  /tikz/hectometer base/.forward to=/tikz/trackschematic/messures/hectometer/base,%
+  %% hectometer base
+  orientation/.value required,%
+  orientation/.store in=\orientation,%
+  /tikz/orientation/.forward to=/tikz/trackschematic/messures/hectometer/orientation,%
+}%
+%% symbol definition
+\tikzset{%
+  pics/hectometer_posts/.default=,%
+  pics/hectometer_posts/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %
+    \gettikzxy{\basecoord}{\basecoordX}{\basecoordY}%
+    \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+      \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+    }
+    %% orientation setup
+    \ifdefstring{\orientation}{left}{% orientation
+      \def\align{right}%
+    }{%
+      \ifdefstring{\orientation}{right}{% orientation
+        \def\align{left}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/messures/hectometer/orientation}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\orientation}
+    %% calculation of coordinates
+    %%
+    %%                  bend 1       bend 2
+    %%       (0,0.75) (ts-hm-b1)  (ts-hm-b2)
+    %% (0,0)•   • ------- • --------- • ----- •(ts-hm-l) label
+    %%
+    \coordinate (ts-hm-l) at (0,\basecoordY);%
+    \ifdefstring{\labelcoord}{(none)}{%
+      \coordinate (ts-hm-b1) at (ts-hm-l);%
+      \coordinate (ts-hm-b2) at (ts-hm-l);%
+    }{% initialize if NOT default
+      \coordinate (ts-hm-b1) at ($(ts-hm-l) + (0,0.5)$);%
+      \coordinate (ts-hm-b2) at ($(ts-hm-l) + (\labelcoordX,0.25)$);%
+      \coordinate (ts-hm-l)  at ($(ts-hm-l) + (\labelcoordX,\labelcoordY)$);%
+    }%
+    %% symbol
+    \path[draw=\hectometercolor,dashed,shorten <=0.75cm]%
+      (0,0) -- (ts-hm-b1) -- (ts-hm-b2) -- (ts-hm-l);%
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \node[font=\sffamily,text=\hectometercolor,rotate=-90,\orientation,align=\align,fill=\background] at (ts-hm-l) {\labelcontent};%
+    }%
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol messureline
+%%%%%%%%%%%%%%%
+%
+% command
+\newcommand\messureline{}% just for safety
+\def\messureline{\path[MessureLine]}% \maintrack (coord1) -- (coord2);
+%
+\tikzset{MessureLine/.style={draw=\hectometercolor,dashed,shorten <=0.75cm,shorten >=0.75cm}}%
+%
+%%%%%%%%%%%%%%%
+% TODO:
+% * platform length
+% * direction of milage
+%
+%%%%%%%%%%%%%%%
+\endinput%
+%

@@ -1,31 +1,13 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
-
-\ProvidesFileRCS{tikzlibrarytrackschematic.code.tex}
-
-%%%%%%%%%%%%%%%
-% global settings
-%%%%%%%%%%%%%%%
-\RequirePackage{tikz,xcolor}
-
-\colorlet{background}{white}
-\colorlet{foreground}{black}
-
-\pgfkeys{%
-  /tikz/trackschematic/.is family,%
-  /tikz/trackschematic/.cd,%
-  %% face
-  face/.value required,% forward OR backward
-  face/.store in=\face,
-  /tikz/face/.forward to=/tikz/trackschematic/face,%
-  /tikz/forward/.code={\pgfkeys{/tikz/trackschematic/face=forward}},%
-  /tikz/backward/.code={\pgfkeys{/tikz/trackschematic/face=backward}},%
-  %
-}
-
+%
+\ProvidesFileRCS{tikzlibrarytrackschematic.code.tex}%
+%
+\RequirePackage{tikz,etoolbox,lmodern}%
+%
 %%%%%%%%%%%%%%%
 % symbol definitions
 %%%%%%%%%%%%%%%
@@ -33,5 +15,9 @@
 \usetikzlibrary{trackschematic.trafficcontrol}%
 \usetikzlibrary{trackschematic.vehicles}%
 \usetikzlibrary{trackschematic.constructions}%
-
-\endinput
+\usetikzlibrary{trackschematic.messures}%
+% \usetikzlibrary{trackschematic.i18n}%
+%
+%%%%%%%%%%%%%%%
+\endinput%
+%

@@ -1,11 +1,15 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = ../snippets.tex
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+\coordinate (A1) at (0, 0);
+\coordinate (B1) at (6, 0);
+\coordinate (A2) at (2,-1);
+\coordinate (B2) at (4, 1);
+\coordinate (X) at (3,0);
 
-\draw[MainTrack] (-1,-1) -- ++(2,2);
-\fill[background] (-1,-0.4) rectangle (1,0.4);
-\draw[MainTrack] (-2.5,0) -- ++(5,0);
-\pic at (-1,0) {bridge_left=3};
-\pic at (-2,0) {bridge_right=3};
+% order is important
+\maintrack (A2) -- (B2); % first
+\bridge[shift left=0.25cm,shift right=-0.25cm] at (X); % secound
+\maintrack (A1) -- (B1); % third

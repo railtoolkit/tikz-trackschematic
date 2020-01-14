@@ -1,8 +1,12 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = ../snippets.tex
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\draw[MainTrack] (-2.5,0) -- ++(5,0);
-\pic at (2,0) {train_moving_slow_forward};
+\coordinate (A) at (0,0);
+\coordinate (B) at (6,0);
+\coordinate (T) at (5,0);
+
+\maintrack (A) -- (B);
+\train[run=slow,forward] at (T) label ();

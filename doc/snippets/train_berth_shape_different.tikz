@@ -1,9 +1,0 @@
-%!TEX TS-program = pdflatexmk
-%!TEX root = ../snippets.tex
-
-% Copyright 2019 Martin Scheidt (ISC license)
-% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
-
-\draw[MainTrack] (-2.5,0) -- ++(5,0);
-\pic at (-2,0) {train_berth_shape_forward={4}};
-\pic at (-1,0) {train_berth_shape_backward={3}};

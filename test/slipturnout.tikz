@@ -1,7 +1,7 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = test.tex
 
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \node[blue] at (4,0) {\large test slip turnouts};
@@ -75,18 +75,18 @@
 
 \slipturnout[branch=right,forward points=moving,backward points=moving] at (X6-1) label (X6-1a)(X6-1b);
 \slipturnout[branch=left ,forward points=moving,backward points=moving] at (X6-2) label (X6-2a)(X6-2b);
-\slipturnout[branch=right,manual operated] at (X6-3) label (X6-3a)(X6-3b);
-\slipturnout[branch=left ,manual operated] at (X6-4) label (X6-4a)(X6-4b);
+\slipturnout[branch=right,operation=manual] at (X6-3) label (X6-3a)(X6-3b);
+\slipturnout[branch=left ,operation=manual] at (X6-4) label (X6-4a)(X6-4b);
 
-\slipturnout[branch=right,manual operated] at (X7-1) label (X7-1a)(X7-1b);
-\slipturnout[branch=left ,manual operated] at (X7-2) label (X7-2a)(X7-2b);
-\slipturnout[branch=right,manual operated,fouling point] at (X7-3) label (X7-3a)(X7-3b);
-\slipturnout[branch=left ,manual operated,fouling point] at (X7-4) label (X7-4a)(X7-4b);
+\slipturnout[branch=right,operation=manual] at (X7-1) label (X7-1a)(X7-1b);
+\slipturnout[branch=left ,operation=manual] at (X7-2) label (X7-2a)(X7-2b);
+\slipturnout[branch=right,operation=manual,fouling point] at (X7-3) label (X7-3a)(X7-3b);
+\slipturnout[branch=left ,operation=manual,fouling point] at (X7-4) label (X7-4a)(X7-4b);
 
-\slipturnout[branch=right,manual operated,slip=right] at (X8-1) label (X8-1a)(X8-1b);
-\slipturnout[branch=left ,manual operated,slip=right] at (X8-2) label (X8-2a)(X8-2b);
-\slipturnout[branch=right,manual operated,slip=left ] at (X8-3) label (X8-3a)(X8-3b);
-\slipturnout[branch=left ,manual operated,slip=left ] at (X8-4) label (X8-4a)(X8-4b);
+\slipturnout[branch=right,operation=manual,slip=right] at (X8-1) label (X8-1a)(X8-1b);
+\slipturnout[branch=left ,operation=manual,slip=right] at (X8-2) label (X8-2a)(X8-2b);
+\slipturnout[branch=right,operation=manual,slip=left ] at (X8-3) label (X8-3a)(X8-3b);
+\slipturnout[branch=left ,operation=manual,slip=left ] at (X8-4) label (X8-4a)(X8-4b);
 
 \slipturnout[branch=right,slip=right] at (X9-1) label (X9-1a)(X9-1b);
 \slipturnout[branch=left ,slip=right] at (X9-2) label (X9-2a)(X9-2b);

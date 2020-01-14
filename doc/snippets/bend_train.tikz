@@ -1,0 +1,25 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../snippets.tex
+
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\coordinate (A1) at (0  ,-0.5);
+\coordinate (Y1) at (2.5,-0.5);
+\coordinate (B1) at (6  ,-0.5);
+\coordinate (A2) at (0  , 0.5);
+\coordinate (Y2) at (3.5, 0.5);
+\coordinate (B2) at (6  , 0.5);
+\coordinate (T)  at (5  , 0.5);
+
+\maintrack (A1) -- (B1);
+\maintrack (A2) -- (B2);
+\maintrack (Y1) -- (Y2);
+\turnout[forward ,branch=left ] at (Y1) label (Y1);
+\turnout[backward,branch=right] at (Y2) label (Y2);
+
+\train[
+  run=slow,forward,
+  bend left at={(Y1)},bend right at={(Y2)},
+  shift label={(-2,-0.5)} % relative coordinate
+] at (T) label (T1);

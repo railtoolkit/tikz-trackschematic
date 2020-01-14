@@ -1,388 +1,606 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
-
-\ProvidesFileRCS{tikzlibrarytrackschematic.trafficcontrol.code.tex}
-
-\colorlet{background}{white}
-\colorlet{foreground}{black}
-
-\tikzset{
-  train_berth_sign_forward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.3,0); % signal pole
-    {   % signal marker
-      \path[draw=foreground,line width=1pt] (0.3,-0.575) rectangle ++(0.5,0.35);
-      \path[draw=foreground,line width=0.75pt] (0.375,-0.3) -- ++(0.35,0);
-      \path[draw=foreground,line width=0.75pt] (0.55,-0.5) -- ++(0,0.2);
-      \path[draw=foreground,line width=0.75pt] (0.375,-0.5) -- ++(0.35,0);
-    }
-  };
-}
-
-\tikzset{
-  train_berth_sign_backward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.3,0); % signal pole
-    {   % signal marker
-      \path[draw=foreground,line width=1pt] (-0.3,0.575) rectangle ++(-0.5,-0.35);
-      \path[draw=foreground,line width=0.75pt] (-0.375,0.3) -- ++(-0.35,0);
-      \path[draw=foreground,line width=0.75pt] (-0.55,0.5) -- ++(0,-0.2);
-      \path[draw=foreground,line width=0.75pt] (-0.375,0.5) -- ++(-0.35,0);
-    }
-  };
-}
-
-\tikzset{
-  pics/train_berth_shape/.default=4,
-  pics/train_berth_shape/.style n args={1}{
-    code={
-      \path[draw=foreground,line width=0.75pt,densely dotted] (0, 0.25) -- (0, 0.35) -- (#1, 0.35) -- ++(0,-0.1); % berth shape
-      \path[draw=foreground,line width=0.75pt,densely dotted] (0,-0.25) -- (0,-0.35) -- (#1,-0.35) -- ++(0, 0.1); % berth shape
-    }
-  },
-}
-
-\tikzset{
-  pics/train_berth_shape/.default=4,
-  pics/train_berth_shape_forward/.style n args={1}{
-    code={
-      \path[draw=foreground,line width=0.75pt,densely dotted] (0,-0.25) -- (0,-0.35) -- (#1,-0.35) -- ++(0, 0.1); % berth shape
-    }
-  },
-}
-
-\tikzset{
-  pics/train_berth_shape/.default=4,
-  pics/train_berth_shape_backward/.style n args={1}{
-    code={
-      \path[draw=foreground,line width=0.75pt,densely dotted] (0, 0.25) -- (0, 0.35) -- (#1, 0.35) -- ++(0,-0.1); % berth shape
-    }
-  },
-}
-
-\tikzset{
-  view_point_forward/.pic={
-    \path[draw=foreground,<-,>=latex,line width=1pt] (0,-0.1) -- ++(0,-0.3) -- ++(0.2,0); % arrow
-    { % eye
-    \filldraw[foreground] (0.4,-0.4) circle (0.1);
-    \path[draw=foreground, line width=1pt]
-      (0.4,-0.15) .. controls (0.25,-0.25) and (0.25,-0.55) .. (0.4,-0.65) .. controls (0.55,-0.55) and (0.55,-0.25) .. (0.4,-0.15)--cycle;
-    }
-  };
-}
-
-\tikzset{
-  view_point_backward/.pic={
-    \path[draw=foreground,<-,>=latex,line width=1pt] (0,0.1) -- ++(0,0.3) -- ++(-0.2,0); % arrow
-    { % eye
-    \filldraw[foreground] (-0.4,0.4) circle (0.1);
-    \path[draw=foreground, line width=1pt]
-      (-0.4,0.15) .. controls (-0.25,0.25) and (-0.25,0.55) .. (-0.4,0.65) .. controls (-0.55,0.55) and (-0.55,0.25) .. (-0.4,0.15)--cycle;
-    }
-  };
-}
-
-\tikzset{
-  pics/distant_signal_forward/.default=,
-  pics/distant_signal_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.4,0); % signal pole
-      \path[draw=foreground,fill=background,line width=1pt] (0.7,-0.6) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
-      \node[rotate=-90,font=\sffamily,text=foreground] at (0.9,-0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/distant_signal_backward/.default=,
-  pics/distant_signal_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.4,0); % signal pole
-      \path[draw=foreground,fill=background,line width=1pt] (-0.7,0.6) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
-      \node[rotate=90,font=\sffamily,text=foreground] at (-0.9,0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/speed_signal_forward/.default=,
-  pics/speed_signal_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.4,0); % signal pole
-      \path[draw=foreground,line width=1pt] (0.4,-0.2) -- ++(0,-0.4) -- ++ (0.35,0.2) -- cycle; % signal marker
-      \node[rotate=-90,font=\sffamily,text=foreground] at (1.0,-0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/speed_signal_backward/.default=,
-  pics/speed_signal_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.4,0); % signal pole
-      \path[draw=foreground,line width=1pt] (-0.4,0.2) -- ++(0,0.4) -- ++ (-0.35,-0.2) -- cycle; % signal marker
-      \node[rotate=90,font=\sffamily,text=foreground] at (-1.0,0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/block_signal_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
-      \path[draw=foreground,line width=1pt] (0.7,-0.6) rectangle ++(0.4,0.4); % signal marker
-      \node[rotate=-90,font=\sffamily,text=foreground] at (1.3,-0.4) {#1}; % speed indicator
-    }
-  },
-  pics/block_signal_forward/.default=,
-}
-\tikzset{
-  pics/block_signal_backward/.default=,
-  pics/block_signal_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
-      \path[draw=foreground,line width=1pt] (-0.7,0.6) rectangle ++(-0.4,-0.4); % signal marker
-      \node[rotate=90,font=\sffamily,text=foreground] at (-1.3,0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/route_signal_forward/.default=,
-  pics/route_signal_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
-      \path[draw=foreground,line width=1pt] (0.9,-0.4) circle (0.2); % signal marker
-      \node[rotate=-90,font=\sffamily,text=foreground] at (1.3,-0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/route_signal_backward/.default=,
-  pics/route_signal_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
-      \path[draw=foreground,line width=1pt] (-0.9,0.4) circle (0.2); % signal marker
-      \node[rotate=90,font=\sffamily,text=foreground] at (-1.3,0.4) {#1}; % speed indicator
-    }
-  },
-}
-
-\tikzset{
-  shunt_signal_forward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
-    \path[draw=foreground,line width=1pt] (0.6,-0.3) circle (0.1); % signal marker
-  };
-}
-
-\tikzset{
-  shunt_signal_forward_locked/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
-    % \path[fill=red] (0.6,-0.3) circle (0.1); % signal aspect
-    \path[draw=foreground, line width=1pt] (0.6,-0.2) -- ++(0,-0.2); % signal aspect
-    \path[draw=foreground,line width=1pt] (0.6,-0.3) circle (0.1); % signal marker
-  };
-}
-
-\tikzset{
-  shunt_signal_backward/.pic={
-    \path[draw=foreground, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
-    \path[draw=foreground, line width=1pt] (-0.6,0.3) circle (0.1); % signal marker
-  };
-}
-
-\tikzset{
-  shunt_signal_backward_locked/.pic={
-    \path[draw=foreground, line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
-    % \path[fill=red] (-0.6,0.3) circle (0.1); % signal aspect
-    \path[draw=foreground, line width=1pt] (-0.6,0.2) -- ++(0,0.2); % signal aspect
-    \path[draw=foreground, line width=1pt] (-0.6,0.3) circle (0.1); % signal marker
-  };
-}
-
-\tikzset{
-  shunt_limit_forward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.4) -- ++(0.7,0); % signal pole
-    \path[draw=foreground,line width=1pt] (0.6,-0.2) arc (270:90:-0.1) -- cycle;; % signal marker
-  };
-}
-
-\tikzset{
-  shunt_limit_backward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.4) -- ++(-0.7,0); % signal pole
-    \path[draw=foreground,line width=1pt] (-0.6,0.4) arc (90:270:0.1) -- cycle;; % signal marker
-  };
-}
-
-\tikzset{
-  block_end_marker_forward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,-0.5); % marker
-    \path[draw=foreground,line width=1pt] (-0.1,-0.7) rectangle ++(0.2,0.2); % sign
-  };
-}
-
-\tikzset{
-  block_end_marker_backward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0) -- ++(0,0.5); % marker
-    \path[draw=foreground,line width=1pt] (0.1,0.7) rectangle ++(-0.2,-0.2); % sign
-  };
-}
-
-\tikzset{
-  block_clearing_point_forward/.pic={
-    \path[draw=foreground,line width=1pt] (0,0.1) -- ++(0,-0.2); % marker
-    \path[draw=foreground,line width=1pt] (0,-0.1) -- ++(-0.1,-0.1) -- ++(0.1,-0.1) -- ++(0.1,0.1) -- cycle; % sign
-  };
-}
-
-\tikzset{
-  block_clearing_point_backward/.pic={
-    \path[draw=foreground, line width=1pt] (0,-0.1) -- ++(0,0.2); % marker
-    \path[draw=foreground, line width=1pt] (0,0.1) -- ++(0.1,0.1) -- ++(-0.1,0.1) -- ++(-0.1,-0.1) -- cycle; % sign
-  };
-}
-
-\tikzset{
-  route_clearing_point_forward/.pic={
-    \path[draw=foreground, line width=1pt] (0,0.1) -- ++(0,-0.2); % marker
-    \path[draw=foreground, line width=1pt] (0,-0.2) circle (0.1); % sign
-  };
-}
-
-\tikzset{
-  route_clearing_point_backward/.pic={
-    \path[draw=foreground, line width=1pt] (0,-0.1) -- ++(0,0.2); % marker
-    \path[draw=foreground, line width=1pt] (0, 0.2) circle (0.1); % sign
-  };
-}
-
-\tikzset{
-  pics/clearing_point/.default=,
-  pics/clearing_point/.style args={#1}{
-    code={
-      \path[draw=foreground, line width=1pt] (0  ,-0.1) -- ++( 0  ,0.2); % marker
-      \path[draw=foreground, line width=1pt] (0.1, 0.1) -- ++(-0.2,0  ); % sign
-      \node[font=\sffamily,text=foreground] at (0,0.45) {#1}; % indicator
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_below/.default=background,
-  pics/transmitter_below/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_below_forward/.default=background,
-  pics/transmitter_below_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
-      \path[draw=foreground] (0.1,-0.05) -- (0.2,-0.125) -- (0.1,-0.2) -- cycle;
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_below_backward/.default=background,
-  pics/transmitter_below_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
-      \path[draw=foreground] (-0.1,-0.05) -- (-0.2,-0.125) -- (-0.1,-0.2) -- cycle;
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_below_bidirectional/.default=background,
-  pics/transmitter_below_bidirectional/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,-0.25); % turnout marker
-      \path[draw=foreground] ( 0.1,-0.05) -- ( 0.2,-0.125) -- ( 0.1,-0.2) -- cycle;
-      \path[draw=foreground] (-0.1,-0.05) -- (-0.2,-0.125) -- (-0.1,-0.2) -- cycle;
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_above/.default=background,
-  pics/transmitter_above/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_above_forward/.default=background,
-  pics/transmitter_above_forward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
-      \path[draw=foreground] (0.1,0.05) -- (0.2,0.125) -- (0.1,0.2) -- cycle;
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_above_backward/.default=background,
-  pics/transmitter_above_backward/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
-      \path[draw=foreground] (-0.1,0.05) -- (-0.2,0.125) -- (-0.1,0.2) -- cycle;
-    }
-  },
-}
-
-\tikzset{
-  pics/transmitter_above_bidirectional/.default=background,
-  pics/transmitter_above_bidirectional/.style args={#1}{
-    code={
-      \path[draw=foreground,line width=1pt,fill=#1] (-0.25,0) rectangle (0.25,0.25); % turnout marker
-      \path[draw=foreground] ( 0.1,0.05) -- ( 0.2,0.125) -- ( 0.1,0.2) -- cycle;
-      \path[draw=foreground] (-0.1,0.05) -- (-0.2,0.125) -- (-0.1,0.2) -- cycle;
-    }
-  },
-}
-
-\tikzset{
-  opposing_protection_forward/.pic={
-    \path[draw=foreground, fill=background] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
-  };
-}
-
-\tikzset{
-  opposing_protection_backward/.pic={
-    \path[draw=foreground, fill=background] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
-  };
-}
-
-\tikzset{
-  opposing_protection_granted_forward/.pic={
-    \fill[foreground] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
-  };
-}
-
-\tikzset{
-  opposing_protection_granted_backward/.pic={
-    \fill[foreground] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
-  };
-}
-
-\tikzset{
-  opposing_protection_declined_forward/.pic={
-    \path[draw=foreground, fill=background, densely dotted] (-0.175,-0.15) -- ++(0,0.3) -- ++ (0.35,-0.15) -- cycle;
-  };
-}
-
-\tikzset{
-  opposing_protection_declined_backward/.pic={
-    \path[draw=foreground, fill=background, densely dotted] (0.175,-0.15) -- ++(0,0.3) -- ++ (-0.35,-0.15) -- cycle;
-  };
-}
-
-\endinput
+%
+\ProvidesFileRCS{tikzlibrarytrackschematic.trafficcontrol.code.tex}%
+%
+%%%%%%%%%%%%%%%
+% Requirements
+%%%%%%%%%%%%%%%
+\RequirePackage{tikz,etoolbox,lmodern}%
+\usetikzlibrary{calc}%
+%
+% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
+\providecommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}%
+%
+%%%%%%%%%%%%%%%
+% tikz keys for multiple use
+%%%%%%%%%%%%%%%
+\pgfkeys{%
+  /tikz/trackschematic/.is family,%
+  /tikz/trackschematic/.cd,%
+  %% color \foreground
+  foreground/.store in=\foreground,%
+  foreground=black,% DEFAULT
+  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
+  %% color \background
+  background/.store in=\background,%
+  background=white,% DEFAULT
+  /tikz/background/.forward to=/tikz/trackschematic/background,%
+  %% face
+  face/.value required,% forward OR backward
+  face/.store in=\face,% forward OR backward
+  /tikz/face/.forward to=/tikz/trackschematic/face,%
+  /tikz/forward/.code={\pgfkeys{/tikz/trackschematic/face=forward}},%
+  /tikz/backward/.code={\pgfkeys{/tikz/trackschematic/face=backward}},%
+  /tikz/bidirectional/.code={\pgfkeys{/tikz/trackschematic/face=bidirectional}},%
+  %% traffic practice
+  traffic practice/.value required,% left OR right
+  traffic practice/.store in=\trafficpractice,%
+  traffic practice=right,% DEFAULT
+  /tikz/traffic practice/.forward to=/tikz/trackschematic/traffic practice,%
+  /tikz/position/.forward to=/tikz/trackschematic/traffic practice,%
+  %% label
+  shift label/.store in=\labelcoord,% (coord)
+  shift label=(none),% DEFAULT
+  /tikz/shift label/.forward to=/tikz/trackschematic/shift label,%
+}%
+%
+\pgfkeys{%
+  /tikz/trackschematic/trafficcontrol/.is family,%
+  /tikz/trackschematic/trafficcontrol/.cd,%
+  %% type
+  type/.value required,% balise OR loop
+  type/.store in=\type,% balise OR loop
+  /tikz/type/.forward to=/tikz/trackschematic/trafficcontrol/type,%
+  %% block signal type
+  block type/.value forbidden,%
+  block type/.code={\settoggle{is_block_type}{true}},%
+  /tikz/block/.forward to=/tikz/trackschematic/trafficcontrol/block type,%
+  %% route signal type
+  route type/.value forbidden,%
+  route type/.code={\settoggle{is_route_type}{true}},%
+  /tikz/route/.forward to=/tikz/trackschematic/trafficcontrol/route type,%
+}%
+% options
+\newtoggle{is_block_type}\settoggle{is_block_type}{false}%
+\newtoggle{is_route_type}\settoggle{is_route_type}{false}%
+%%%%%%%%%%%%%%%
+% symbol signal
+%%%%%%%%%%%%%%%
+% command
+\newcommand\signal{}% just for safety
+\def\signal[#1]#2(#3)#4(#5){% \signal[options] at (coord) label (name);
+  \pic[#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\distantsignal{}% just for safety
+\def\distantsignal[#1]#2(#3)#4(#5){% \distantsignal[options] at (coord) label (name);
+  \pic[distant,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\speedsign{}% just for safety
+\def\speedsign[#1]#2(#3)#4(#5){% \speedsign[options] at (coord) label (name);
+  \pic[speed type,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\speedsignal{}% just for safety
+\def\speedsignal[#1]#2(#3)#4(#5){% \speedsignal[options] at (coord) label (name);
+  \pic[speed type,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\speeddistantsignal{}% just for safety
+\def\speeddistantsignal[#1]#2(#3)#4(#5){% \speedsignal[options] at (coord) label (name);
+  \pic[speed type,distant,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\blocksignal{}% just for safety
+\def\blocksignal[#1]#2(#3)#4(#5){% \blocksignal[options] at (coord) label (name);
+  \pic[block,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\routesignal{}% just for safety
+\def\routesignal[#1]#2(#3)#4(#5){% \routesignal[options] at (coord) label (name);
+  \pic[route,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\shuntsignal{}% just for safety
+\def\shuntsignal[#1]#2(#3)#4(#5){% \shuntsignal[options] at (coord) label (name);
+  \pic[shunting,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\shuntlimit{}% just for safety
+\def\shuntlimit[#1]#2(#3)#4(#5){% \shuntlimit[options] at (coord) label (name);
+  \pic[shunt limit,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\berthsignal{}% just for safety
+\def\berthsignal[#1]#2(#3)#4(#5){% \berthsignal[options] at (coord) label (name);
+  \pic[berth,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+\newcommand\berthsign{}% just for safety
+\def\berthsign[#1]#2(#3)#4(#5){% \berthsign[options] at (coord) label (name);
+  \pic[berth,#1] at (#3) {signal={#2/#4/#5}}% symbol
+}%
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/trafficcontrol/signal/.is family,%
+  /tikz/trackschematic/trafficcontrol/signal/.cd,%
+  %% distant signal type
+  distant type/.value forbidden,%
+  distant type/.code={\settoggle{is_distant_type}{true}},%
+  /tikz/distant/.forward to=/tikz/trackschematic/trafficcontrol/signal/distant type,%
+  %% block signal type
+  speed type/.value forbidden,%
+  speed type/.code={\settoggle{is_speed_type}{true}},%
+  /tikz/speed type/.forward to=/tikz/trackschematic/trafficcontrol/signal/speed type,%
+  %% shunting signal type
+  shunting type/.value forbidden,%
+  shunting type/.code={\settoggle{is_shunting_type}{true}},%
+  /tikz/shunting/.forward to=/tikz/trackschematic/trafficcontrol/signal/shunting type,%
+  %% shunting signal type
+  shunt limit/.value forbidden,%
+  shunt limit/.code={\settoggle{is_shunt_limit}{true}},%
+  /tikz/shunt limit/.forward to=/tikz/trackschematic/trafficcontrol/signal/shunt limit,%
+  %% berth signal type
+  berth type/.value forbidden,%
+  berth type/.code={\settoggle{is_berth_type}{true}},%
+  /tikz/berth/.forward to=/tikz/trackschematic/trafficcontrol/signal/berth type,%
+  %% speed value
+  speed/.store in=\speed,% number
+  speed=,% number
+  /tikz/speed/.forward to=/tikz/trackschematic/trafficcontrol/signal/speed,%
+  %% speed value
+  distant speed/.store in=\distantspeed,% number
+  distant speed=,% number
+  /tikz/distant speed/.forward to=/tikz/trackschematic/trafficcontrol/signal/distant speed,%
+  %% locked signal
+  locked/.value forbidden,%
+  locked/.code={\settoggle{is_locked}{true}},%
+  /tikz/locked/.forward to=/tikz/trackschematic/trafficcontrol/signal/locked,%
+}%
+% options
+\newtoggle{is_distant_type}\settoggle{is_distant_type}{false}%
+\newtoggle{is_speed_type}\settoggle{is_speed_type}{false}%
+\newtoggle{is_shunting_type}\settoggle{is_shunting_type}{false}%
+\newtoggle{is_shunt_limit}\settoggle{is_shunt_limit}{false}%
+\newtoggle{is_berth_type}\settoggle{is_berth_type}{false}%
+\newtoggle{is_locked}\settoggle{is_locked}{false}%
+% symbol definition
+\tikzset{% generic symbol
+  pics/signal/.default=,%
+  pics/signal/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+      \def\rotate{-90}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+        \def\rotate{90}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    %% signal pole
+    \path (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.7,0)$);% signal pole
+    %
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (ts-s-l) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-s-l) at ($(ts-s-l)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (ts-s-l) {\footnotesize \labelcontent};%
+    }%
+    \tikzset{every path/.style={draw=\foreground,line width=1pt,fill=\background},rounded corners=0.1pt};%
+    %% signal marker
+    \iftoggle{is_distant_type}{% marker for distant signal
+      \path ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.35,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(0.35,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.4)$) -- cycle;% signal marker
+    %
+    }{}%
+    \iftoggle{is_speed_type}{% marker for speed signal
+      \path ($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(0.35,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.4)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.2) + \facefactor*(0.35,0)$) -- cycle;% signal marker
+      %
+    }{}%
+    \iftoggle{is_block_type}{% marker for block signal
+      \path ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(0.7,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0, 0.4) + \facefactor*(0.4,0)$);% signal marker
+      %
+    }{}%
+    \iftoggle{is_route_type}{% marker for route signal
+      \path ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.9,0)$) circle (0.2);% signal marker
+      %
+    }{}%
+    \iftoggle{is_shunting_type}{% marker for shunting signal
+      \path ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*(0.6,0)$) circle (0.1);% signal marker
+      %
+    }{}%
+    \iftoggle{is_shunt_limit}{% marker for shunting signal
+      \tikzset{semicircle/.pic={\path (0,0) arc (180:0:0.1) -- cycle;};}%
+      \pgfmathsetmacro{\trafficfactorTEST}{-1}%
+      \ifdefequal{\trafficfactor}{\trafficfactorTEST}{%
+        \pgfmathsetmacro{\trafficfactorX}{-2}%
+      }{%
+        \pgfmathsetmacro{\trafficfactorX}{1}%
+      }%
+      \pic[rotate=\rotate] at ($\trafficfactorX*\facefactor*(0,-0.2) + \facefactor*(0.6,0)$) {semicircle}; % signal marker
+      %
+    }{}%
+    \iftoggle{is_berth_type}{% marker for berth signal
+      \path ($\trafficfactor*\facefactor*(0,-0.575) + \facefactor*(0.3,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0, 0.35 ) + \facefactor*(0.5,0)$);% % signal marker
+      \path[line width=0.75pt] ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*(0.375,0)$) -- ++($\facefactor*(0.35,0)$);%
+      \path[line width=0.75pt] ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*(0.55 ,0)$) -- ++($\trafficfactor*\facefactor*(0,0.2)$);%
+      \path[line width=0.75pt] ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*(0.375,0)$) -- ++($\facefactor*(0.35,0)$);%
+      %
+    }{}%
+    %% speed indicator
+    \ifdefstring{\speed}{}{}{% speed NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \iftoggle{is_speed_type}{% marker for speed signal
+        \node[rotate=\rotate] at ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.85,0)$) {\speed};%
+      }{%
+        \iftoggle{is_shunting_type}{}{% is NOT shunting tyoe
+          \node[rotate=\rotate] at ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(1.3,0)$) {\speed};%
+        }%
+      }%
+    }%
+    \ifdefstring{\distantspeed}{}{}{% distant speed NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground,fill=\background,inner sep=0.5pt}};%
+      \node[rotate=\rotate] at ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.2,0)$) {\distantspeed};%
+    }%
+    %% locked
+    \iftoggle{is_locked}{% marker for route signal
+      \iftoggle{is_block_type}{% marker for block signal
+        \path ($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(0.9,0)$) --%
+            ++($\trafficfactor*\facefactor*(0,-0.4)$);% signal aspect
+      }{}%
+      \iftoggle{is_route_type}{% marker for route signal
+        \path ($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(0.9,0)$) --%
+            ++($\trafficfactor*\facefactor*(0,-0.4)$);% signal aspect
+      }{}%
+      \iftoggle{is_shunting_type}{%
+        \path ($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(0.6,0)$) --%
+            ++($\trafficfactor*\facefactor*(0,-0.2)$);% signal aspect
+      }{}%
+    }{}%
+  }},% end pics/signal/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol clearing point
+%%%%%%%%%%%%%%%
+% command
+\newcommand\clearingpoint{}% just for safety
+\def\clearingpoint[#1]#2(#3)#4(#5){% \clearingpoint[options] at (coord) label (name);
+  \pic[standard,#1] at (#3) {clearing_point={#2/#4/#5}}% symbol
+}%
+\newcommand\blockclearing{}% just for safety
+\def\blockclearing[#1]#2(#3)#4(#5){% \blockclearing[options] at (coord) label (name);
+  \pic[block,#1] at (#3) {clearing_point={#2/#4/#5}}% symbol
+}%
+\newcommand\routeclearing{}% just for safety
+\def\routeclearing[#1]#2(#3)#4(#5){% \routeclearing[options] at (coord) label (name);
+  \pic[route,#1] at (#3) {clearing_point={#2/#4/#5}}% symbol
+}%
+\pgfkeys{%
+  /tikz/trackschematic/trafficcontrol/clearing point/.is family,%
+  /tikz/trackschematic/trafficcontrol/clearing point/.cd,%
+  %% standard type
+  standard type/.value forbidden,%
+  standard type/.code={\settoggle{is_standard_type}{true}},%
+  /tikz/standard/.forward to=/tikz/trackschematic/trafficcontrol/clearing point/standard type,%
+}%
+% options
+\newtoggle{is_standard_type}\settoggle{is_standard_type}{false}%
+% symbol definition
+\tikzset{%
+  pics/clearing_point/.default=,%
+  pics/clearing_point/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{backward}{% face
+      \pgfmathsetmacro{\facefactor}{-1}%
+    }{% default case
+      \pgfmathsetmacro{\facefactor}{1}%
+    }% end \ifdefstring{\face}
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    %% marker
+    \path ($\trafficfactor*\facefactor*(0,-0.1)$) -- ++($\trafficfactor*\facefactor*(0,0.2)$);% marker
+    %% sign
+    \iftoggle{is_standard_type}{% marker for block signal
+      \path ($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*(0.1,0)$) -- ++($\facefactor*(-0.2,0)$);% sign
+    }{}%
+    \iftoggle{is_block_type}{% marker for block signal
+      \path ($\trafficfactor*\facefactor*(0,-0.1)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*(-0.1,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*( 0.1,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.1) + \facefactor*( 0.1,0)$) -- cycle;% sign
+    }{}%
+    \iftoggle{is_route_type}{% marker for route signal
+      \path ($\trafficfactor*\facefactor*(0,-0.2)$) circle (0.1);% sign
+    }{}%
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \coordinate (ts-cp-l) at ($\trafficfactor*\facefactor*(0,0.25)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-cp-l) at ($(ts-cp-l)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node at (ts-cp-l) {\footnotesize \labelcontent};%
+    }%
+  }},% end pics/clearing_point/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol transmitter
+%%%%%%%%%%%%%%%
+% command
+\newcommand\transmitter{}% just for safety
+\def\transmitter[#1]#2(#3)#4(#5){% \transmitter[options] at (coord) label (name);
+  \pic[#1] at (#3) {transmitter={#2/#4/#5}}% symbol
+}%
+\newcommand\balise{}% just for safety
+\def\balise[#1]#2(#3)#4(#5){% \balise[options] at (coord) label (name);
+  \pic[type=balise,#1] at (#3) {transmitter={#2/#4/#5}}% symbol
+}%
+\newcommand\trackloop{}% just for safety
+\def\trackloop[#1]#2(#3)#4(#5){% \trackloop[options] at (coord) label (name);
+  \pic[type=loop,#1] at (#3) {transmitter={#2/#4/#5}}% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/transmitter/.default=,%
+  pics/transmitter/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% marker
+    \tikzset{every path/.style={draw=\foreground}};%
+    \ifdefstring{\type}{balise}{% type balise
+      \path[line width=1pt,fill=\background] ($(-0.25,0)$) rectangle%
+                                             ($\trafficfactor*(0,-0.25) + (0.25,0)$);% balise marker
+      \ifdefstring{\face}{forward}{% face
+        \path ($\trafficfactor*(0,-0.05) + (0.1,0)$) -- ($\trafficfactor*(0,-0.125) + (0.2,0)$) --%
+              ($\trafficfactor*(0,-0.2) + (0.1,0)$) -- cycle;% arrow forward
+      }{%
+        \ifdefstring{\face}{backward}{% face
+          \path ($\trafficfactor*(0,-0.05) + (-0.1,0)$) -- ($\trafficfactor*(0,-0.125) + (-0.2,0)$) --%
+                ($\trafficfactor*(0,-0.2) + (-0.1,0)$) -- cycle;% arrow backward
+        }{
+          \ifdefstring{\face}{bidirectional}{% face
+            \path ($\trafficfactor*(0,-0.05) + (0.1,0)$) -- ($\trafficfactor*(0,-0.125) + (0.2,0)$) --%
+                  ($\trafficfactor*(0,-0.2) + (0.1,0)$) -- cycle;% arrow forward
+            \path ($\trafficfactor*(0,-0.05) + (-0.1,0)$) -- ($\trafficfactor*(0,-0.125) + (-0.2,0)$) --%
+                  ($\trafficfactor*(0,-0.2) + (-0.1,0)$) -- cycle;% arrow backward
+          }{}%
+        }%
+      }% end \ifdefstring{\face}
+    }{%
+      \ifdefstring{\type}{loop}{% type loop
+        \path[line width=1pt] ($\trafficfactor*(0,-0.175)$) -- ++(-0.0625,-0.0625) -- ++(-0.2,0) -- ++(-0.125,0.125) -- ++(-0.1,0) -- ++(0,-0.125) -- ++(0.1,0) -- ++(0.125,0.125) -- ++(0.2,0) -- ++(0.125,-0.125) -- ++(0.2,0) -- ++(0.125,0.125) -- ++(0.1,0) -- ++(0,-0.125) -- ++(-0.1,0) -- ++(-0.125,0.125) -- ++(-0.2,0) -- cycle;% loop marker
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/transmitter/type}{“balise“ OR “loop“ as key required}}%
+      }%
+    }% end \ifdefstring{\type}
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \coordinate (ts-tm-l) at ($\trafficfactor*(0,0.25)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-tm-l) at ($(ts-tm-l) + (\labelcoordX,\labelcoordY)$);%
+      }%
+      \node at (ts-tm-l) {\footnotesize \labelcontent};%
+    }%
+  }},% end pics/transmitter/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol view point
+%%%%%%%%%%%%%%%
+% command
+\newcommand\viewpoint{}% just for safety
+\def\viewpoint[#1]#2(#3){% \viewpoint[options] at (coord);
+  \pic[#1] at (#3) {view_point={#2}};% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/view_point/.default=,%
+  pics/view_point/.style args={#1}{code={%
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% arrow
+    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+      ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
+    %% eye
+    \filldraw[\foreground] ($\facefactor*(0.4,0) + \facefactor*\trafficfactor*(0,-0.4)$) circle (0.1);% pupil
+    \path[draw=\foreground, line width=1pt]% eye contour
+      ($\facefactor*(0.4, 0) + \facefactor*\trafficfactor*(0,-0.15)$) .. controls%
+      ($\facefactor*(0.25,0) + \facefactor*\trafficfactor*(0,-0.25)$) and%
+      ($\facefactor*(0.25,0) + \facefactor*\trafficfactor*(0,-0.55)$) ..%
+      ($\facefactor*(0.4, 0) + \facefactor*\trafficfactor*(0,-0.65)$) .. controls%
+      ($\facefactor*(0.55,0) + \facefactor*\trafficfactor*(0,-0.55)$) and%
+      ($\facefactor*(0.55,0) + \facefactor*\trafficfactor*(0,-0.25)$) ..%
+      ($\facefactor*(0.4, 0) + \facefactor*\trafficfactor*(0,-0.15)$) --cycle;% eye contour
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol end of authority marker
+%%%%%%%%%%%%%%%
+% command
+\newcommand\movementauthority{}% just for safety
+\def\movementauthority[#1]#2(#3)#4(#5){% \movementauthority[options] at (coord) label (name);
+  \pic[#1] at (#3) {movement_authority_marker={#2/#4/#5}}% symbol
+}%
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/trafficcontrol/EoA/.is family,%
+  /tikz/trackschematic/trafficcontrol/EoA/.cd,%
+  %% option \directionarrow
+  direction arrow/.store in=\directionarrow,% true or false
+  direction arrow=true,% true or false
+  /tikz/direction arrow/.forward to=/tikz/trackschematic/trafficcontrol/EoA/direction arrow,%
+}%
+% symbol definition
+\tikzset{%
+  pics/movement_authority_marker/.default=,%
+  pics/movement_authority_marker/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    %% marker
+    \path (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.5)$);% marker
+    \path ($\trafficfactor*\facefactor*(0,-0.7) + \facefactor*(-0.1,0)$) rectangle%
+        ++($\trafficfactor*\facefactor*(0, 0.2) + \facefactor*(0.2,0)$);% sign
+    %% arrow
+    \ifdefstring{\directionarrow}{true}{%
+      \path[line width=0.5pt] ($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(-0.2,0)$) --%
+                            ++($\facefactor*(0.2,0)$);% arrow body
+      \path[draw=none,fill=\foreground]% arrow tip
+          ($\trafficfactor*\facefactor*(0,-0.2)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.04) + \facefactor*(-0.1,0)$) -- ++($\trafficfactor*\facefactor*(0,0.08)$) -- cycle;%
+    }{% error message
+      \ifdefstring{\directionarrow}{false}{}{%
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/EoA/direction arrow}{'true' OR 'false' as key required}}%
+      }%
+    }%
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \coordinate (ts-ma-l) at ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(-0.05,0)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-ma-l) at ($(ts-ma-l) + (\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (ts-ma-l) {\footnotesize \labelcontent};%
+    }%
+  }},% end pics/movement_authority_marker/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol route
+%%%%%%%%%%%%%%%
+% command
+\newcommand\route{}% just for safety
+\def\route[#1]#2(#3){% \route[options] at (coord);
+  \pic[#1] at (#3) {route={#2}}% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/route/.default=,%
+  pics/route/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1} % beware of leading and tailing spaces!
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %% symbol
+    \fill[\foreground] ($\facefactor*(-0.175,0)+(0,-0.15)$) --%
+                       ($\facefactor*(-0.175,0)+(0, 0.15)$) --%
+                       ($\facefactor*( 0.175,0)+(0, 0   )$) -- cycle;%
+  }},%
+}%
+%
+%%%%%%%%%%%%%%%
+\endinput%
+%
