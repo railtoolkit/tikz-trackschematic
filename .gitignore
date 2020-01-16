@@ -272,3 +272,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Archives for upload
+*.zip
