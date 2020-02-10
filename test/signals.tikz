@@ -6,16 +6,16 @@
 
 \node[blue] at (4,0) {\large test signal symbols};
 
-\foreach \i in {1,2,...,11}{% base coordinate
+\foreach \i in {1,2,...,12}{% base coordinate
   \coordinate (A\i) at ($(0,0) + 2*(0,-\i)$);% base coordinate
   \coordinate (B\i) at ($(8,0) + 2*(0,-\i)$);% base coordinate
 }
 
-\foreach \i in {1,2,...,11}{% draw main tracks on base coordinate
+\foreach \i in {1,2,...,12}{% draw main tracks on base coordinate
   \maintrack (A\i) --   (B\i);
 }
 
-\foreach \i in {1,2,...,11}{% coordinates for testing symbols
+\foreach \i in {1,2,...,12}{% coordinates for testing symbols
   \coordinate (X\i-1) at ($(1,0) + 2*(0,-\i)$);
   \coordinate (X\i-2) at ($(3,0) + 2*(0,-\i)$);
   \coordinate (X\i-3) at ($(5,0) + 2*(0,-\i)$);
@@ -67,12 +67,17 @@
 \berthsignal[backward,position=left] at (X9-3) label (X9-3);
 \berthsignal[backward] at (X9-4) label (X9-4);
 
-\movementauthority[forward ] at (X10-1) label (X10-1);
-\movementauthority[forward ,position=left] at (X10-2) label (X10-2);
-\movementauthority[backward,position=left,direction arrow=false] at (X10-3) label (X10-3);
-\movementauthority[backward] at (X10-4) label (X10-4);
+\signal[forward ,block,shunting] at (X10-1) label (X10-1);
+\signal[forward ,route,shunting] at (X10-2) label (X10-2);
+\signal[backward,route,shunting] at (X10-3) label (X10-3);
+\signal[backward,block,shunting] at (X10-4) label (X10-4);
 
-\signal[forward ,block,shunting] at (X11-1) label (X11-1);
-\signal[forward ,route,shunting] at (X11-2) label (X11-2);
-\signal[backward,route,shunting] at (X11-3) label (X11-3);
-\signal[backward,block,shunting] at (X11-4) label (X11-4);
+\movementauthority[forward ] at (X11-1) label (X11-1);
+\movementauthority[forward ,position=left] at (X11-2) label (X11-2);
+\movementauthority[backward,position=left] at (X11-3) label (X11-3);
+\movementauthority[backward] at (X11-4) label (X11-4);
+
+\brakingpoint[forward ] at (X12-1) label (X12-1);
+\brakingpoint[forward ,position=left] at (X12-2) label (X12-2);
+\brakingpoint[backward,position=left] at (X12-3) label (X12-3);
+\brakingpoint[backward] at (X12-4) label (X12-4);

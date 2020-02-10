@@ -6,16 +6,16 @@
 
 \node[blue] at (4,0) {\large test clearing points symbols};
 
-\foreach \i in {1,2,...,4}{% base coordinate
+\foreach \i in {1,2,...,5}{% base coordinate
   \coordinate (A\i) at ($(0,0) + 2*(0,-\i)$);% base coordinate
   \coordinate (B\i) at ($(8,0) + 2*(0,-\i)$);% base coordinate
 }
 
-\foreach \i in {1,2,...,4}{% draw main tracks on base coordinate
+\foreach \i in {1,2,...,5}{% draw main tracks on base coordinate
   \maintrack (A\i) --   (B\i);
 }
 
-\foreach \i in {1,2,...,4}{% coordinates for testing symbols
+\foreach \i in {1,2,...,5}{% coordinates for testing symbols
   \coordinate (X\i-1) at ($(1,0) + 2*(0,-\i)$);
   \coordinate (X\i-2) at ($(3,0) + 2*(0,-\i)$);
   \coordinate (X\i-3) at ($(5,0) + 2*(0,-\i)$);
@@ -41,3 +41,8 @@
 \clearingpoint[standard,route,block,backward] at (X4-2) label (X4-2);
 \clearingpoint[standard,route,block,forward ,position=left] at (X4-3) label (X4-3);
 \clearingpoint[standard,route,block,backward,position=left] at (X4-4) label (X4-4);
+
+\dangerpoint[forward] at (X5-1) label (X5-1);
+\dangerpoint[backward] at (X5-2) label (X5-2);
+\dangerpoint[forward ,position=left] at (X5-3) label (X5-3);
+\dangerpoint[backward,position=left] at (X5-4) label (X5-4);

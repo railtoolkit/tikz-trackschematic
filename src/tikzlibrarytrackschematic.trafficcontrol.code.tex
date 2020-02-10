@@ -500,15 +500,6 @@
 \def\movementauthority[#1]#2(#3)#4(#5){% \movementauthority[options] at (coord) label (name);
   \pic[#1] at (#3) {movement_authority_marker={#2/#4/#5}}% symbol
 }%
-% tikz keys
-\pgfkeys{%
-  /tikz/trackschematic/trafficcontrol/EoA/.is family,%
-  /tikz/trackschematic/trafficcontrol/EoA/.cd,%
-  %% option \directionarrow
-  direction arrow/.store in=\directionarrow,% true or false
-  direction arrow=true,% true or false
-  /tikz/direction arrow/.forward to=/tikz/trackschematic/trafficcontrol/EoA/direction arrow,%
-}%
 % symbol definition
 \tikzset{%
   pics/movement_authority_marker/.default=,%
@@ -542,25 +533,15 @@
     }% end \ifdefstring{\face}
     \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
     %% marker
-    \path (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.5)$);% marker
-    \path ($\trafficfactor*\facefactor*(0,-0.7) + \facefactor*(-0.1,0)$) rectangle%
-        ++($\trafficfactor*\facefactor*(0, 0.2) + \facefactor*(0.2,0)$);% sign
+      \path ($\trafficfactor*\facefactor*(0,-0.55) + \facefactor*(0.3,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0, 0.3) + \facefactor*(0.3,0)$);% 
     %% arrow
-    \ifdefstring{\directionarrow}{true}{%
-      \path[line width=0.5pt] ($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*(-0.2,0)$) --%
-                            ++($\facefactor*(0.2,0)$);% arrow body
-      \path[draw=none,fill=\foreground]% arrow tip
-          ($\trafficfactor*\facefactor*(0,-0.2)$) --%
-          ++($\trafficfactor*\facefactor*(0,-0.04) + \facefactor*(-0.1,0)$) -- ++($\trafficfactor*\facefactor*(0,0.08)$) -- cycle;%
-    }{% error message
-      \ifdefstring{\directionarrow}{false}{}{%
-        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/EoA/direction arrow}{'true' OR 'false' as key required}}%
-      }%
-    }%
+    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+      ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
-      \coordinate (ts-ma-l) at ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(-0.05,0)$);%
+      \coordinate (ts-ma-l) at ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(0.3,0)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
         \coordinate (ts-ma-l) at ($(ts-ma-l) + (\labelcoordX,\labelcoordY)$);%
@@ -568,6 +549,127 @@
       \node[\align] at (ts-ma-l) {\footnotesize \labelcontent};%
     }%
   }},% end pics/movement_authority_marker/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol braking point
+%%%%%%%%%%%%%%%
+% command
+\newcommand\brakingpoint{}% just for safety
+\def\brakingpoint[#1]#2(#3)#4(#5){% \brakingpoint[options] at (coord) label (name);
+  \pic[#1] at (#3) {braking_point_marker={#2/#4/#5}}% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/braking_point_marker/.default=,%
+  pics/braking_point_marker/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    %% marker
+      \path ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.3,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*(0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.3)$) -- cycle;% signal marker
+    %% arrow
+    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+      ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \coordinate (ts-bp-l) at ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(0.3,0)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-bp-l) at ($(ts-bp-l) + (\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (ts-bp-l) {\footnotesize \labelcontent};%
+    }%
+  }},% end pics/braking_point_marker/.style args={#1/#2/#3}
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol danger point
+%%%%%%%%%%%%%%%
+% command
+\newcommand\dangerpoint{}% just for safety
+\def\dangerpoint[#1]#2(#3)#4(#5){% \dangerpoint[options] at (coord) label (name);
+  \pic[#1] at (#3) {danger_point_marker={#2/#4/#5}}% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/danger_point_marker/.default=,%
+  pics/danger_point_marker/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    %% marker
+      \path ($\trafficfactor*\facefactor*(0,-0.4)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*(-0.1,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*( 0.1,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.1) + \facefactor*( 0.1,0)$) -- cycle;% sign
+    %% arrow
+    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+      ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.25)$);% arrow
+    %% label
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \coordinate (ts-dp-l) at ($\trafficfactor*\facefactor*(0,0.25)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-dp-l) at ($(ts-dp-l)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node at (ts-dp-l) {\footnotesize \labelcontent};%
+    }%
+  }},% end pics/danger_point_marker/.style args={#1/#2/#3}
 }%
 %
 %%%%%%%%%%%%%%%

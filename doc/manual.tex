@@ -519,7 +519,7 @@
       An absolute \textit{(label-coord)} or \textit{(bend-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
 
   \subsection{Traffic control}
-    \subsubsection{Signals}\label{sec:signals}
+    \subsubsection{Stationary signals}\label{sec:signals}
       
       \symboldescription{Generic signal command}
         \begin{lstlisting}[gobble=10]
@@ -679,6 +679,59 @@
           \signal[berth,options] at (coord) label (name);
         \end{lstlisting}
 
+    \subsubsection{Non-stationary points}\label{sec:points}
+
+      \symboldescription{View point}
+        \symbol{view_point_forward.tikz}
+        \begin{lstlisting}[gobble=10]
+          \viewpoint[options] at (coord);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward} or \texttt{backward} (mandatory)
+          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+
+      \symboldescription{Braking point}
+        \symbol{braking_point_forward.tikz}
+        \begin{lstlisting}[gobble=10]
+          \brakingpoint[options] at (coord) label (name);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+
+      \symboldescription{End of movement authority}
+        \symbol{end_of_movement_authority_forward.tikz}
+        \begin{lstlisting}[gobble=10]
+          \movementauthority[options] at (coord) label (name);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+
+      \symboldescription{Danger point}
+        \symbol{danger_point_forward.tikz}
+        \begin{lstlisting}[gobble=10]
+          \dangerpoint[options] at (coord) label (name);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+
     \subsubsection{Clearing points}\label{sec:clearingpoints}
 
       \symboldescription{Generic clearing point}
@@ -799,32 +852,6 @@
         \end{lstlisting}
 
     \subsubsection{Miscellaneous}\label{sec:misc}
-
-      \symboldescription{View point}
-        \symbol{view_point_forward.tikz}
-        \begin{lstlisting}[gobble=10]
-          \viewpoint[options] at (coord);
-        \end{lstlisting}
-        values for \texttt{options} (comma seperated):
-        \begin{itemize}[label={}]
-          \item \texttt{forward} or \texttt{backward} (mandatory)
-          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
-          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
-        \end{itemize}
-
-      \symboldescription{End of movement authority}
-        \symbol{block_end_marker_forward.tikz}
-        \begin{lstlisting}[gobble=10]
-          \movementauthority[options] at (coord) label (name);
-        \end{lstlisting}
-        values for \texttt{options} (comma seperated):
-        \begin{itemize}[label={}]
-          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
-          \item \texttt{direction arrow=true} (default) or \texttt{direction arrow=false} (mandatory)
-          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
-          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
-          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
-        \end{itemize}
 
       \symboldescription{Route}
         \symbol{route.tikz}
@@ -1035,6 +1062,14 @@
     \hline
       \No & train berth sign                & \symbol{train_berth_sign_forward.tikz}            & \ref{sec:signals}        \\
     \hline
+      \No & view point                      & \symbol{view_point_forward.tikz}                  & \ref{sec:points}         \\
+    \hline
+      \No & braking point                   & \symbol{braking_point_forward.tikz}               & \ref{sec:points}         \\
+    \hline
+      \No & end of movement authority       & \symbol{end_of_movement_authority_forward.tikz}   & \ref{sec:points}         \\
+    \hline
+      \No & danger point                    & \symbol{danger_point_forward.tikz}                & \ref{sec:points}         \\
+    \hline
       \No & clearing point                  & \symbol{clearing_point.tikz}                      & \ref{sec:clearingpoints} \\
     \hline
       \No & block clearing point            & \symbol{block_clearing_point_forward.tikz}        & \ref{sec:clearingpoints} \\
@@ -1048,11 +1083,6 @@
       \No & transmitter bidirectional       & \symbol{transmitter_right_bidirectional.tikz}     & \ref{sec:transmitters}   \\
     \hline
       \No & loop transmitter                & \symbol{loop_transmitter.tikz}                    & \ref{sec:transmitters}   \\
-    \hline
-      \No & view point                      & \symbol{view_point_forward.tikz}                  & \ref{sec:misc}           \\
-    \hline
-      \No & \parbox[c]{4.5cm}{block end marker\\(end of movement authority)}
-                                            & \symbol{block_end_marker_forward.tikz}            & \ref{sec:misc}           \\
     \hline
       \No & route                           & \symbol{route.tikz}                               & \ref{sec:misc}           \\
     \hline
