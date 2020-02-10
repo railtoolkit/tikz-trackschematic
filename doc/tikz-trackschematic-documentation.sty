@@ -81,7 +81,15 @@
 \RequirePackage{longtable,tikz,siunitx,adjustbox,rotating}
 \sisetup{math-rm=\mathsf}
 
-\usetikzlibrary{trackschematic}
+\IfFileExists{tikzlibrarytrackschematic-dev.code.tex}{%
+  \usetikzlibrary{trackschematic-dev.topology}%
+  \usetikzlibrary{trackschematic-dev.trafficcontrol}%
+  \usetikzlibrary{trackschematic-dev.vehicles}%
+  \usetikzlibrary{trackschematic-dev.constructions}%
+  \usetikzlibrary{trackschematic-dev.messures}%
+}{%
+  \usetikzlibrary{trackschematic}%
+}%
 
 \def\rootTrackschematic{.}
 
