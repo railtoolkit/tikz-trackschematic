@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/usr/bin/env sh
 
 echo "specify path for installation!"
 echo "( e.g. /usr/local/texlive/2019/texmf-dist/tex/latex ):"

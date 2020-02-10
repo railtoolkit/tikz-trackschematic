@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/usr/bin/env sh
 
 echo "specify version ( e.g. v0.5 ):"
 read VERSION

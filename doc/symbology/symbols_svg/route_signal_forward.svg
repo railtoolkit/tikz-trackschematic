@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="179.748pt" height="66.362pt" viewBox="0 0 179.748 66.362" version="1.1">
+<defs>
+<g>
+<symbol overflow="visible" id="glyph0-0">
+<path style="stroke:none;" d=""/>
+</symbol>
+<symbol overflow="visible" id="glyph0-1">
+<path style="stroke:none;" d="M 5.234375 0 L 3.578125 -2.578125 C 4.71875 -2.921875 5 -3.609375 5 -4.046875 C 5 -4.875 4.03125 -5.53125 2.875 -5.53125 L 0.78125 -5.53125 L 0.78125 0 L 1.5625 0 L 1.5625 -2.5 L 2.875 -2.5 L 4.4375 0 Z M 4.28125 -4.046875 C 4.28125 -3.484375 3.734375 -3.03125 2.765625 -3.03125 L 1.5625 -3.03125 L 1.5625 -5.0625 L 2.765625 -5.0625 C 3.6875 -5.0625 4.28125 -4.625 4.28125 -4.046875 Z M 4.28125 -4.046875 "/>
+</symbol>
+<symbol overflow="visible" id="glyph0-2">
+<path style="stroke:none;" d="M 3.625 0 L 3.625 -0.5 L 2.5625 -0.5 L 2.5625 -5.390625 L 2.375 -5.390625 C 1.859375 -4.921875 1.21875 -4.890625 0.734375 -4.875 L 0.734375 -4.359375 C 1.046875 -4.375 1.4375 -4.390625 1.84375 -4.546875 L 1.84375 -0.5 L 0.78125 -0.5 L 0.78125 0 Z M 3.625 0 "/>
+</symbol>
+</g>
+</defs>
+<g id="surface1">
+<path style="fill:none;stroke-width:1.99255;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 0.0009375 0.0013125 L 170.079062 0.0013125 " transform="matrix(1,0,0,-1,4.835,33.181)"/>
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 85.04 0.0013125 L 85.04 -11.338531 L 104.88375 -11.338531 " transform="matrix(1,0,0,-1,4.835,33.181)"/>
+<g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
+  <use xlink:href="#glyph0-1" x="78.666" y="47.287"/>
+  <use xlink:href="#glyph0-2" x="84.145444" y="47.287"/>
+</g>
+<path style="fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 116.219688 -11.338531 C 116.219688 -8.205719 113.684531 -5.670563 110.551719 -5.670563 C 107.422813 -5.670563 104.88375 -8.205719 104.88375 -11.338531 C 104.88375 -14.471344 107.422813 -17.0065 110.551719 -17.0065 C 113.684531 -17.0065 116.219688 -14.471344 116.219688 -11.338531 Z M 116.219688 -11.338531 " transform="matrix(1,0,0,-1,4.835,33.181)"/>
+</g>
+</svg>

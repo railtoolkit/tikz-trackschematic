@@ -40,6 +40,11 @@ These files should be copied wherever TeX can find it, for example in your TEXMF
 
 # History
 
+## Version 0.5.1
+  
+  * modified symbol "end of movement authority"
+  * added symbols "braking point" and "danger point"
+
 ## Version 0.5
   
   * new improved syntax for topology
