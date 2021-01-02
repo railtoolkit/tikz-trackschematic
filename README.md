@@ -5,21 +5,29 @@
 # Installation
 
 The tikz library is contained in the files:
+* tikz-trackschematic.sty
 * tikzlibrarytrackschematic.code.tex,
 * tikzlibrarytrackschematic.topology.code.tex,
 * tikzlibrarytrackschematic.trafficcontrol.code.tex,
 * tikzlibrarytrackschematic.vehicles.code.tex,
-* tikzlibrarytrackschematic.constructions.code.tex, and
-* tikzlibrarytrackschematic.messures.code.tex.
-These files should be copied wherever TeX can find it, for example in your TEXMF folder. The library can then be loaded through the command \usetikzlibrary{trackschematic} in any tex file.
+* tikzlibrarytrackschematic.constructions.code.tex,
+* tikzlibrarytrackschematic.electrics.code.tex, and
+* tikzlibrarytrackschematic.measures.code.tex.
+
+These files should be copied wherever TeX can find it, for example in your $TEXMF folder.
+The library can then be loaded through the command
+```TeX
+\usepackage{tikz-trackschematic}
+```
+in any TeX file.
 
 ------------
 
-# Usage
+# Minimal working example
 
 ```TeX
-\documentclass[tikz]{standalone}
-\usetikzlibrary{trackschematic}
+\documentclass{standalone}
+\usepackage{tikz-trackschematic}
 \begin{document}
 
   \begin{tikzpicture}
@@ -35,10 +43,25 @@ These files should be copied wherever TeX can find it, for example in your TEXMF
 
 \end{document}
 ```
+results in:
+* ![train on a track](https://glossary.ivev.bau.tu-bs.de/tiki-download_file.php?fileId=28&display&scale=.4 "train on a track")
+
+------------
+
+# Symbology and meaning
+
+A transnational symbol library with common traits of railway operation. 
+A [glossary](https://glossary.ivev.bau.tu-bs.de/tiki-index.php?page=_Symbology) for further information regarding meaning of the symbols.
 
 ------------
 
 # History
+
+## Version 0.6
+
+  * added symbols for direction control, track marking, pylons and electric wiring
+  * change symbol for friction bufferstop;
+  * created an encapsulating package for future flexibilty
 
 ## Version 0.5.1
   
@@ -81,6 +104,7 @@ These files should be copied wherever TeX can find it, for example in your TEXMF
 
   * rethink syntax
   * provide option for internationalziation (i18n)
+  * replace "\gettikzxy" with "\path let" syntax
   * rewrite library with better coding skills
 
 ------------
@@ -93,9 +117,9 @@ These files should be copied wherever TeX can find it, for example in your TEXMF
 
 # License
   
-  ISC License
+  [![Open Source Initiative Approved License logo](https://opensource.org/files/OSIApproved_100X125.png)](https://opensource.org)
 
-  Copyright (c) 2018 - 2020, Martin Scheidt \<m.scheidt@tu-bs.de\>
+  Copyright (c) 2018 - 2021, Martin Scheidt \<m.scheidt@tu-bs.de\> (ISC License)
 
   Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 

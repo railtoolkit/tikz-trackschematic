@@ -1,6 +1,6 @@
 %!TEX TS-program = pdflatexmk
 
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \documentclass[tikz,border=2]{standalone}
@@ -145,7 +145,7 @@
     \platform[side=right] at (P2);
     \platform[side=left ] at (P1);
   }
-  { %% messures
+  { %% measures
     % hectometer posts
     \tikzset{hectometer base={(HM1)},orientation=right};
     \hectometer[] at (S01)    label ( 7.200);
@@ -161,8 +161,8 @@
     \hectometer[] at (S09)    label ( 9.900);
     \hectometer[] at (S11)    label (10.900);
     
-    \messureline (S09) -- ++(0,1.7) -- (S10);
-    \messureline (S11) -- ++(0,2.2) -- (S12);
+    \measureline (S09) -- ++(0,1.7) -- (S10);
+    \measureline (S11) -- ++(0,2.2) -- (S12);
 
     \tikzset{hectometer base={(HM2)},orientation=left};
     \hectometer[] at (14  ,1) label ( 8.500);

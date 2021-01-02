@@ -1,10 +1,13 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../test/test.tex
+%
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
-\ProvidesFileRCS{tikzlibrarytrackschematic.messures.code.tex}%
+\ProvidesFileRCS{tikzlibrarytrackschematic.measures.code.tex}%
 %
 %%%%%%%%%%%%%%%
 % global settings
@@ -62,12 +65,12 @@
 %
 % tikz keys
 \pgfkeys{%
-  /tikz/trackschematic/messures/.is family,%
-  /tikz/trackschematic/messures/.cd,%
+  /tikz/trackschematic/measures/.is family,%
+  /tikz/trackschematic/measures/.cd,%
   %% color hectometer
   color/.store in=\hectometercolor,%
   color=\foreground!50!\background,% DEFAULT
-  /tikz/hectometer color/.forward to=/tikz/trackschematic/messures/color,%
+  /tikz/hectometer color/.forward to=/tikz/trackschematic/measures/color,%
 }%
 %%%%%%%%%%%%%%%%
 % symbol train berth
@@ -149,7 +152,12 @@
         \node[fill=\background,text=\foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
       }{}%
     }%
-  }},% end pics/train_berth/.style args={#1/#2/#3}
+  }},% END pics/train_berth/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_train_berth/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \berth[forward] at (3,0) length (length);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -158,9 +166,17 @@
 %
 %% command
 \newcommand\trackdistance{}% just for safety
-\def\trackdistance#1(#2)#3(#4)#5(#6){% \trackdistance between (coord1) and (coord2) label (distance);
+\def\trackdistance#1(#2)#3(#4)#5(#6){% \trackdistance between (coord1) and (coord2) distance (distance);
   \path[draw=\background,<->,>={Stealth[\foreground,inset=0pt,angle=50:0.2cm]},shorten <=1pt,shorten >=1pt] (#2) -- (#4)% arrow tips
   node[hectometer base=(current bounding box.center),text=\foreground,midway,sloped,rotate=90] {#6};% label
+}%
+% symbology entry
+\tikzset{%
+  symbology_track_distance/.pic = {%
+    \maintrack (0,-0.5) -- (6,-0.5);%
+    \maintrack (0, 0.5) -- (6, 0.5);%
+    \trackdistance between (3, 0.5) and (3,-0.5) distance (distance);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -174,16 +190,16 @@
 }%
 % tikz keys
 \pgfkeys{%
-  /tikz/trackschematic/messures/hectometer/.is family,%
-  /tikz/trackschematic/messures/hectometer/.cd,%
+  /tikz/trackschematic/measures/hectometer/.is family,%
+  /tikz/trackschematic/measures/hectometer/.cd,%
   %% hectometer base
   base/.value required,%
   base/.store in=\basecoord,%
-  /tikz/hectometer base/.forward to=/tikz/trackschematic/messures/hectometer/base,%
+  /tikz/hectometer base/.forward to=/tikz/trackschematic/measures/hectometer/base,%
   %% hectometer base
   orientation/.value required,%
   orientation/.store in=\orientation,%
-  /tikz/orientation/.forward to=/tikz/trackschematic/messures/hectometer/orientation,%
+  /tikz/orientation/.forward to=/tikz/trackschematic/measures/hectometer/orientation,%
 }%
 %% symbol definition
 \tikzset{%
@@ -205,7 +221,7 @@
       \ifdefstring{\orientation}{right}{% orientation
         \def\align{left}%
       }{% error message
-        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/messures/hectometer/orientation}{“left“ OR “right“ as key required}}%
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/measures/hectometer/orientation}{“left“ OR “right“ as key required}}%
       }%
     }% end \ifdefstring{\orientation}
     %% calculation of coordinates
@@ -230,18 +246,48 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \node[font=\sffamily,text=\hectometercolor,rotate=-90,\orientation,align=\align,fill=\background] at (ts-hm-l) {\labelcontent};%
     }%
-  }},%
+  }},% END
+  % symbology entry
+  symbology_hectometer/.pic = {%
+    \tikzset{hectometer base={(0,-2)},orientation=right};%
+    \hectometer[] at (0,0)  mileage (hectometer 1);%
+    \hectometer[] at (3,0) mileage (hectometer 2);%
+    \hectometer[shift label={(0.3,0)}] at (3.5,0) mileage (hectometer 3);%
+    \hectometer[] at (6,0)  mileage (hectometer 4);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
-% symbol messureline
+% symbol measureline
 %%%%%%%%%%%%%%%
 %
 % command
-\newcommand\messureline{}% just for safety
-\def\messureline{\path[MessureLine]}% \maintrack (coord1) -- (coord2);
+\newcommand\measureline{}% just for safety
+\def\measureline{\path[MeasureLine]}% \measureline (coord1) -- (coord2);
 %
-\tikzset{MessureLine/.style={draw=\hectometercolor,dashed,shorten <=0.75cm,shorten >=0.75cm}}%
+\tikzset{%
+  MeasureLine/.style={draw=\hectometercolor,dashed,shorten <=0.75cm,shorten >=0.75cm},
+  % symbology entry
+  symbology_measure_line/.pic = {%
+    \measureline (0,0) -- (6,0);%
+  },%
+}%
+%%%%%%%%%%%%%%%
+% symbol track marking
+%%%%%%%%%%%%%%%
+%
+% command
+\newcommand\trackmarking{}% just for safety
+\def\trackmarking[#1]{\path[draw,TrackMark,#1]}% \trackmarking[color] (coord1) -- (coord2);
+%
+\tikzset{%
+  TrackMark/.style={line width=8pt, opacity=0.4, arrows = {Bar[line cap=round,line width=1pt,width=12pt]-Bar[line cap=round,line width=1pt,width=12pt]},shorten >=1pt,shorten <=1pt},
+  % symbology entry
+  symbology_track_marking/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \trackmarking[] (1,0) -- (5,0);%
+  },%
+}%
 %
 %%%%%%%%%%%%%%%
 % TODO:

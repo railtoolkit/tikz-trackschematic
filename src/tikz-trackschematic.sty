@@ -1,0 +1,158 @@
+%% symbol library for TikZ track schematics
+%
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
+%
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+%
+\NeedsTeXFormat{LaTeX2e}%
+\ProvidesPackage{tikz-trackschematic}[2021/01/05 tikz-trackschematic]%
+%
+% Required Packages for tikz-trackschematic
+\RequirePackage{tikz,etoolbox,lmodern}%
+%
+%%%%%%%%%%%%%%%
+% Package options
+%%%%%%%%%%%%%%%
+\RequirePackage{xkeyval,etoolbox}%
+\newtoggle{development}%
+\DeclareOptionX{dev}[\settoggle{development}{false}]{\settoggle{development}{true}}
+\ProcessOptionsX
+%
+\iftoggle{development}{%
+  \PackageInfo{tikz-trackschematic}{development mode}%
+  %
+  \IfFileExists{tikz-trackschematic-dev.sty}{%
+    \usetikzlibrary{trackschematic-dev.topology}%
+    \usetikzlibrary{trackschematic-dev.trafficcontrol}%
+    \usetikzlibrary{trackschematic-dev.vehicles}%
+    \usetikzlibrary{trackschematic-dev.constructions}%
+    \usetikzlibrary{trackschematic-dev.electrics}%
+    \usetikzlibrary{trackschematic-dev.measures}%
+    \usetikzlibrary{trackschematic-dev}%
+  }{%
+    \PackageError{tikz-trackschematic}{development mode not available}{execute the dev-install.sh script provided by the package repository}%
+  }%
+}{%
+  \usetikzlibrary{trackschematic.topology}%
+  \usetikzlibrary{trackschematic.trafficcontrol}%
+  \usetikzlibrary{trackschematic.vehicles}%
+  \usetikzlibrary{trackschematic.constructions}%
+  \usetikzlibrary{trackschematic.electrics}%
+  \usetikzlibrary{trackschematic.measures}%
+}%
+%
+%%%%%%%%%%%%%%%
+% commands
+%%%%%%%%%%%%%%%
+\RequirePackage{adjustbox}%
+\usetikzlibrary{calc}%
+%
+\DeclareRobustCommand{\tsSymbol}[2][1]{%
+  \adjustbox{valign=c}{%
+    \begin{tikzpicture}]%
+      \pic at (0,0) {symbology_#2};%
+      \path ($0.5*(-0.2,-#1)$) rectangle ($0.5*(12.2,#1)$);% background rectangle to unify every cell containing a symbol
+    \end{tikzpicture}%
+  }%
+}%
+%%%%%%%%%%%%%%%
+% symbology table
+%%%%%%%%%%%%%%%
+%
+%% TODO: replave with package glossaries
+% \@ifpackageloaded{glossaries}{%
+%   \newglossaryentry{main_track}{name={main track},description={},symbol={\tsSymbol{main_track}}}%
+% }{}%
+%%
+\RequirePackage{booktabs,xltabular,multicol}%
+%% command
+\DeclareRobustCommand\tsFullSymbology{%
+  \begin{xltabular}{\textwidth}{cX}%
+    \toprule%
+    \textbf{Notation}                   & \multicolumn{1}{c}{\textbf{Description}}          \\%
+    \midrule%
+    \endfirsthead%
+    % -----------
+    \midrule%
+    \textbf{Notation}                   & \multicolumn{1}{c}{\textbf{Description}}          \\%
+    \midrule%
+    \endhead%
+    % -----------
+    \midrule%
+    \multicolumn{2}{c}{\footnotesize -- continued on next page -- }                         \\%
+    \endfoot%
+    % -----------
+    \bottomrule%
+    \endlastfoot%
+    % -----------
+    \tsSymbol{main_track}               & main track                                        \\%
+    \tsSymbol{secondary_track}          & secondary track                                   \\%
+    \tsSymbol{track_label}              & track label                                       \\%
+    \tsSymbol{bufferstop}               & bufferstop                                        \\%
+    \tsSymbol{friction_bufferstop}      & friction bufferstop                               \\%
+    \tsSymbol{track_closure}            & track closure                                     \\%
+    \tsSymbol{turnout}                  & turnout                                           \\%
+    \tsSymbol{turnout_fouling}          & turnout with fouling point indicator              \\%
+    \tsSymbol{turnout_manually}         & turnout operated manually                         \\%
+    \tsSymbol{diamond_crossing}         & diamond crossing                                  \\%
+    \tsSymbol{slip_turnout}             & double-slip turnout                               \\%
+    \tsSymbol{turnout_points_right}     & turnout with points in right position             \\%
+    \tsSymbol{turnout_points_left}      & turnout with points in left position              \\%
+    \tsSymbol{turnout_points_moving}    & turnout with moving points                        \\%
+    \tsSymbol{derailer}                 & derailer                                          \\%
+    \tsSymbol{parked_vehicles}          & parked vehicles                                   \\%
+    \tsSymbol{train_shunt_mode}         & train in shunting mode                            \\%
+    \tsSymbol{train_shunting}           & train shunting                                    \\%
+    \tsSymbol{train}                    & train                                             \\%
+    \tsSymbol{train_moving_slow}        & train moving slow                                 \\%
+    \tsSymbol{train_moving}             & train moving                                      \\%
+    \tsSymbol{train_moving_fast}        & train moving fast                                 \\%
+    \tsSymbol{train_ghost}              & train ghost                                       \\%
+    \tsSymbol{train_drive_automatic}    & train operated automatic                          \\%
+    \tsSymbol{train_drive_human}        & train operated by human                           \\%
+    \tsSymbol[1.4]{distant_signal}      & distant signal                                    \\%
+    \tsSymbol[1.4]{distant_speed_signal}& distant signal with speed indicator               \\%
+    \tsSymbol[1.4]{speed_signal}        & speed signal                                      \\%
+    \tsSymbol[1.4]{block_signal}        & block signal                                      \\%
+    \tsSymbol[1.4]{route_signal}        & route signal                                      \\%
+    \tsSymbol[1.4]{combined_signal}     & combined signal (distant, block and route signal) \\%
+    \tsSymbol[1.4]{shunt_signal}        & shunt signal                                      \\%
+    \tsSymbol[1.4]{locked_shunt_signal} & shunt signal locked                               \\%
+    \tsSymbol[1.4]{shunt_limit}         & shunt limit                                       \\%
+    \tsSymbol[1.4]{train_berth_sign}    & train berth sign                                  \\%
+    \tsSymbol[1.4]{view_point}          & view point                                        \\%
+    \tsSymbol[1.4]{braking_point}       & braking point                                     \\%
+    \tsSymbol[1.4]{end_of_authority}    & end of movement authority                         \\%
+    \tsSymbol[1.4]{danger_point}        & danger point                                      \\%
+    \tsSymbol{clearing_point}           & clearing point                                    \\%
+    \tsSymbol{block_clearing_point}     & block clearing point                              \\%
+    \tsSymbol{route_clearing_point}     & route clearing point                              \\%
+    \tsSymbol{transmitter}              & transmitter                                       \\%
+    \tsSymbol{transmitter_forward}      & transmitter effective forward                     \\%
+    \tsSymbol{transmitter_bidirectional}& transmitter bidirectional                         \\%
+    \tsSymbol{loop_transmitter}         & loop transmitter                                  \\%
+    \tsSymbol{route}                    & route                                             \\%
+    \tsSymbol{direction_control}        & direction control                                 \\%
+    \tsSymbol{platform}                 & platform                                          \\%
+    \tsSymbol{level_crossing}           & level crossing                                    \\%
+    \tsSymbol[2.0]{bridge}              & bridge                                            \\%
+    \tsSymbol[1.4]{hump}                & hump                                              \\%
+    \tsSymbol{pylon}                    & pylons                                            \\%
+    \tsSymbol{interlocking}             & interlocking                                      \\%
+    \tsSymbol[1.4]{distant_power_off}   & distant power off                                 \\%
+    \tsSymbol[1.4]{power_off}           & power off                                         \\%
+    \tsSymbol[1.4]{power_on}            & power on                                          \\%
+    \tsSymbol[1.4]{distant_pantograph_down}& distant pantograph down                        \\%
+    \tsSymbol[1.4]{pantograph_down}     & pantograph down                                   \\%
+    \tsSymbol[1.4]{pantograph_up}       & pantograph up                                     \\%
+    \tsSymbol[1.4]{wire_limit}          & wire limit                                        \\%
+    \tsSymbol[2.0]{track_distance}      & track distance                                    \\%
+    \tsSymbol{train_berth}              & train berth                                       \\%
+    \tsSymbol{measure_line}             & measure line                                      \\%
+    \tsSymbol{hectometer}               & hectometer                                        \\%
+    \tsSymbol{track_marking}            & track marking                                     \\%
+  \end{xltabular}%
+}%
+%%%%%%%%%%%%%%%
+\endinput%
+%

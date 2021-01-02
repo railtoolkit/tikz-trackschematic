@@ -1,0 +1,26 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../snippets.tex
+
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\coordinate (A1) at (0,-0.5);
+\coordinate (B1) at (6,-0.5);
+\coordinate (A2) at (0, 0.5);
+\coordinate (B2) at (6, 0.5);
+%
+\coordinate (P1) at (1,-0.5);
+\coordinate (P2) at (3,-0.5);
+\coordinate (P3) at (5,-0.5);
+\coordinate (P4) at (1, 0.5);
+\coordinate (P5) at (3, 0.5);
+\coordinate (P6) at (5, 0.5);
+
+\maintrack (A1) -- (B1);
+\maintrack (A2) -- (B2);
+\pylon[side=left]  at (P1);
+\pylon[side=left]  at (P2);
+\pylon[side=left]  at (P3);
+\pylon[side=right] at (P4);
+\pylon[side=right] at (P5);
+\pylon[side=right] at (P6);

@@ -1,0 +1,28 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../snippets.tex
+
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\coordinate (A1) at (0,0);
+\coordinate (X1) at (3,0);
+\coordinate (B1) at (6,0);
+
+\coordinate (A2) at (0,3);
+\coordinate (X2) at (2,3);
+\coordinate (X3) at (5,3);
+\coordinate (B2) at (6,3);
+
+\coordinate (hb) at (0,-2);
+
+\maintrack (A1) -- (B1);
+\maintrack (A2) -- (B2);
+
+\measureline (A2) -- (A1);
+\measureline (X2) -- ++(0,-1) -- ++(1,-1) -- (X1);
+\measureline (X3) -- ++(0,-1) -- ++(1,-1) -- (B1);
+
+\tikzset{hectometer base={(hb)},orientation=right}
+\hectometer[] at (A)  mileage (0.000);
+\hectometer[] at (X1) mileage (4.000);
+\hectometer[] at (B)  mileage (6.000);

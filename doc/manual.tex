@@ -1,6 +1,6 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2018,2019,2020 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021 Martin Scheidt (ISC license)
 
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
@@ -25,10 +25,10 @@
 
 % -------[ PDF Informations ]---------
 \hypersetup{%
-  pdftitle={tikz/trackschematic},
+  pdftitle={tikz-trackschematic},
   pdfsubject={A tikz toolbox for track schematics},
   pdfauthor={Martin Scheidt},
-  pdfkeywords={latex, tikz, library, railway, track, layout}
+  pdfkeywords={latex, tikz, library, railway, track layout, schematic}
 }
 
 \begin{document}
@@ -56,8 +56,9 @@
       \item \texttt{topology},
       \item \texttt{trafficcontrol},
       \item \texttt{vehicles},
-      \item \texttt{constructions}, and
-      \item \texttt{messures}.
+      \item \texttt{constructions},
+      \item \texttt{electrics}, and
+      \item \texttt{measures}.
     \end{itemize*}
 
   \subsection{Acknowledgement}
@@ -84,7 +85,7 @@
 
   \subsection{License}
 
-    Copyright (c) 2018 - 2020, \MS.
+    Copyright (c) 2018 - 2021, \MS.
     Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies (\href{https://www.tldrlegal.com/l/isc}{ISC license}).
 
   \subsection{Alternatives}
@@ -96,15 +97,15 @@
 \section{Usage}\label{sec:use}
   \subsection{A complete minimal example}
 
-    The command \texttt{\textbackslash usetikzlibrary\{trackschematic\}} will load the library; place it somewhere in your preamble.
+    The command \texttt{\textbackslash usepackage\{tikz-trackschematic\}} will load the library; place it somewhere in your preamble.
     Here is a complete working minimal example which will produce a single PDF file with the figure on the right:\\
     \begin{minipage}[c]{0.51\textwidth}
       \centering
       \begin{lstlisting}[gobble=8]
-        \documentclass[tikz]{standalone}
+        \documentclass{standalone}
 
         % loading the library
-        \usetikzlibrary{trackschematic}
+        \usepackage{tikz-trackschematic}
 
         \begin{document}
           \begin{tikzpicture}
@@ -242,10 +243,10 @@
     There is also the alias \texttt{position} for single local entries.
     \begin{minipage}[c]{0.65\textwidth}
       \begin{lstlisting}[gobble=8]
-        \documentclass[tikz]{standalone}
+        \documentclass{standalone}
 
         % load the library
-        \usetikzlibrary{trackschematic}
+        \usepackage{tikz-trackschematic}
 
         \begin{document}
           \begin{tikzpicture}
@@ -285,10 +286,10 @@
     For example like this:\\
     \begin{minipage}[c]{0.65\textwidth}
       \begin{lstlisting}[gobble=8]
-        \documentclass[tikz]{standalone}
+        \documentclass{standalone}
 
         % load the library
-        \usetikzlibrary{trackschematic}
+        \usepackage{tikz-trackschematic}
 
         \begin{document}
           \begin{tikzpicture}
@@ -315,10 +316,25 @@
     \end{minipage}
 
 
-\section{Provided Symbols and their commands}
+\section{Provided Symbols and their commands}\label{sec:symbols}
+  
+  \subsection{overview}
+    To get a table with all symbols the command \textbackslash tsFullSymbology is provided.
+    It can be used in a normal \TeX~ environment and will list all symbols of all sublibraries.
+    \begin{lstlisting}[gobble=6]
+      \tsFullSymbology
+    \end{lstlisting}
 
-  Each sublibrary provides different symbols. The following section will go through each symbol their command and options.
-  % for aperance see the snippet document
+    Each symbol provides a reference name fo a symbology entry if there is the need to create an own table with the symbols.
+    It can be used in a normal \TeX~ environment and will show the named symbol with a length of \SI{6.2}{\cm} and a width of \SI{1}{\cm}.
+    \begin{lstlisting}[gobble=6]
+      \tsSymbol[width]{main_track}
+    \end{lstlisting}
+        
+    There is also a table with snippets for various situations.
+    Each snippet and each symbol must be used inside a Ti\emph{k}Z environment.
+    Each sublibrary provides different symbols.
+    The following section will go through each symbol their command and options.
 
   \subsection{Topology}
     
@@ -331,8 +347,8 @@
         \item \texttt{secondary tracks}.
       \end{itemize*}
 
-      \symboldescription{Main track}
-        \symbol{main_track.tikz}
+      \symboldescription{Main track}\label{sym:maintrack}
+        \tsSymbol{main_track}
         \begin{lstlisting}[gobble=10]
           \maintrack (coord1) -- (coord2);
           \maintrack (coord1) -- (coord2) -- (coord3) -- etc.;
@@ -344,9 +360,15 @@
         \end{lstlisting}
         Beware of the placement assumption by the library (see Section \ref{sec:placement}).
 
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{main_track}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Secondary track}
-        \symbol{secondary_track.tikz}
+
+      \symboldescription{Secondary track}\label{sym:secondarytrack}
+        \tsSymbol{secondary_track}
         \begin{lstlisting}[gobble=10]
           \secondarytrack (coord1) -- (coord2);
           \secondarytrack (coord1) -- (coord2) -- (coord3) -- etc.;
@@ -361,9 +383,16 @@
           \path[draw=foreground,line width=0.7pt] (coord1) -- (coord2);
         \end{lstlisting}
         Beware of the placement assumption by the library (see Section \ref{sec:placement}).
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{secondary_track}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Track number or track label}
-        \symbol{track_number.tikz}
+
+      \symboldescription{Track number or track label}\label{sym:tracklabel}
+        \tsSymbol{track_label}
         \begin{lstlisting}[gobble=10]
           \tracklabel at (coord) label (number);
         \end{lstlisting}
@@ -372,10 +401,17 @@
         \begin{lstlisting}[gobble=10]
           \node[fill=background,text=foreground] at (coord) {number};
         \end{lstlisting}
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{track_label}% TeX environment
+        \end{lstlisting}
+        
 
-      \symboldescription{Buffer stops}
-        \symbol{bufferstop_forward.tikz}
-        \symbol{friction_bufferstop_forward.tikz}
+      \symboldescription{Buffer stops}\label{sym:bufferstop}
+        \tsSymbol{bufferstop}
+        \tsSymbol{friction_bufferstop}
         \begin{lstlisting}[gobble=10]
           \bufferstop[options] at (coord);
         \end{lstlisting}
@@ -385,19 +421,34 @@
           \item \texttt{friction=\textit{length unit}} (optional)
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{bufferstop}% TeX environment
+          \tsSymbol{friction_bufferstop}% TeX environment
+        \end{lstlisting}
+        
 
-      \symboldescription{Track closures}
-        \symbol{track_closure.tikz}
+      \symboldescription{Track closures}\label{sym:trackclosure}
+        \tsSymbol{track_closure}
         \begin{lstlisting}[gobble=10]
           \trackclosure at (coord);
         \end{lstlisting}
-        No \texttt{options} available.\\
+        No \texttt{options} available.
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{track_closure}% TeX environment
+        \end{lstlisting}
+        
 
     \subsubsection{Turnouts and similar}\label{sec:turnout}
-      \symboldescription{Turnouts}
-        \symbol{turnout_with_fouling_left_forward.tikz}
-        \symbol{turnout_left_forward_manually.tikz}
-        % \symbol{turnout_left_forward_right_position.tikz}
+      \symboldescription{Turnouts}\label{sym:turnouts}
+        \tsSymbol{turnout_fouling}
+        \tsSymbol{turnout_manually}
+        % \tsSymbol{turnout_left_forward_right_position}
         \begin{lstlisting}[gobble=10]
           \turnout[options] at (coord) label (name);
         \end{lstlisting}
@@ -411,9 +462,17 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{turnout_fouling}% TeX environment
+          \tsSymbol{turnout_manually}% TeX environment
+        \end{lstlisting}
+        
 
-      \symboldescription{Diamond crossings}
-        \symbol{diamond_crossing_left.tikz}
+      \symboldescription{Diamond crossings}\label{sym:diamondcrossing}
+        \tsSymbol{diamond_crossing}
         \begin{lstlisting}[gobble=10]
           \crossing[options] at (coord) label (name);
         \end{lstlisting}
@@ -421,12 +480,19 @@
         \begin{itemize}[label={}]
           \item \texttt{branch=left} or \texttt{branch=right} (mandatory)
           \item \texttt{fouling point} (optional)
-        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{diamond_crossing}% TeX environment
+        \end{lstlisting}
+        
 
-      \symboldescription{Slip switchs or slip turnouts}
-        \symbol{double-slip_turnout_left.tikz}
+      \symboldescription{Slip switchs or slip turnouts}\label{sym:slipturnout}
+        \tsSymbol{slip_turnout}
         \begin{lstlisting}[gobble=10]
           \slipturnout[options] at (coord) label (name1)(name2);
         \end{lstlisting}
@@ -441,9 +507,16 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{slip_turnout}% TeX environment
+        \end{lstlisting}
+        
 
-      \symboldescription{Derailers}
-        \symbol{derailer_left_forward.tikz}
+      \symboldescription{Derailers}\label{sym:derailer}
+        \tsSymbol{derailer}
         \begin{lstlisting}[gobble=10]
           \derailer[options] at (coord) label (name);
         \end{lstlisting}
@@ -454,11 +527,19 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+        
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{derailer}% TeX environment
+        \end{lstlisting}
+        
+
 
   \subsection{Vehicles}\label{sec:vehicles}
 
-    \symboldescription{Parked vehicles}\label{sec:parked}
-      \symbol{parked_vehicles.tikz}
+    \symboldescription{Parked vehicles}\label{sym:parkedvehicles}
+      \tsSymbol{parked_vehicles}
       \begin{lstlisting}[gobble=8]
         \parkedvehicles[options] at (coord) label (name);
       \end{lstlisting}
@@ -472,10 +553,16 @@
       \end{itemize}
       The value for \textit{(label-coord)} is relative to \textit{(coord)}.
       An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{parked_vehicles}% TeX environment
+      \end{lstlisting}
 
-    \symboldescription{Shunting movements}\label{sec:shunting}
-      % \symbol{train_shunt_mode_forward.tikz}
-      \symbol{train_shunting_forward.tikz}
+
+    \symboldescription{Shunting movements}\label{sym:trainshunting}
+      \tsSymbol{train_shunting}
       \begin{lstlisting}[gobble=8]
         \shunting[options] at (coord) label (name);
       \end{lstlisting}
@@ -494,10 +581,17 @@
       \end{itemize}
       The value for \textit{(label-coord)} and \textit{(bend-coord)} is relative to \textit{(coord)}.
       An absolute \textit{(label-coord)} or \textit{(bend-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{train_shunting}% TeX environment
+      \end{lstlisting}
 
-    \symboldescription{Train runs}\label{sec:train}
-      \symbol{train_moving_fast_forward.tikz}
-      \symbol{train_ghost_direction_forward.tikz}
+
+    \symboldescription{Train runs}\label{sym:trains}
+      \tsSymbol{train_moving_fast}
+      \tsSymbol{train_ghost}
       \begin{lstlisting}[gobble=8]
         \train[options] at (coord) label (name);
       \end{lstlisting}
@@ -517,9 +611,17 @@
       \end{itemize}
       The value for \textit{(label-coord)} and \textit{(bend-coord)} is relative to \textit{(coord)}.
       An absolute \textit{(label-coord)} or \textit{(bend-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{train_moving_fast}% TeX environment
+        \tsSymbol{train_ghost}% TeX environment
+      \end{lstlisting}
+
 
   \subsection{Traffic control}
-    \subsubsection{Stationary signals}\label{sec:signals}
+    \subsubsection{Stationary signals}\label{sym:signals}
       
       \symboldescription{Generic signal command}
         \begin{lstlisting}[gobble=10]
@@ -546,8 +648,9 @@
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
 
-      \symboldescription{Distant signal}
-        \symbol{distant_signal_forward.tikz}
+
+      \symboldescription{Distant signal}\label{sym:distantsignal}
+        \tsSymbol[1.4]{distant_signal}
         \begin{lstlisting}[gobble=10]
           \distantsignal[options] at (coord) label (name);
         \end{lstlisting}
@@ -563,9 +666,16 @@
         \begin{lstlisting}[gobble=10]
           \signal[distant,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{distant_signal}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Speed signal/sign}
-        \symbol{speed_signal_forward.tikz}
+
+      \symboldescription{Speed signal/sign}\label{sym:speedsignal}
+        \tsSymbol[1.4]{speed_signal}
         \begin{lstlisting}[gobble=10]
           \speedsignal[options] at (coord) label (name);
         \end{lstlisting}
@@ -585,9 +695,16 @@
         \begin{lstlisting}[gobble=10]
           \signal[speed type,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{speed_signal}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Block signal}
-        \symbol{block_signal_forward.tikz}
+
+      \symboldescription{Block signal}\label{sym:blocksignal}
+        \tsSymbol[1.4]{block_signal}
         \begin{lstlisting}[gobble=10]
           \blocksignal[options] at (coord) label (name);
         \end{lstlisting}
@@ -603,9 +720,16 @@
         \begin{lstlisting}[gobble=10]
           \signal[block,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{block_signal}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Route signal}
-        \symbol{route_signal_forward.tikz}
+
+      \symboldescription{Route signal}\label{sym:routesignal}
+        \tsSymbol[1.4]{route_signal}
         \begin{lstlisting}[gobble=10]
           \routesignal[options] at (coord) label (name);
         \end{lstlisting}
@@ -622,9 +746,16 @@
         \begin{lstlisting}[gobble=10]
           \signal[route,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{route_signal}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Shunting signal}
-        \symbol{shunt_signal_forward.tikz}
+
+      \symboldescription{Shunting signal}\label{sym:shuntsignal}
+        \tsSymbol[1.4]{shunt_signal}
         \begin{lstlisting}[gobble=10]
           \shuntsignal[options] at (coord) label (name);
         \end{lstlisting}
@@ -640,9 +771,16 @@
         \begin{lstlisting}[gobble=10]
           \signal[shunting,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{shunt_signal}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Shunt limit}
-        \symbol{shunt_limit_forward.tikz}
+
+      \symboldescription{Shunt limit}\label{sym:shuntlimit}
+        \tsSymbol[1.4]{shunt_limit}
         \begin{lstlisting}[gobble=10]
           \shuntlimit[options] at (coord) label (name);
         \end{lstlisting}
@@ -657,9 +795,16 @@
         \begin{lstlisting}[gobble=10]
           \signal[shunt limit,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{shunt_limit}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Berth signal/sign}
-        \symbol{train_berth_sign_forward.tikz}
+
+      \symboldescription{Berth signal/sign}\label{sym:berthsign}
+        \tsSymbol[1.4]{train_berth_sign}
         \begin{lstlisting}[gobble=10]
           \berthsignal[options] at (coord) label (name);
         \end{lstlisting}
@@ -678,11 +823,18 @@
         \begin{lstlisting}[gobble=10]
           \signal[berth,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{train_berth_sign}% TeX environment
+        \end{lstlisting}
 
-    \subsubsection{Non-stationary points}\label{sec:points}
 
-      \symboldescription{View point}
-        \symbol{view_point_forward.tikz}
+    \subsubsection{Non-stationary locations}\label{sec:locations}
+
+      \symboldescription{View point}\label{sym:viewpoint}
+        \tsSymbol[1.4]{view_point}
         \begin{lstlisting}[gobble=10]
           \viewpoint[options] at (coord);
         \end{lstlisting}
@@ -692,9 +844,16 @@
           \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{view_point}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Braking point}
-        \symbol{braking_point_forward.tikz}
+
+      \symboldescription{Braking point}\label{sym:brakingpoint}
+        \tsSymbol[1.4]{braking_point}
         \begin{lstlisting}[gobble=10]
           \brakingpoint[options] at (coord) label (name);
         \end{lstlisting}
@@ -705,9 +864,16 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{braking_point}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{End of movement authority}
-        \symbol{end_of_movement_authority_forward.tikz}
+
+      \symboldescription{End of movement authority}\label{sym:endofauthority}
+        \tsSymbol[1.4]{end_of_authority}
         \begin{lstlisting}[gobble=10]
           \movementauthority[options] at (coord) label (name);
         \end{lstlisting}
@@ -718,9 +884,16 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{end_of_authority}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Danger point}
-        \symbol{danger_point_forward.tikz}
+
+      \symboldescription{Danger point}\label{sym:dangerpoint}
+        \tsSymbol[1.4]{danger_point}
         \begin{lstlisting}[gobble=10]
           \dangerpoint[options] at (coord) label (name);
         \end{lstlisting}
@@ -731,10 +904,17 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{danger_point}% TeX environment
+        \end{lstlisting}
+
 
     \subsubsection{Clearing points}\label{sec:clearingpoints}
 
-      \symboldescription{Generic clearing point}
+      \symboldescription{Generic clearing point}\label{sym:genericclearingpoint}
         \begin{lstlisting}[gobble=10]
           \clearingpoint[options] at (coord) label (name);
         \end{lstlisting}
@@ -752,8 +932,9 @@
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
 
-      \symboldescription{Standard clearing point}
-        \symbol{clearing_point.tikz}
+
+      \symboldescription{Standard clearing point}\label{sym:clearingpoint}
+        \tsSymbol{clearing_point}
         \begin{lstlisting}[gobble=10]
           \standardclearing[options] at (coord) label (name);
         \end{lstlisting}
@@ -768,9 +949,16 @@
         \begin{lstlisting}[gobble=10]
           \clearingpoint[standard,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{clearing_point}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Block clearing point}
-        \symbol{block_clearing_point_forward.tikz}
+
+      \symboldescription{Block clearing point}\label{sym:blockclearingpoint}
+        \tsSymbol{block_clearing_point}
         \begin{lstlisting}[gobble=10]
           \blockclearing[options] at (coord) label (name);
         \end{lstlisting}
@@ -785,9 +973,16 @@
         \begin{lstlisting}[gobble=10]
           \clearingpoint[block,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{block_clearing_point}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Route clearing point}
-        \symbol{route_clearing_point_forward.tikz}
+
+      \symboldescription{Route clearing point}\label{sym:routeclearingpoint}
+        \tsSymbol{route_clearing_point}
         \begin{lstlisting}[gobble=10]
           \routeclearing[options] at (coord) label (name);
         \end{lstlisting}
@@ -802,10 +997,55 @@
         \begin{lstlisting}[gobble=10]
           \clearingpoint[route,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{route_clearing_point}% TeX environment
+        \end{lstlisting}
+
+
+    \subsubsection{Routes}\label{sec:routes}
+
+      \symboldescription{Route}\label{sym:route}
+        \tsSymbol{route}
+        \begin{lstlisting}[gobble=10]
+          \route[options] at (coord);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward} or \texttt{backward} (mandatory)
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{route}% TeX environment
+        \end{lstlisting}
+
+
+      \symboldescription{Direction control}\label{sym:directioncontrol}
+        \tsSymbol[1.4]{direction_control}
+        \begin{lstlisting}[gobble=10]
+          \directioncontrol[options] at (coord);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{direction_control}% TeX environment
+        \end{lstlisting}
+
 
     \subsubsection{Transmitters}\label{sec:transmitters}
 
-      \symboldescription{Generic transmitter command}
+      \symboldescription{Generic transmitter command}\label{sym:generictransmitter}
         \begin{lstlisting}[gobble=10]
           \transmitter[options] at (coord) label (name);
         \end{lstlisting}
@@ -818,8 +1058,9 @@
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
 
-      \symboldescription{Balise}
-        \symbol{transmitter_right_bidirectional.tikz}
+
+      \symboldescription{Balise}\label{sym:balise}
+        \tsSymbol{transmitter_forward}
         \begin{lstlisting}[gobble=10]
           \balise[options] at (coord) label (name);
         \end{lstlisting}
@@ -834,9 +1075,16 @@
         \begin{lstlisting}[gobble=10]
           \transmitter[type=balise,options] at (coord) label (name);
         \end{lstlisting}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol{transmitter_forward}% TeX environment
+        \end{lstlisting}
 
-      \symboldescription{Loop}
-        \symbol{loop_transmitter.tikz}
+
+      \symboldescription{Loop}\label{sym:loop}
+        \tsSymbol{loop_transmitter}
         \begin{lstlisting}[gobble=10]
           \trackloop[options] at (coord) label (name);
         \end{lstlisting}
@@ -850,24 +1098,18 @@
         \begin{lstlisting}[gobble=10]
           \transmitter[type=loop,options] at (coord) label (name);
         \end{lstlisting}
-
-    \subsubsection{Miscellaneous}\label{sec:misc}
-
-      \symboldescription{Route}
-        \symbol{route.tikz}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
         \begin{lstlisting}[gobble=10]
-          \route[options] at (coord);
+          \tsSymbol{loop_transmitter}% TeX environment
         \end{lstlisting}
-        values for \texttt{options} (comma seperated):
-        \begin{itemize}[label={}]
-          \item \texttt{forward} or \texttt{backward} (mandatory)
-          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
-        \end{itemize}
+
 
   \subsection{Constructions}\label{sec:constructions}
 
-    \symboldescription{Platform}
-      \symbol{platform_left.tikz}
+    \symboldescription{Platform}\label{sym:platform}
+      \tsSymbol[1.4]{platform}
       \begin{lstlisting}[gobble=8]
         \platform[options] at (coord);
       \end{lstlisting}
@@ -878,9 +1120,16 @@
         \item \texttt{width=\textit{length unit}} (optional, default 0.5cm)
         \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
       \end{itemize}
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{platform}% TeX environment
+      \end{lstlisting}
 
-    \symboldescription{Level crossings}
-      \symbol{level_crossing_single.tikz}
+
+    \symboldescription{Level crossings}\label{sym:levelcrossing}
+      \tsSymbol[2.0]{level_crossing}
       \begin{lstlisting}[gobble=8]
         \levelcrossing[options] at (coord);
       \end{lstlisting}
@@ -893,9 +1142,16 @@
         \item \texttt{no road} (optional)
         \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
       \end{itemize}
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[2.0]{level_crossing}% TeX environment
+      \end{lstlisting}
 
-    \symboldescription{Bridge}
-      \symbol{bridge.tikz}
+
+    \symboldescription{Bridge}\label{sym:bridge}
+      \tsSymbol[2.0]{bridge}
       \begin{lstlisting}[gobble=8]
         \bridge[options] at (coord);
       \end{lstlisting}
@@ -910,71 +1166,345 @@
         \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
         \item \texttt{no background} (optional)
       \end{itemize}
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[2.0]{bridge}% TeX environment
+      \end{lstlisting}
 
-    \symboldescription{Interlocking}
-      \symbol{interlocking.tikz}
+
+    \symboldescription{Interlocking}\label{sym:interlocking}
+      \tsSymbol{interlocking}
       \begin{lstlisting}[gobble=8]
         \interlocking at (coord);
       \end{lstlisting}
-      No \texttt{options} available.\\
+      No \texttt{options} available.
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{interlocking}% TeX environment
+      \end{lstlisting}
 
-    \symboldescription{Hump}
-      \symbol{hump.tikz}
+
+    \symboldescription{Hump}\label{sym:hump}
+      \tsSymbol[1.4]{hump}
       \begin{lstlisting}[gobble=8]
         \hump at (coord);
       \end{lstlisting}
+      No \texttt{options} available.
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{hump}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Pylon}\label{sym:pylon}
+      \tsSymbol[1.4]{pylon}
+      \begin{lstlisting}[gobble=8]
+        \pylon[options] at (coord);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{side=right} (default), \texttt{side=left} or \texttt{side=both} (optional)
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{pylon}% TeX environment
+      \end{lstlisting}
+
+
+  \subsection{Electrics}\label{sec:electrics}
+
+    \symboldescription{Distant power off}\label{sym:distantpoweroff}
+      \tsSymbol[1.4]{distant_power_off}
+      \begin{lstlisting}[gobble=8]
+        \distantpoweroff[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{distant_power_off}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Power off}\label{sym:poweroff}
+      \tsSymbol[1.4]{power_off}
+      \begin{lstlisting}[gobble=8]
+        \poweroff[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{power_off}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Power on}\label{sym:poweron}
+      \tsSymbol[1.4]{power_on}
+      \begin{lstlisting}[gobble=8]
+        \poweron[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{power_on}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Distant pantograph down}\label{sym:distantpantographdown}
+      \tsSymbol[1.4]{distant_pantograph_down}
+      \begin{lstlisting}[gobble=8]
+        \distantpantographdown[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{distant_pantograph_down}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Pantograph down}\label{sym:pantographdown}
+      \tsSymbol[1.4]{pantograph_down}
+      \begin{lstlisting}[gobble=8]
+        \pantographdown[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{pantograph_down}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Pantograph up}\label{sym:pantographup}
+      \tsSymbol[1.4]{pantograph_up}
+      \begin{lstlisting}[gobble=8]
+        \pantographup[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{pantograph_up}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Wire limit}\label{sym:wirelimit}
+      \tsSymbol[1.4]{wire_limit}
+      \begin{lstlisting}[gobble=8]
+        \wirelimit[options] at (coord) label (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{signal color=\textit{color}} (optional, default: \texttt{ts-signal-blue})
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \item \texttt{background=\textit{color}} (optional, default: \texttt{white})
+      \end{itemize}
+      The color \textit{ts-signal-blue} is defined as \textit{HTML: 013ADF}.
+      The value for \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[1.4]{wire_limit}% TeX environment
+      \end{lstlisting}
+
+
+  \subsection{Messures}\label{sec:measures}
+
+    \symboldescription{Track distance}\label{sym:trackdistance}
+      \tsSymbol[2.0]{track_distance}
+      \begin{lstlisting}[gobble=8]
+        \trackdistance between (coord1) and (coord2) distance (value);
+      \end{lstlisting}
+      No \texttt{options} available.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol[2.0]{track_distance}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Train berth}\label{sym:trainberth}
+      \tsSymbol{train_berth}
+      \begin{lstlisting}[gobble=8]
+        \berth[options] at (coord) length (value);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
+        \item \texttt{length=\textit{length unit}} (optional, default 4cm)
+        \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+        \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+      \end{itemize}
+      
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{train_berth}% TeX environment
+      \end{lstlisting}
+
+
+    \symboldescription{Messure line}\label{sym:measureline}
+      \tsSymbol{measure_line}
+      \begin{lstlisting}[gobble=8]
+        \measureline (coord1) -- (coord2);
+        \measureline (coord1) -- (coord2) -- (coord3) -- etc.;
+      \end{lstlisting}
       No \texttt{options} available.\\
+      This command is equivalent to:
+      \begin{lstlisting}[gobble=10]
+        \path[draw=foreground!50!background,dashed,shorten <=0.75cm,shorten >=0.75cm] (coord1) -- (coord2);
+      \end{lstlisting}
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{measure_line}% TeX environment
+      \end{lstlisting}
 
-  \subsection{Messures}\label{sec:messures}
 
-      \symboldescription{Track distance}
-        \symbol{track_distance.tikz}
-        \begin{lstlisting}[gobble=10]
-          \trackdistance between (coord1) and (coord2) distance (value);
-        \end{lstlisting}
-        No \texttt{options} available.
+    \symboldescription{Hectometer}\label{sym:hectometer}
+      \tsSymbol{hectometer}
+      \begin{lstlisting}[gobble=8]
+        \hectometer[options] at (coord) mileage (name);
+      \end{lstlisting}
+      values for \texttt{options} (comma seperated):
+      \begin{itemize}[label={}]
+        \item \texttt{hectometer base=\{\textit{(base-coord)}\}} (mandatory)
+        \item \texttt{orientation=left} or \texttt{orientation=right} (mandatory)
+        \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
+        \item \texttt{hectometer color=\textit{color}} (optional, default: \texttt{foreground!50!background})
+      \end{itemize}
+      The value for \textit{(base-coord)} and \textit{(label-coord)} is relative to \textit{(coord)}.
+      An absolute \textit{(base-coord)} or \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
+      Specify a commen hectometer base and orientation if you have to place multipile hectometers, i.e. with:
+      \texttt{\textbackslash tikzset\{hectometer base=\{(base-coord)\},orientation=right\};}.
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{hectometer}% TeX environment
+      \end{lstlisting}
 
-      \symboldescription{Train berth}
-        \symbol{train_berth_shape.tikz}
-        \begin{lstlisting}[gobble=10]
-          \berth[options] at (coord) length (value);
-        \end{lstlisting}
-        values for \texttt{options} (comma seperated):
-        \begin{itemize}[label={}]
-          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (mandatory)
-          \item \texttt{length=\textit{length unit}} (optional, default 4cm)
-          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
-          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
-        \end{itemize}
 
-      \symboldescription{Hectometer}
-        \symbol{hectometer.tikz}
-        \begin{lstlisting}[gobble=10]
-          \hectometer[options] at (coord) mileage (name);
-        \end{lstlisting}
-        values for \texttt{options} (comma seperated):
-        \begin{itemize}[label={}]
-          \item \texttt{hectometer base=\{\textit{(base-coord)}\}} (mandatory)
-          \item \texttt{orientation=left} or \texttt{orientation=right} (mandatory)
-          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
-          \item \texttt{hectometer color=\textit{color}} (optional, default: \texttt{foreground!50!background})
-        \end{itemize}
-        The value for \textit{(base-coord)} and \textit{(label-coord)} is relative to \textit{(coord)}.
-        An absolute \textit{(base-coord)} or \textit{(label-coord)} can be specified with the Ti\emph{k}Z \textbackslash coordinate command.
-        Specify a commen hectometer base and orientation if you have to place multipile hectometers, i.e. with:
-        \texttt{\textbackslash tikzset\{hectometer base=\{(base-coord)\},orientation=right\};}.
+    \symboldescription{Track Marking}\label{sym:trackmarking}
+      \tsSymbol{track_marking}
+      \begin{lstlisting}[gobble=10]
+        \trackmarking[color] (coord1) -- (coord2);
+      \end{lstlisting}
+      \begin{itemize}[label={}]
+        \item \texttt{\textit{color}} (optional, default: \texttt{foreground with opacity 40\%})
+      \end{itemize}\mbox{}\\
+      This command is equivalent to:
+      \begin{lstlisting}[gobble=8]
+        \path[
+          draw,
+          line width=8pt,
+          opacity=0.4,
+          arrows={
+            Bar[line cap=round,line width=1pt,width=12pt]-
+            Bar[line cap=round,line width=1pt,width=12pt]
+          },
+          shorten >=1pt,shorten <=1pt
+        ] (coord1) -- (coord2);
+      \end{lstlisting}
+    
+      \mbox{}\\[0.2cm]
+      Symbology entry as seen at top:
+      \begin{lstlisting}[gobble=8]
+        \tsSymbol{track_marking}% TeX environment
+      \end{lstlisting}
 
-      \symboldescription{Messure line}
-        \symbol{messure_line.tikz}
-        \begin{lstlisting}[gobble=10]
-          \messureline (coord1) -- (coord2);
-          \messureline (coord1) -- (coord2) -- (coord3) -- etc.;
-        \end{lstlisting}
-        No \texttt{options} available.\\
-        This command is equivalent to:
-        \begin{lstlisting}[gobble=10]
-          \path[draw=foreground!50!background,dashed,shorten <=0.75cm,shorten >=0.75cm] (coord1) -- (coord2);
-        \end{lstlisting}
 
 \clearpage
 \appendix
@@ -982,130 +1512,151 @@
 
   \begin{longtable}{|r|l|c|c|}
     \hline 
-      No. & Name                            & Symbol                                            & See section              \\
+      No. & Name                            & Symbol                                         & See section              \\
     \endhead
     \hline
-      \No & main track                      & \symbol{main_track.tikz}                          & \ref{sec:track}          \\
+      \No & main track                      & \tsSymbol{main_track}                          & \ref{sec:track}          \\
     \hline
-      \No & secondary track                 & \symbol{secondary_track.tikz}                     & \ref{sec:track}          \\
+      \No & secondary track                 & \tsSymbol{secondary_track}                     & \ref{sec:track}          \\
     \hline
-      \No & track number                    & \symbol{track_number.tikz}                        & \ref{sec:track}          \\
+      \No & track label                     & \tsSymbol{track_label}                         & \ref{sec:track}          \\
     \hline
-      \No & bufferstop                      & \symbol{bufferstop_forward.tikz}                  & \ref{sec:track}          \\
+      \No & bufferstop                      & \tsSymbol{bufferstop}                          & \ref{sec:track}          \\
     \hline
-      \No & friction bufferstop             & \symbol{friction_bufferstop_forward.tikz}         & \ref{sec:track}          \\
+      \No & friction bufferstop             & \tsSymbol{friction_bufferstop}                 & \ref{sec:track}          \\
     \hline
-      \No & track closure                   & \symbol{track_closure.tikz}                       & \ref{sec:track}          \\
+      \No & track closure                   & \tsSymbol{track_closure}                       & \ref{sec:track}          \\
     \hline
-      \No & turnout                         & \symbol{turnout_left_forward.tikz}                & \ref{sec:turnout}        \\
+      \No & turnout                         & \tsSymbol{turnout}                             & \ref{sym:turnouts}       \\
     \hline
       \No & \parbox[c]{5cm}{turnout\\with fouling point indicator}
-                                            & \symbol{turnout_with_fouling_left_forward.tikz}   & \ref{sec:turnout}        \\
+                                            & \tsSymbol{turnout_fouling}                     & \ref{sym:turnouts}       \\
     \hline
       \No & \parbox[c]{5cm}{turnout\\operated manually}
-                                            & \symbol{turnout_left_forward_manually.tikz}       & \ref{sec:turnout}        \\
-    \hline
-      \No & double-slip turnout             & \symbol{double-slip_turnout_left.tikz}            & \ref{sec:turnout}        \\
-    \hline
-      \No & diamond crossing                & \symbol{diamond_crossing_left.tikz}               & \ref{sec:turnout}        \\
+                                            & \tsSymbol{turnout_manually}                    & \ref{sym:turnouts}       \\
     \hline
       \No & \parbox[c]{5cm}{turnout\\with points in right position}
-                                            & \symbol{turnout_left_forward_right_position.tikz} & \ref{sec:turnout}        \\
+                                            & \tsSymbol{turnout_points_right}                & \ref{sym:turnouts}       \\
     \hline
       \No & \parbox[c]{5cm}{turnout\\with points in left position}
-                                            & \symbol{turnout_left_forward_left_position.tikz}  & \ref{sec:turnout}        \\
+                                            & \tsSymbol{turnout_points_left}                 & \ref{sym:turnouts}       \\
     \hline
       \No & \parbox[c]{5cm}{turnout\\with moving points}
-                                            & \symbol{turnout_left_forward_moving_points.tikz}  & \ref{sec:turnout}        \\
+                                            & \tsSymbol{turnout_points_moving}               & \ref{sym:turnouts}       \\
     \hline
-      \No & derailer                        & \symbol{derailer_left_forward.tikz}               & \ref{sec:turnout}        \\
+      \No & diamond crossing                & \tsSymbol{diamond_crossing}                    & \ref{sym:diamondcrossing}\\
     \hline
-      \No & parked vehicles                 & \symbol{parked_vehicles.tikz}                     & \ref{sec:parked}         \\
+      \No & double-slip turnout             & \tsSymbol{slip_turnout}                        & \ref{sym:slipturnout}    \\
     \hline
-      \No & train in shunting mode          & \symbol{train_shunt_mode_forward.tikz}            & \ref{sec:shunting}       \\
+      \No & derailer                        & \tsSymbol{derailer}                            & \ref{sym:derailer}       \\
     \hline
-      \No & train shunting                  & \symbol{train_shunting_forward.tikz}              & \ref{sec:shunting}       \\
+      \No & parked vehicles                 & \tsSymbol{parked_vehicles}                     & \ref{sym:parkedvehicles} \\
     \hline
-      \No & train                           & \symbol{train_direction_forward.tikz}             & \ref{sec:train}          \\
+      \No & train in shunting mode          & \tsSymbol{train_shunt_mode}                    & \ref{sym:trainshunting}  \\
     \hline
-      \No & train moving slow               & \symbol{train_moving_slow_forward.tikz}           & \ref{sec:train}          \\
+      \No & train shunting                  & \tsSymbol{train_shunting}                      & \ref{sym:trainshunting}  \\
     \hline
-      \No & train moving                    & \symbol{train_moving_forward.tikz}                & \ref{sec:train}          \\
+      \No & train                           & \tsSymbol{train}                               & \ref{sym:trains}         \\
     \hline
-      \No & train moving fast               & \symbol{train_moving_fast_forward.tikz}           & \ref{sec:train}          \\
+      \No & train moving slow               & \tsSymbol{train_moving_slow}                   & \ref{sym:trains}         \\
     \hline
-      \No & train ghost                     & \symbol{train_ghost_direction_forward.tikz}       & \ref{sec:train}          \\
+      \No & train moving                    & \tsSymbol{train_moving}                        & \ref{sym:trains}         \\
     \hline
-      \No & train operated automatic        & \symbol{train_drive_automatic.tikz}               & \ref{sec:train}          \\
+      \No & train moving fast               & \tsSymbol{train_moving_fast}                   & \ref{sym:trains}         \\
     \hline
-      \No & train operated by human         & \symbol{train_drive_human.tikz}                   & \ref{sec:train}          \\
+      \No & train ghost                     & \tsSymbol{train_ghost}                         & \ref{sym:trains}         \\
     \hline
-      \No & distant signal                  & \symbol{distant_signal_forward.tikz}              & \ref{sec:signals}        \\
+      \No & train operated automatic        & \tsSymbol{train_drive_automatic}               & \ref{sym:trains}         \\
+    \hline
+      \No & train operated by human         & \tsSymbol{train_drive_human}                   & \ref{sym:trains}         \\
+    \hline
+      \No & distant signal                  & \tsSymbol[1.4]{distant_signal}                 & \ref{sym:signals}        \\
     \hline
       \No & \parbox[c]{4cm}{distant signal\\with speed indicator}
-                                            & \symbol{distant_speed_signal_forward.tikz}        & \ref{sec:signals}        \\
+                                            & \tsSymbol[1.4]{distant_speed_signal}           & \ref{sym:signals}        \\
     \hline
-      \No & speed signal                    & \symbol{speed_signal_forward.tikz}                & \ref{sec:signals}        \\
+      \No & speed signal                    & \tsSymbol[1.4]{speed_signal}                   & \ref{sym:signals}        \\
     \hline
-      \No & block signal                    & \symbol{block_signal_forward.tikz}                & \ref{sec:signals}        \\
+      \No & block signal                    & \tsSymbol[1.4]{block_signal}                   & \ref{sym:signals}        \\
     \hline
-      \No & route signal                    & \symbol{route_signal_forward.tikz}                & \ref{sec:signals}        \\
+      \No & route signal                    & \tsSymbol[1.4]{route_signal}                   & \ref{sym:signals}        \\
     \hline
-      \No & \parbox[c]{4cm}{combined signal\\(distant, block and route signal)}
-                                            & \symbol{combined_signal_forward.tikz}             & \ref{sec:signals}        \\
+      \No & \parbox[c]{5cm}{combined signal (distant, block and route signal)}
+                                            & \tsSymbol[1.4]{combined_signal}                & \ref{sym:signals}        \\
     \hline
-      \No & shunt signal                    & \symbol{shunt_signal_forward.tikz}                & \ref{sec:signals}        \\
+      \No & shunt signal                    & \tsSymbol[1.4]{shunt_signal}                   & \ref{sym:signals}        \\
     \hline
-      \No & shunt signal locked             & \symbol{shunt_signal_forward_locked.tikz}         & \ref{sec:signals}        \\
+      \No & shunt signal locked             & \tsSymbol[1.4]{locked_shunt_signal}            & \ref{sym:signals}        \\
     \hline
-      \No & shunt limit                     & \symbol{shunt_limit_forward.tikz}                 & \ref{sec:signals}        \\
+      \No & shunt limit                     & \tsSymbol[1.4]{shunt_limit}                    & \ref{sym:signals}        \\
     \hline
-      \No & train berth sign                & \symbol{train_berth_sign_forward.tikz}            & \ref{sec:signals}        \\
+      \No & train berth sign                & \tsSymbol[1.4]{train_berth_sign}               & \ref{sym:signals}        \\
     \hline
-      \No & view point                      & \symbol{view_point_forward.tikz}                  & \ref{sec:points}         \\
+      \No & view point                      & \tsSymbol[1.4]{view_point}                     & \ref{sec:locations}      \\
     \hline
-      \No & braking point                   & \symbol{braking_point_forward.tikz}               & \ref{sec:points}         \\
+      \No & braking point                   & \tsSymbol[1.4]{braking_point}                  & \ref{sec:locations}      \\
     \hline
-      \No & end of movement authority       & \symbol{end_of_movement_authority_forward.tikz}   & \ref{sec:points}         \\
+      \No & end of movement authority       & \tsSymbol[1.4]{end_of_authority}               & \ref{sec:locations}      \\
     \hline
-      \No & danger point                    & \symbol{danger_point_forward.tikz}                & \ref{sec:points}         \\
+      \No & danger point                    & \tsSymbol[1.4]{danger_point}                   & \ref{sec:locations}      \\
     \hline
-      \No & clearing point                  & \symbol{clearing_point.tikz}                      & \ref{sec:clearingpoints} \\
+      \No & clearing point                  & \tsSymbol{clearing_point}                      & \ref{sec:clearingpoints} \\
     \hline
-      \No & block clearing point            & \symbol{block_clearing_point_forward.tikz}        & \ref{sec:clearingpoints} \\
+      \No & block clearing point            & \tsSymbol{block_clearing_point}                & \ref{sec:clearingpoints} \\
     \hline
-      \No & route clearing point            & \symbol{route_clearing_point_forward.tikz}        & \ref{sec:clearingpoints} \\
+      \No & route clearing point            & \tsSymbol{route_clearing_point}                & \ref{sec:clearingpoints} \\
     \hline
-      \No & transmitter                     & \symbol{transmitter_right.tikz}                   & \ref{sec:transmitters}   \\
+      \No & route                           & \tsSymbol{route}                               & \ref{sec:routes}         \\
     \hline
-      \No & transmitter effective forward   & \symbol{transmitter_right_forward.tikz}           & \ref{sec:transmitters}   \\
+      \No & direction control               & \tsSymbol{direction_control}                   & \ref{sec:routes}         \\
     \hline
-      \No & transmitter bidirectional       & \symbol{transmitter_right_bidirectional.tikz}     & \ref{sec:transmitters}   \\
+      \No & transmitter                     & \tsSymbol{transmitter}                         & \ref{sec:transmitters}   \\
     \hline
-      \No & loop transmitter                & \symbol{loop_transmitter.tikz}                    & \ref{sec:transmitters}   \\
+      \No & transmitter effective forward   & \tsSymbol{transmitter_forward}                 & \ref{sec:transmitters}   \\
     \hline
-      \No & route                           & \symbol{route.tikz}                               & \ref{sec:misc}           \\
+      \No & transmitter bidirectional       & \tsSymbol{transmitter_bidirectional}           & \ref{sec:transmitters}   \\
     \hline
-      \No & platform                        & \symbol{platform_left.tikz}                       & \ref{sec:constructions}  \\
+      \No & loop transmitter                & \tsSymbol{loop_transmitter}                    & \ref{sec:transmitters}   \\
     \hline
-      \No & level crossing                  & \symbol{level_crossing_single.tikz}               & \ref{sec:constructions}  \\
+      \No & platform                        & \tsSymbol[1.4]{platform}                       & \ref{sec:constructions}  \\
     \hline
-      \No & bridge                          & \symbol{bridge.tikz}                              & \ref{sec:constructions}  \\
+      \No & level crossing                  & \tsSymbol[2.0]{level_crossing}                 & \ref{sec:constructions}  \\
     \hline
-      \No & hump                            & \symbol{hump.tikz}                                & \ref{sec:constructions}  \\
+      \No & bridge                          & \tsSymbol[2.0]{bridge}                         & \ref{sec:constructions}  \\
     \hline
-      \No & interlocking                    & \symbol{interlocking.tikz}                        & \ref{sec:constructions}  \\
+      \No & hump                            & \tsSymbol[1.4]{hump}                           & \ref{sec:constructions}  \\
     \hline
-      \No & track distance (in \si{\metre}) & \symbol{track_distance.tikz}                      & \ref{sec:messures}       \\
+      \No & interlocking                    & \tsSymbol{interlocking}                        & \ref{sec:constructions}  \\
     \hline
-      \No & train berth shape               & \symbol{train_berth_shape.tikz}                   & \ref{sec:messures}       \\
+      \No & pylons                          & \tsSymbol[1.4]{pylon}                          & \ref{sec:constructions}  \\
     \hline
-      \No & hectometer                      & \symbol{hectometer.tikz}                          & \ref{sec:messures}       \\
+      \No & distant power off               & \tsSymbol[1.4]{distant_power_off}              & \ref{sec:electrics}      \\
     \hline
-      \No & Messure line                    & \symbol{messure_line.tikz}                        & \ref{sec:messures}       \\
+      \No & power off                       & \tsSymbol[1.4]{power_off}                      & \ref{sec:electrics}      \\
+    \hline
+      \No & power on                        & \tsSymbol[1.4]{power_on}                       & \ref{sec:electrics}      \\
+    \hline
+      \No & distant pantograph down         & \tsSymbol[1.4]{distant_pantograph_down}        & \ref{sec:electrics}      \\
+    \hline
+      \No & pantograph down                 & \tsSymbol[1.4]{pantograph_down}                & \ref{sec:electrics}      \\
+    \hline
+      \No & pantograph up                   & \tsSymbol[1.4]{pantograph_up}                  & \ref{sec:electrics}      \\
+    \hline
+      \No & wire limit                      & \tsSymbol[1.4]{wire_limit}                     & \ref{sec:electrics}      \\
+    \hline
+      \No & track distance (in \si{\metre}) & \tsSymbol[2.0]{track_distance}                 & \ref{sec:measures}       \\
+    \hline
+      \No & train berth shape               & \tsSymbol{train_berth}                         & \ref{sec:measures}       \\
+    \hline
+      \No & Messure line                    & \tsSymbol{measure_line}                        & \ref{sec:measures}       \\
+    \hline
+      \No & hectometer                      & \tsSymbol{hectometer}                          & \ref{sec:measures}       \\
+    \hline
+      \No & track marking                   & \tsSymbol{track_marking}                       & \ref{sec:measures}       \\
     \hline
   \end{longtable}
 
+\clearpage
 \input{versionhistory.tex}
 \vhListAllAuthorsLongWithAbbrev
 

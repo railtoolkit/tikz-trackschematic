@@ -1,10 +1,10 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright 2018,2019 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\ProvidesPackage{doc}[2019-09-30 Doc Package]
+\ProvidesPackage{tikz-trackschematic-documentation}[2020-12-30 Documentation Package for the tikz-trackschematic library]
 
 % --------[  Coding and Language  ]----------
 \RequirePackage{scrhack,marginnote}
@@ -31,6 +31,7 @@
 \pagestyle{scrheadings}
 \RequirePackage{multicol}
 % -----------[ PDF linking ]----------------
+\RequirePackage{xr-hyper}
 \RequirePackage[%
   pdftex,%
   pdfpagelabels, % modify PDF page labels
@@ -81,31 +82,32 @@
 \RequirePackage{longtable,tikz,siunitx,adjustbox,rotating}
 \sisetup{math-rm=\mathsf}
 
-\IfFileExists{tikzlibrarytrackschematic-dev.code.tex}{%
-  \usetikzlibrary{trackschematic-dev.topology}%
-  \usetikzlibrary{trackschematic-dev.trafficcontrol}%
-  \usetikzlibrary{trackschematic-dev.vehicles}%
-  \usetikzlibrary{trackschematic-dev.constructions}%
-  \usetikzlibrary{trackschematic-dev.messures}%
+\IfFileExists{tikz-trackschematic-dev.sty}{%
+  \RequirePackage[dev]{tikz-trackschematic-dev}%
 }{%
-  \usetikzlibrary{trackschematic}%
+  \RequirePackage{tikz-trackschematic}%
 }%
 
-\def\rootTrackschematic{.}
+\usepackage[obeyDraft,textsize=footnotesize]{todonotes}
+\newcommand{\TODO}{\todo[linecolor=orange,backgroundcolor=orange!20,bordercolor=orange,inline,]{\textcolor{orange}{Todo}}}
+% \newcommand{\TODO}[1]{\todo[linecolor=orange,backgroundcolor=orange!20,bordercolor=orange,inline,]{\textcolor{orange}{Todo:~}#1}}
 
 \renewcommand{\symbol}[2][1.0]{%
   \adjustbox{valign=c}{\begin{tikzpicture}[scale=#1]%
-    \input{\rootTrackschematic/snippets/#2}%
+    \input{./snippets/#2}%
     \path (-0.1,-1.1) rectangle (6.1,1.1); % background rectangle to unify every cell containing a symbol
   \end{tikzpicture}}%
 }%
 
-\newcommand{\symboldescription}[1]{\paragraph*{#1}\marginnote{\tikz{\fill (-0.4,0.15)--(-0.4,-0.15)--(0,0)--cycle;}}\mbox{}\\}%
-
-\newcommand{\code}[1]{\lstinputlisting[firstline=7]{\rootTrackschematic/snippets/#1}}%
+\newcommand{\code}[1]{\lstinputlisting[firstline=7]{./snippets/#1}}%
 
 \newcounter{symbolNo}%
 \def\No{\stepcounter{symbolNo}\arabic{symbolNo}}%
 
+\newcommand{\symboldescription}[1]{\paragraph*{#1}\marginnote{\tikz{\fill (-0.4,0.15)--(-0.4,-0.15)--(0,0)--cycle;}}\mbox{}\\}%
+
 \setlength{\parindent}{0cm}
 \reversemarginpar
+%%%%%%%%%%%%%%%
+\endinput%
+%

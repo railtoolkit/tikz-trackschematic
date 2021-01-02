@@ -1,6 +1,9 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../test/test.tex
+%
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
@@ -49,7 +52,6 @@
   shift label=(none),% DEFAULT
   /tikz/shift label/.forward to=/tikz/trackschematic/shift label,%
 }%
-%
 \pgfkeys{%
   /tikz/trackschematic/topology/.is family,%
   /tikz/trackschematic/topology/.cd,%
@@ -66,23 +68,32 @@
   points=none,% DEFAULT
   /tikz/points/.forward to=/tikz/trackschematic/topology/points,%
 }%
-% options
+% options for turnout and slip turnout
 \newtoggle{fouling_point}\settoggle{fouling_point}{false}%
 %
 %%%%%%%%%%%%%%%
 % symbol track
 %%%%%%%%%%%%%%%
 %
-% tracks
+% commands
 \newcommand\maintrack{}% just for safety
-\def\maintrack{\path[draw,MainTrack]}% \maintrack (coord1) -- (coord2);
+\def\maintrack{\path[draw=\foreground,MainTrack]}% \maintrack (coord1) -- (coord2);
 \newcommand\secondarytrack{}% just for safety
-\def\secondarytrack{\path[draw,SecondaryTrack]}% \secondarytrack (coord1) -- (coord2);
+\def\secondarytrack{\path[draw=\foreground,SecondaryTrack]}% \secondarytrack (coord1) -- (coord2);
 \newcommand\sidetrack{}% just for safety
 \def\sidetrack{\path[draw,SecondaryTrack]}% alias for \secondarytrack
 %
-\tikzset{MainTrack/.style={line width=2pt,\foreground}}%
-\tikzset{SecondaryTrack/.style={line width=0.7pt,\foreground}}%
+%% symbol definition
+\tikzset{%
+  MainTrack/.style={line width=2pt},%
+  % symbology entry
+  symbology_main_track/.pic = {\maintrack (0,0) -- (6,0);}%
+}%
+\tikzset{%
+  SecondaryTrack/.style={line width=0.7pt},%
+  % symbology entry
+  symbology_secondary_track/.pic = {\secondarytrack (0,0) -- (6,0);}%
+}%
 %
 %%%%%%%%%%%%%%%
 % symbol track number
@@ -117,7 +128,13 @@
       }%
       \node at (ts-tl-l) {\labelcontent};%
     }%
-  }},%
+  }},% END pics/track_label/.style args={#1/#2/#3}
+  %
+  % symbology entry
+  symbology_track_label/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \tracklabel at (3,0) label (label);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -156,13 +173,26 @@
       }%
     }% end \ifdefstring{\face}
     %% symbol
-    \ifdefstring{\friction}{none}{% friction
-      \path[draw=\foreground, line width=1pt] ($\facefactor*(-0.1,0) + (0,0.2)$) --  ++($\facefactor*( 0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*(-0.1,0)$); % bufferstop marker
-    }{
-      \path[draw=\foreground, line width=1pt] ($\facefactor*(-\friction,0) + \facefactor*( 0.1,0) + (0,0.2)$) --  ++($\facefactor*(-0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*( 0.1,0)$); % bufferstop marker
+    \ifdefstring{\friction}{none}{% none friction
+      \path[draw=\foreground, line width=1pt]%
+        ($\facefactor*(-0.1,0) + (0,0.2)$) --  ++($\facefactor*( 0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*(-0.1,0)$);% bufferstop marker
+    }{% friction
+      \path[draw=\foreground, line width=1pt]%
+        ($\facefactor*(-\friction,0) + \facefactor*(-0.05,0) + (0,0.2)$) --  ++($\facefactor*(0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*(-0.1,0)$);% bufferstop marker
       \fill[\foreground] (0,0) circle (0.06);% track closure indicator
-    }
-  }},%
+    }%
+  }},% END pics/bufferstop/.style args={#1}
+  %
+  % symbology entry
+  symbology_bufferstop/.pic = {%
+    \secondarytrack (0,0) -- (3,0);%
+    \bufferstop[forward] at (3,0);%
+  },%
+  % symbology entry
+  symbology_friction_bufferstop/.pic = {%
+    \maintrack (0,0) -- (3,0);%
+    \bufferstop[forward,friction=.5] at (3,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -174,6 +204,7 @@
 \def\trackclosure#1(#2){% \trackclosure at (coord);
   \pic at (#2) {track_closure={#1}}% symbol
 }%
+% symbol definition
 \tikzset{%
   pics/track_closure/.default=,%
   pics/track_closure/.style args={#1}{code={%
@@ -182,7 +213,13 @@
     %%
     \fill[\foreground] (0,0) circle (0.06);% track closure indicator
     % \path[fill=\foreground] (0.04,0.02) -- (0.04,-0.02) -- (0.02,-0.04) -- (-0.02,-0.04) -- (-0.04,-0.02) -- (-0.04,0.02) -- (-0.02,0.04) -- (0.02,0.04) -- cycle;% label
-  }},% end pics/track_closure/.style args={#1}
+  }},% END pics/track_closure/.style args={#1}
+  %
+  % symbology entry
+  symbology_track_closure/.pic = {%
+    \maintrack (0,0) -- (3,0);%
+    \trackclosure at (3,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -304,7 +341,38 @@
       }%
     }% end \ifdefstring{\points}
     %
-  }},% end pics/turnout/.style args={#1/#2/#3}
+  }},% END pics/turnout/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_turnout/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \turnout[forward,branch=left] at (3,0) label ();%
+  },%
+  symbology_turnout_fouling/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \turnout[forward,branch=left,fouling point] at (3,0) label ();%
+  },%
+  symbology_turnout_manually/.pic = {%
+    \secondarytrack (0,0) -- (6,0);%
+    \secondarytrack (3,0) -- ++(0.8,0.8);%
+    \turnout[forward,branch=left,operation=manual] at (3,0) label ();%
+  },%
+  symbology_turnout_points_right/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \turnout[forward,branch=left,points=right] at (3,0) label ();%
+  },%
+  symbology_turnout_points_left/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \turnout[forward,branch=left,points=left] at (3,0) label ();%
+  },%
+  symbology_turnout_points_moving/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \turnout[forward,branch=left,points=moving] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -369,26 +437,6 @@
         }%
       }%
     }%
-    %
-    %% label
-    \tikzset{every node/.style={text=\foreground}};%
-    \ifdefstring{\labelcontentleft}{}{}{% label NOT empty
-      \coordinate (ts-sy-l1) at ($(2pt,0) + \branchfactor*(0, 10pt)$);%
-      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-sy-l1) at ($(ts-sy-l1)+(\labelcoordX,\labelcoordY)$);%
-      }%
-      \node[left]  at (ts-sy-l1) {\footnotesize \labelcontentleft};%
-    }%
-    \ifdefstring{\labelcontentright}{}{}{% label NOT empty
-      \coordinate (ts-sy-l2) at ($(2pt,0) + \branchfactor*(0,-10pt)$);%
-      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-sy-l2) at ($(ts-sy-l2)-(\labelcoordX,\labelcoordY)$);%
-      }%
-      \node[right] at (ts-sy-l2) {\footnotesize \labelcontentright};%
-    }%
-    %
     %% fouling point indicator
     \iftoggle{fouling_point}{%
       \path[draw=\foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
@@ -471,13 +519,39 @@
       }%
     }%
     %
-  }},% end of  pics/slipturnout/.style args={#1/#2/#3/#4}{
+    %% label
+    \tikzset{every node/.style={text=\foreground}};%
+    \ifdefstring{\labelcontentleft}{}{}{% label NOT empty
+      \coordinate (ts-sy-l1) at ($(2pt,0) + \branchfactor*(0, 10pt)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-sy-l1) at ($(ts-sy-l1)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[left]  at (ts-sy-l1) {\footnotesize \labelcontentleft};%
+    }%
+    \ifdefstring{\labelcontentright}{}{}{% label NOT empty
+      \coordinate (ts-sy-l2) at ($(2pt,0) + \branchfactor*(0,-10pt)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (ts-sy-l2) at ($(ts-sy-l2)-(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[right] at (ts-sy-l2) {\footnotesize \labelcontentright};%
+    }%
+    %
+  }},% END of  pics/slipturnout/.style args={#1/#2/#3/#4}
+  % symbology entry
+  symbology_slip_turnout/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \maintrack (3,0) -- ++(-0.8,-0.8);%
+    \slipturnout[branch=left] at (3,0) label ()();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
 % symbol crossing - using parts of turnout
 %%%%%%%%%%%%%%%
-%
+% command
 \newcommand\crossing{}% just for safety
 \def\crossing[#1]#2(#3)#4(#5){% \crossing[options] at (coord) label (name);
   \pic[#1] at (#3) {crossing={#2/#4/#5}}% symbol
@@ -523,7 +597,14 @@
       \path[draw=\foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
     }{}%
     %
-  }},% end of  pics/crossing/.style args={#1/#2/#3}{
+  }},% end of  pics/crossing/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_diamond_crossing/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \maintrack (3,0) -- ++(0.8,0.8);%
+    \maintrack (3,0) -- ++(-0.8,-0.8);%
+    \crossing[branch=left] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -587,7 +668,12 @@
       \node[right] at (ts-dr-l) {\footnotesize \labelcontent};%
     }%
     %
-  }},%
+  }},% END pics/derailer/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_derailer/.pic = {%
+    \secondarytrack (0,0) -- (6,0);%
+    \derailer[forward,branch=left] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%

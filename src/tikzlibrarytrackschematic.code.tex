@@ -1,6 +1,6 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
@@ -9,15 +9,54 @@
 \RequirePackage{tikz,etoolbox,lmodern}%
 %
 %%%%%%%%%%%%%%%
-% symbol definitions
+% loading sublibraries
 %%%%%%%%%%%%%%%
-\usetikzlibrary{trackschematic.topology}%
-\usetikzlibrary{trackschematic.trafficcontrol}%
-\usetikzlibrary{trackschematic.vehicles}%
-\usetikzlibrary{trackschematic.constructions}%
-\usetikzlibrary{trackschematic.messures}%
-% \usetikzlibrary{trackschematic.i18n}%
-%
+% \usetikzlibrary{trackschematic.topology}%
+% \usetikzlibrary{trackschematic.trafficcontrol}%
+% \usetikzlibrary{trackschematic.vehicles}%
+% \usetikzlibrary{trackschematic.constructions}%
+% \usetikzlibrary{trackschematic.electrics}%
+% \usetikzlibrary{trackschematic.measures}%
+%%%%%%%%%%%%%%%
+%% template for new symbol definitions
+%%%%%%%%%%%%%%%
+% %
+% \newcommand\XXXX{}% just for safety
+% \def\XXXX[#1]#2(#3)#4(#5){% \XXXX[options] at (coord) label (name);
+%   \pic[#1] at (#3) {XXXX={#2/#4/#5}}% symbol
+% }%
+% % tikz keys
+% \pgfkeys{%
+%   /tikz/trackschematic/.is family,%
+%   /tikz/trackschematic//.cd,%
+% }%
+% % symbol definition
+% \tikzset{%
+%   pics/XXXX/.default=,%
+%   pics/XXXX/.style args={#1/#2/#3}{code={%
+%     %% settings
+%     \def\coordcommand{#1}% beware of leading and tailing spaces!
+%     \def\labelcommand{#2}% beware of leading and tailing spaces!
+%     \def\labelcontent{#3}%
+%     %% symbol marker
+%     %
+%     %% label
+%     \ifdefstring{\labelcontent}{}{}{% label NOT empty
+%       \coordinate (label-coord) at (coord);%
+%       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+%         \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+%         \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+%       }%
+%       \node at (label-coord) {\footnotesize \labelcontent};%
+%     }%
+%   }},% END of  pics/XXXX/.style args={#1/#2/#3}
+%   % symbology entry
+%   symbology_XXXX/.pic = {%
+%     \maintrack (0,0) -- (6,0);%
+%     \XXXX at (3,0);%
+%   },%
+% }%
+% %
 %%%%%%%%%%%%%%%
 \endinput%
 %

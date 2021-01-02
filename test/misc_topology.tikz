@@ -1,7 +1,7 @@
 %!TEX TS-program = pdflatexmk
 %!TEX root = test.tex
 
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \node[blue] at (4,0) {\large test misc. topology symbols};
@@ -43,6 +43,13 @@
 \bufferstop[forward]  at (B3);
 
 \trackclosure at (A4);
+\directioncontrol[forward] at (X4-2);
+\directioncontrol[backward] at (X4-3);
+\directioncontrol[bidirectional] at (X4-4);
 \trackclosure at (B4);
+
 \trackclosure at (A5);
+\directioncontrol[forward,position=left] at (X5-2);
+\directioncontrol[backward,position=left] at (X5-3);
+\directioncontrol[bidirectional,position=left] at (X5-4);
 \trackclosure at (B5);

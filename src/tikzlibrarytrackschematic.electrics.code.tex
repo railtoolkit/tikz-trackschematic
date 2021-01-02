@@ -1,0 +1,611 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../test/test.tex
+%
+%% symbol library for TikZ track schematics
+%
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
+%
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+%
+\ProvidesFileRCS{tikzlibrarytrackschematic.electrics.code.tex}%
+%
+%%%%%%%%%%%%%%%
+% global settings
+%%%%%%%%%%%%%%%
+\RequirePackage{tikz,etoolbox,lmodern}%
+\usetikzlibrary{calc,intersections,arrows.meta}%
+%
+% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
+\providecommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}%
+%
+%%%%%%%%%%%%%%%
+% tikz keys for multiple use
+%%%%%%%%%%%%%%%
+%
+\pgfkeys{%
+  /tikz/trackschematic/.is family,%
+  /tikz/trackschematic/.cd,%
+  %% color foreground
+  foreground/.store in=\foreground,%
+  foreground=black,% DEFAULT
+  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
+  %% color background
+  background/.store in=\background,%
+  background=white,% DEFAULT
+  /tikz/background/.forward to=/tikz/trackschematic/background,%
+  %% face
+  face/.value required,% forward, backward OR bidirectional
+  face/.store in=\face,% forward, backward OR bidirectional
+  /tikz/face/.forward to=/tikz/trackschematic/face,%
+  /tikz/forward/.code={\pgfkeys{/tikz/trackschematic/face=forward}},%
+  /tikz/backward/.code={\pgfkeys{/tikz/trackschematic/face=backward}},%
+  /tikz/bidirectional/.code={\pgfkeys{/tikz/trackschematic/face=bidirectional}},%
+  %% traffic practice
+  traffic practice/.value required,% left OR right
+  traffic practice/.store in=\trafficpractice,%
+  /tikz/traffic practice/.forward to=/tikz/trackschematic/traffic practice,%
+  /tikz/position/.forward to=/tikz/trackschematic/traffic practice,%
+  %% label
+  shift label/.store in=\labelcoord,% (coord)
+  shift label=(none),% DEFAULT
+  /tikz/shift label/.forward to=/tikz/trackschematic/shift label,%
+}%
+\tikzset{traffic practice=right}%
+%
+\definecolor{ts-signal-blue}{HTML}{013ADF}%
+% tikz keys
+\pgfkeys{%
+  /tikz/trackschematic/electrics/.is family,%
+  /tikz/trackschematic/electrics/.cd,%
+  %% color hectometer
+  signal color/.store in=\signalcolor,%
+  signal color=ts-signal-blue,% DEFAULT
+  /tikz/electrics signal color/.forward to=/tikz/trackschematic/electrics/signal color,%
+}%
+%%%%%%%%%%%%%%%%
+% symbol distant power off
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\distantpoweroff{}% just for safety
+\def\distantpoweroff[#1]#2(#3)#4(#5){% \distantpoweroff[options] at (coord) label (name);
+  \pic[#1] at (#3) {distant_power_off={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/distant_power_off/.default=,%
+  pics/distant_power_off/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.45,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.1,0)$)%
+            ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*( 0.45,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*(-0.1,0)$);% symbol
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/distant_power_off/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_distant_power_off/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \distantpoweroff[forward] at (3,0) label ();%
+  },%
+}%
+%
+%%%%%%%%%%%%%%%%
+% symbol power off
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\poweroff{}% just for safety
+\def\poweroff[#1]#2(#3)#4(#5){% \poweroff[options] at (coord) label (name);
+  \pic[#1] at (#3) {power_off={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/power_off/.default=,%
+  pics/power_off/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.5,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.1,0)$)%
+            ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*( 0.5,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*(-0.1,0)$)%
+            ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.3,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*( 0.05,0)$);% symbol
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/power_off/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_power_off/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \poweroff[forward] at (3,0) label ();%
+  },%
+}%
+%
+%%%%%%%%%%%%%%%%
+% symbol power on
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\poweron{}% just for safety
+\def\poweron[#1]#2(#3)#4(#5){% \poweron[options] at (coord) label (name);
+  \pic[#1] at (#3) {power_on={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/power_on/.default=,%
+  pics/power_on/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.475,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.11,0)$)%
+            ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*( 0.475,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*(-0.11,0)$);% symbol part1
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.325,0)$) rectangle%
+          ++($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*( 0.05,0)$);% symbol part2
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/power_on/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_power_on/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \poweron[forward] at (3,0) label ();%
+  },%
+}%
+%
+%%%%%%%%%%%%%%%%
+% symbol distant pantograph down
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\distantpantographdown{}% just for safety
+\def\distantpantographdown[#1]#2(#3)#4(#5){% \distantpantographdown[options] at (coord) label (name);
+  \pic[#1] at (#3) {distant_pantograph_down={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/distant_pantograph_down/.default=,%
+  pics/distant_pantograph_down/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.23) + \facefactor*( 0.35,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.2)$) -- ++($\facefactor*(-0.05,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.15)$) -- cycle%
+            ($\trafficfactor*\facefactor*(0,-0.57) + \facefactor*( 0.45,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.2)$) -- ++($\facefactor*(0.05,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.15)$) -- cycle;% symbol
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/distant_pantograph_down/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_distant_pantograph_down/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \distantpantographdown[forward] at (3,0) label ();%
+  },%
+}%
+%
+%
+%%%%%%%%%%%%%%%%
+% symbol pantograph down
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\pantographdown{}% just for safety
+\def\pantographdown[#1]#2(#3)#4(#5){% \pantographdown[options] at (coord) label (name);
+  \pic[#1] at (#3) {pantograph_down={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/pantograph_down/.default=,%
+  pics/pantograph_down/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.18) + \facefactor*( 0.4 ,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.03) + \facefactor*( 0.03,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.38)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.03) + \facefactor*(-0.03,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.03) + \facefactor*(-0.03,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.38)$) -- cycle;% symbol
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/pantograph_down/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_pantograph_down/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \pantographdown[forward] at (3,0) label ();%
+  },%
+}%
+%
+%
+%%%%%%%%%%%%%%%%
+% symbol pantograph up
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\pantographup{}% just for safety
+\def\pantographup[#1]#2(#3)#4(#5){% \pantographup[options] at (coord) label (name);
+  \pic[#1] at (#3) {pantograph_up={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/pantograph_up/.default=,%
+  pics/pantograph_up/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.4 ) + \facefactor*( 0.62,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.03) + \facefactor*(-0.03,0)$) --%
+          ++($\facefactor*(-0.38,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.03) + \facefactor*(-0.03,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.03) + \facefactor*( 0.03,0)$) --%
+          ++($\facefactor*( 0.38,0)$) -- cycle;% symbol
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/pantograph_up/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_pantograph_up/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \pantographup[forward] at (3,0) label ();%
+  },%
+}%
+%
+%
+%%%%%%%%%%%%%%%%
+% symbol wire limit
+%%%%%%%%%%%%%%%
+%% command
+\newcommand\wirelimit{}% just for safety
+\def\wirelimit[#1]#2(#3)#4(#5){% \wirelimit[options] at (coord) label (name);
+  \pic[#1] at (#3) {wire_limit={#2/#4/#5}}% symbol
+}%
+%% 
+%% symbol definition
+\tikzset{%
+  pics/wire_limit/.default=,%
+  pics/wire_limit/.style args={#1/#2/#3}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    \def\labelcommand{#2}% beware of leading and tailing spaces!
+    \def\labelcontent{#3}%
+    %% symbol marker
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+      \def\align{left}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+        \def\align{right}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %
+    %% signal pole
+    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    %% signal marker
+    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+            ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.4 ,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*(-0.15,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.15,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.15) + \facefactor*( 0.15,0)$) -- cycle;% symbol
+    \path[fill=\signalcolor]%
+            ($\trafficfactor*\facefactor*(0,-0.3 ) + \facefactor*( 0.4 ,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.1 ) + \facefactor*(-0.1 ,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.1 ) + \facefactor*( 0.1 ,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.1 ) + \facefactor*( 0.1 ,0)$) -- cycle;% symbol
+    \path[fill=\background]%
+            ($\trafficfactor*\facefactor*(0,-0.35) + \facefactor*( 0.4 ,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.05,0)$) --%
+          ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*( 0.05,0)$) --%
+          ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*( 0.05,0)$) -- cycle;% symbol
+    %% label
+    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \ifdefstring{\labelcontent}{}{}{% label NOT empty
+      \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
+      \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
+        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+      }%
+      \node[\align] at (label-coord) {\footnotesize \labelcontent};%
+    }%
+  }},% END of  pics/wire_limit/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_wire_limit/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \wirelimit[forward] at (3,0) label ();%
+  },%
+}%
+%
+%
+%%%%%%%%%%%%%%%
+% TODO:
+% * documentation
+%
+%%%%%%%%%%%%%%%
+\endinput%
+%

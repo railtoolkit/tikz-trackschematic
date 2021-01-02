@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+# Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 # Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 LATEXMK=`which latexmk`
@@ -61,7 +61,7 @@ for SYMBOL in $SYMBOLS; do IFS=",";
   echo '\\usetikzlibrary{trackschematic-dev.trafficcontrol}' >> tmp.tex
   echo '\\usetikzlibrary{trackschematic-dev.vehicles}' >> tmp.tex
   echo '\\usetikzlibrary{trackschematic-dev.constructions}' >> tmp.tex
-  echo '\\usetikzlibrary{trackschematic-dev.messures}' >> tmp.tex
+  echo '\\usetikzlibrary{trackschematic-dev.measures}' >> tmp.tex
   echo '}{\\usetikzlibrary{trackschematic}}' >> tmp.tex
   echo '\\begin{document}' >> tmp.tex
   echo '\\begin{tikzpicture}[font=\\sffamily]' >> tmp.tex

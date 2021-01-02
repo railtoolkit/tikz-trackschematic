@@ -1,6 +1,9 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../test/test.tex
+%
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
@@ -287,6 +290,56 @@
       }{}%
     }{}%
   }},% end pics/signal/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_distant_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \distantsignal[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_distant_speed_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \distantsignal[forward,distant speed={s}] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_speed_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \speedsignal[forward,speed={s}] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_block_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \blocksignal[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_route_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \routesignal[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_combined_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \signal[distant,block,route,forward,distant speed={ds},speed={s}] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_shunt_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \shuntsignal[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_locked_shunt_signal/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \shuntsignal[forward,locked] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_shunt_limit/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \shuntlimit[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_berth_sign/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \berthsignal[forward] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -367,6 +420,21 @@
       \node at (ts-cp-l) {\footnotesize \labelcontent};%
     }%
   }},% end pics/clearing_point/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_clearing_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \clearingpoint[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_block_clearing_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \blockclearing[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_route_clearing_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \routeclearing[forward] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -442,6 +510,26 @@
       \node at (ts-tm-l) {\footnotesize \labelcontent};%
     }%
   }},% end pics/transmitter/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_transmitter/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \balise[] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_transmitter_forward/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \balise[forward] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_transmitter_bidirectional/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \balise[bidirectional] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_loop_transmitter/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \transmitter[type=loop] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -489,7 +577,12 @@
       ($\facefactor*(0.55,0) + \facefactor*\trafficfactor*(0,-0.55)$) and%
       ($\facefactor*(0.55,0) + \facefactor*\trafficfactor*(0,-0.25)$) ..%
       ($\facefactor*(0.4, 0) + \facefactor*\trafficfactor*(0,-0.15)$) --cycle;% eye contour
-  }},%
+  }},% END pics/view_point/.style args={#1}
+  % symbology entry
+  symbology_view_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \viewpoint[forward] at (3,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -548,7 +641,12 @@
       }%
       \node[\align] at (ts-ma-l) {\footnotesize \labelcontent};%
     }%
-  }},% end pics/movement_authority_marker/.style args={#1/#2/#3}
+  }},% END pics/movement_authority_marker/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_end_of_authority/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \movementauthority[forward] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -608,7 +706,12 @@
       }%
       \node[\align] at (ts-bp-l) {\footnotesize \labelcontent};%
     }%
-  }},% end pics/braking_point_marker/.style args={#1/#2/#3}
+  }},% END pics/braking_point_marker/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_braking_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \brakingpoint[forward] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -669,7 +772,12 @@
       }%
       \node at (ts-dp-l) {\footnotesize \labelcontent};%
     }%
-  }},% end pics/danger_point_marker/.style args={#1/#2/#3}
+  }},% END pics/danger_point_marker/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_danger_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \dangerpoint[forward] at (3,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -700,7 +808,87 @@
     \fill[\foreground] ($\facefactor*(-0.175,0)+(0,-0.15)$) --%
                        ($\facefactor*(-0.175,0)+(0, 0.15)$) --%
                        ($\facefactor*( 0.175,0)+(0, 0   )$) -- cycle;%
-  }},%
+  }},% END pics/route/.style args={#1}
+  % symbology entry
+  symbology_route/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \route[forward]  at (3,0);%
+  },%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol direction control
+%%%%%%%%%%%%%%%
+% command
+\newcommand\directioncontrol{}% just for safety
+\def\directioncontrol[#1]#2(#3){% \directioncontrol[options] at (coord);
+  \pic[#1] at (#3) {direction_control={#2}}% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/direction_control/.default=,%
+  pics/direction_control/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    %
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \path[draw=\foreground,line width=0.5pt,densely dotted]%
+        ($\trafficfactor*(0,0.1) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.25) + (-0.2125,0)$) -- ($\trafficfactor*(0,0.4) + (-0.0125,0)$) --%
+        ($\trafficfactor*(0,0.325) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.325) + (0.1875,0)$) -- ($\trafficfactor*(0,0.175) + (0.1875,0)$) --%
+        ($\trafficfactor*(0,0.175) + (-0.0125,0)$) -- cycle;% arrow backward
+      \fill[\foreground]%
+        ($\trafficfactor*(0,-0.1) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.25) + (0.2125,0)$) -- ($\trafficfactor*(0,-0.4) + (0.0125,0)$) --%
+        ($\trafficfactor*(0,-0.325) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.325)+(-0.1875,0)$) -- ($\trafficfactor*(0,-0.175) + (-0.1875,0)$) --%
+        ($\trafficfactor*(0,-0.175) + (0.0125,0)$) -- cycle;% arrow forward
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \fill[\foreground]%
+          ($\trafficfactor*(0,0.1) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.25) + (-0.2125,0)$) -- ($\trafficfactor*(0,0.4) + (-0.0125,0)$) --%
+          ($\trafficfactor*(0,0.325) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.325) + (0.1875,0)$) -- ($\trafficfactor*(0,0.175) + (0.1875,0)$) --%
+          ($\trafficfactor*(0,0.175) + (-0.0125,0)$) -- cycle;% arrow backward
+        \path[draw=\foreground,line width=0.5pt,densely dotted]%
+          ($\trafficfactor*(0,-0.1) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.25) + (0.2125,0)$) -- ($\trafficfactor*(0,-0.4) + (0.0125,0)$) --%
+          ($\trafficfactor*(0,-0.325)+(0.0125,0)$) -- ($\trafficfactor*(0,-0.325)+(-0.1875,0)$) -- ($\trafficfactor*(0,-0.175) + (-0.1875,0)$) --%
+          ($\trafficfactor*(0,-0.175) + (0.0125,0)$) -- cycle;% arrow forward
+      }{
+        \ifdefstring{\face}{bidirectional}{% face
+          \path[draw=\foreground,line width=0.5pt]%
+            ($\trafficfactor*(0,0.1) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.25) + (-0.2125,0)$) -- ($\trafficfactor*(0,0.4) + (-0.0125,0)$) --%
+            ($\trafficfactor*(0,0.325) +(-0.0125,0)$) -- ($\trafficfactor*(0,0.325) +(0.1875,0)$) -- ($\trafficfactor*(0,0.175) + (0.1875,0)$) --%
+            ($\trafficfactor*(0,0.175) + (-0.0125,0)$) -- cycle;% arrow backward
+          \path[draw=\foreground,line width=0.5pt]%
+            ($\trafficfactor*(0,-0.1) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.25) + (0.2125,0)$) -- ($\trafficfactor*(0,-0.4) + (0.0125,0)$) --%
+            ($\trafficfactor*(0,-0.325)+(0.0125,0)$) -- ($\trafficfactor*(0,-0.325)+(-0.1875,0)$) -- ($\trafficfactor*(0,-0.175)+(-0.1875,0)$) --%
+            ($\trafficfactor*(0,-0.175) + (0.0125,0)$) -- cycle;% arrow forward
+        }{% error message
+          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“, “backward“ OR “bidirectional“ as key required}}%
+        }%
+      }%
+    }% end \ifdefstring{\face}
+    %% frame
+    % \path[draw=\foreground,line width=0.5pt]%
+    %   (-0.3, 0.1) -- (-0.3, 0.5) -- (0.3, 0.5) -- (0.3, 0.1)
+    %   (-0.3,-0.1) -- (-0.3,-0.5) -- (0.3,-0.5) -- (0.3,-0.1);
+  }},% END pics/direction_control/.style args={#1}
+  % symbology entry
+  symbology_direction_control/.pic = {%
+    \maintrack (0,0) -- (2.9,0);%
+    \maintrack (3.1,0) -- (6,0);%
+    \directioncontrol[bidirectional]  at (2,0);%
+    \directioncontrol[forward]  at (4,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%

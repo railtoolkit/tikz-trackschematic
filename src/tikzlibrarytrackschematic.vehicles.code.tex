@@ -1,6 +1,9 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../test/test.tex
+%
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
@@ -449,7 +452,57 @@
       }% \ifdefstring{\labelalign}{center}
       \node[text=\foreground,anchor=\labelanchor,align=\labelalign] at (ts-v-l) {\footnotesize\emph{\labelcontent}};% label
     }%
-  }},%
+  }},% END pics/vehicles/.style args={#1/#2/#3}
+  % symbology entry
+  symbology_parked_vehicles/.pic = {%
+    \secondarytrack (0,0) -- (6,0);%
+    \parkedvehicles[] at (3,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_shunt_mode/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \shunting[forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_shunting/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \shunting[movement,forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_moving_slow/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[run=slow,forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_moving/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[run=normal,forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_moving_fast/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[run=fast,forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_ghost/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[ghost,forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_drive_automatic/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[operation=automatic,forward] at (5,0) label ();%
+  },%
+  % symbology entry
+  symbology_train_drive_human/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \train[operation=manual,forward] at (5,0) label ();%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%

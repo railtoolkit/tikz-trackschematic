@@ -1,6 +1,9 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../test/test.tex
+%
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2020, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
@@ -48,6 +51,7 @@
   %% side
   side/.value required,% left, right OR both
   side/.store in=\side,% left, right OR both
+  side=right,% DEFAULT
   /tikz/side/.forward to=/tikz/trackschematic/constructions/side,%
   %% width
   width/.store in=\objectwidth,% default width 0.5cm
@@ -105,7 +109,12 @@
       \path ($-0.5*(\objectlength,0) + \sidefactor*(0,0.3)$) --%
             ($ 0.5*(\objectlength,0) + \sidefactor*(0,0.3)$);% part 2
     }%
-  }},%
+  }},% END pics/platform/.style args={#1}
+  % symbology entry
+  symbology_platform/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \platform[side=left] at (3,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -244,7 +253,12 @@
         }%
       }% END \ifdefstring{\barrier}{semi}
     }% END \ifdefstring{\barrier}{full}
-  }},%
+  }},% END pics/level_crossing/.style args={#1}
+  % symbology entry
+  symbology_level_crossing/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \levelcrossing[barrier=semi] at (3,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -312,7 +326,12 @@
         }% END \ifdefstring{\side}{right}
       }% END \ifdefstring{\side}{left}
     }% END \ifdefstring{\side}{both}
-  }},%
+  }},% END pics/bridge/.style args={#1}
+  % symbology entry
+  symbology_bridge/.pic = {%
+    \bridge[] at (3,0);% first
+    \maintrack (0,0) -- (6,0);%% secound
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -340,7 +359,11 @@
     \path (-0.6,-0.4 ) rectangle ++(1.2,0.8); % building
     \path[fill=\foreground] (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
     \path[fill=\foreground] ( 0  , 0.15) circle      (0.15); % human dot
-  }},%
+  }},% END pics/interlocking/.style args={#1}
+  % symbology entry
+  symbology_interlocking/.pic = {
+    \interlocking at (3,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
@@ -381,7 +404,61 @@
     \path ( 0.1,-0.1) -- ++(0,-0.25);
     \path ( 0.2,-0.1) -- ++(0,-0.15);
     \path ( 0.3,-0.1) -- ++(0,-0.05);
-  }},%
+  }},% END pics/hump/.style args={#1}
+  % symbology entry
+  symbology_hump/.pic = {%
+    \secondarytrack (0,0) -- (6,0);%
+    \hump at (3,0);%
+  },%
+}%
+%
+%
+%%%%%%%%%%%%%%%
+% symbol pylon
+%%%%%%%%%%%%%%%
+%
+%% command
+\newcommand\pylon{}% just for safety
+\def\pylon[#1]#2(#3){% \pylon[options] at (coord);
+  \pic[#1] at (#3) {pylon={#2}}% symbol
+}%
+%% symbol definition
+\tikzset{%
+  pics/pylon/.default=,%
+  pics/pylon/.style args={#1}{code={%
+    %% settings
+    \def\coordcommand{#1}% beware of leading and tailing spaces!
+    %
+    \ifdefstring{\side}{left}{% side
+      \pgfmathsetmacro{\sidefactor}{1}%
+    }{%
+      \ifdefstring{\side}{right}{% side
+        \pgfmathsetmacro{\sidefactor}{-1}%
+      }{%
+        \ifdefstring{\side}{both}{% side
+        }{% error message
+          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/constructions/side}{“left“, “right“ OR “both“ as key required}}%
+        }%
+      }%
+    }% end \ifdefstring{\side}
+    %% pylon shape
+    \tikzset{every path/.style={draw=\foreground,line width=0.5pt}};%
+    \ifdefstring{\side}{both}{% double side
+      \path (0,-0.5) circle [radius=0.075];% part 1
+      \path (0, 0.5) circle [radius=0.075];% part 2
+      \path (0,-0.425) -- (0, 0.425);% part 3
+    }{% single side
+      \path ($\sidefactor*(0,0.5)$) circle [radius=0.075];% part 1
+      \path ($\sidefactor*(0,0.425)$) -- ++($\sidefactor*(0,-0.7)$);% part 2
+    }%
+  }},% END pics/pylon/.style args={#1}
+  % symbology entry
+  symbology_pylon/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \pylon[side=left] at (1,0);%
+    \pylon[side=left] at (3,0);%
+    \pylon[side=left] at (5,0);%
+  },%
 }%
 %
 %%%%%%%%%%%%%%%
