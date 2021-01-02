@@ -19,7 +19,7 @@ The library can then be loaded through the command
 ```TeX
 \usepackage{tikz-trackschematic}
 ```
-in any TeX file.
+in any LaTeX file.
 
 ------------
 
