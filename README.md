@@ -44,7 +44,7 @@ in any TeX file.
 \end{document}
 ```
 results in:
-* ![train on a track](https://glossary.ivev.bau.tu-bs.de/tiki-download_file.php?fileId=28&display&scale=.4 "train on a track")
+![train on a track](https://glossary.ivev.bau.tu-bs.de/tiki-download_file.php?fileId=28&display&scale=.4 "train on a track")
 
 ------------
 
@@ -59,9 +59,10 @@ A [glossary](https://glossary.ivev.bau.tu-bs.de/tiki-index.php?page=_Symbology) 
 
 ## Version 0.6
 
+  * created an encapsulating package for future flexibility
   * added symbols for direction control, track marking, pylons and electric wiring
   * change symbol for friction bufferstop;
-  * created an encapsulating package for future flexibilty
+  * changed load command to \usepackage{tikz-trackschematic}
 
 ## Version 0.5.1
   
