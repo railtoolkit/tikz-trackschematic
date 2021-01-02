@@ -44,6 +44,7 @@ in any TeX file.
 \end{document}
 ```
 results in:
+
 ![train on a track](https://glossary.ivev.bau.tu-bs.de/tiki-download_file.php?fileId=28&display&scale=.4 "train on a track")
 
 ------------
