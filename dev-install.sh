@@ -110,5 +110,6 @@ $rootrun ln -sfn $PROJECTDIR/src/tikzlibrarytrackschematic.measures.code.tex $TE
 $rootrun ln -sfn $PROJECTDIR/src/tikzlibrarytrackschematic.topology.code.tex $TEXMFLOCAL/tex/latex/$DEVDIR/tikzlibrarytrackschematic-dev.topology.code.tex
 $rootrun ln -sfn $PROJECTDIR/src/tikzlibrarytrackschematic.trafficcontrol.code.tex $TEXMFLOCAL/tex/latex/$DEVDIR/tikzlibrarytrackschematic-dev.trafficcontrol.code.tex
 $rootrun ln -sfn $PROJECTDIR/src/tikzlibrarytrackschematic.vehicles.code.tex $TEXMFLOCAL/tex/latex/$DEVDIR/tikzlibrarytrackschematic-dev.vehicles.code.tex
+$rootrun ln -sfn $PROJECTDIR/src/tikzlibrarytrackschematic.symbology.code.tex $TEXMFLOCAL/tex/latex/$DEVDIR/tikzlibrarytrackschematic-dev.symbology.code.tex
 
 $rootrun $TEXlsr --quiet

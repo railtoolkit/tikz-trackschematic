@@ -26,21 +26,24 @@ in any LaTeX file.
 # Minimal working example
 
 ```TeX
-\documentclass{standalone}
-\usepackage{tikz-trackschematic}
-\begin{document}
+\documentclass{standalone} % LaTeX
+\usepackage{tikz-trackschematic} % loading the library
 
+\begin{document}
   \begin{tikzpicture}
 
+    % TikZ command: specify coordinates
     \coordinate (A)   at (0,0);
     \coordinate (B)   at (6,0);
     \coordinate (T)   at (5,0);
 
+    % draw a track
     \maintrack (A) -- (B);
-    \train[forward] at (T) label (train);
+
+    % place a train on the track
+    \train[forward] at (T) label ();
 
   \end{tikzpicture}
-
 \end{document}
 ```
 results in:
@@ -57,6 +60,12 @@ A [glossary](https://glossary.ivev.bau.tu-bs.de/tiki-index.php?page=_Symbology) 
 ------------
 
 # History
+
+## Version 0.6.1
+  
+  * removed package requirement lmodern
+  * minor correction in manual
+  * added citation information
 
 ## Version 0.6
 
@@ -108,6 +117,7 @@ A [glossary](https://glossary.ivev.bau.tu-bs.de/tiki-index.php?page=_Symbology) 
   * provide option for internationalziation (i18n)
   * replace "\gettikzxy" with "\path let" syntax
   * rewrite library with better coding skills
+  * include support for glossaries package
 
 ------------
 
@@ -119,7 +129,7 @@ A [glossary](https://glossary.ivev.bau.tu-bs.de/tiki-index.php?page=_Symbology) 
 
 # License
   
-  [![Open Source Initiative Approved License logo](https://opensource.org/files/OSIApproved_100X125.png)](https://opensource.org)
+  [![Open Source Initiative Approved License logo](https://opensource.org/files/OSIApproved_100X125.png "Open Source Initiative Approved License logo")](https://opensource.org)
 
   Copyright (c) 2018 - 2021, Martin Scheidt \<m.scheidt@tu-bs.de\> (ISC License)
 

@@ -64,6 +64,8 @@
   \subsection{Acknowledgement}
 
     This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No. 826347.
+    If you want to cite this project please use the follwoing informations:\\
+    Scheidt, M. (2021). TikZ-trackschematics (Version \vhCurrentVersion) DOI: 10.5281/zenodo.5539845
 
   \subsection{Requirements}\label{sec:require}
 
@@ -146,7 +148,7 @@
   \subsection{Orientation system}\label{sec:orientationsystem}
 
     The orientation is controlled via given Ti\emph{k}Z options or pgfkey.
-    The orientation options/pgfkeys are named in relation to orientation-based coordinates, which inhibate thier meaning from reading left to right beeing \texttt{forward} and relate \texttt{left}/\texttt{right} to that movement.
+    The orientation options/pgfkeys inhibit their meaning from reading left to right as \texttt{forward} and relate \texttt{left}/\texttt{right} to that movement.
     \begin{center}
       \begin{tikzpicture}[font=\ttfamily]
         \draw[<->] (-0.5,0) node[left] {backward} -- (0.5,0) node[right] {forward};
@@ -326,9 +328,9 @@
     \end{lstlisting}
 
     Each symbol provides a reference name fo a symbology entry if there is the need to create an own table with the symbols.
-    It can be used in a normal \TeX~ environment and will show the named symbol with a length of \SI{6.2}{\cm} and a width of \SI{1}{\cm}.
+    It can be used in a normal \TeX~ environment and will show the named symbol with a length of \SI{6.2}{\cm} and a height of \SI{1}{\cm}.
     \begin{lstlisting}[gobble=6]
-      \tsSymbol[width]{main_track}
+      \tsSymbol[height]{symbol_name}
     \end{lstlisting}
         
     There is also a table with snippets for various situations.
@@ -1566,7 +1568,7 @@
     \hline
       \No & train ghost                     & \tsSymbol{train_ghost}                         & \ref{sym:trains}         \\
     \hline
-      \No & train operated automatic        & \tsSymbol{train_drive_automatic}               & \ref{sym:trains}         \\
+      \No & train operated automatically    & \tsSymbol{train_drive_automatic}               & \ref{sym:trains}         \\
     \hline
       \No & train operated by human         & \tsSymbol{train_drive_human}                   & \ref{sym:trains}         \\
     \hline
