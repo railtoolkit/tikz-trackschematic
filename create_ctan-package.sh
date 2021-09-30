@@ -32,6 +32,7 @@ cp src/tikzlibrarytrackschematic.measures.code.tex tikz-trackschematic-$VERSION/
 cp src/tikzlibrarytrackschematic.topology.code.tex tikz-trackschematic-$VERSION/tikzlibrarytrackschematic.topology.code.tex
 cp src/tikzlibrarytrackschematic.trafficcontrol.code.tex tikz-trackschematic-$VERSION/tikzlibrarytrackschematic.trafficcontrol.code.tex
 cp src/tikzlibrarytrackschematic.vehicles.code.tex tikz-trackschematic-$VERSION/tikzlibrarytrackschematic.vehicles.code.tex
+cp src/tikzlibrarytrackschematic.symbology.code.tex tikz-trackschematic-$VERSION/tikzlibrarytrackschematic.symbology.code.tex
 
 # zip package
 zip -r tikz-trackschematic-$VERSION.zip tikz-trackschematic-$VERSION/*
