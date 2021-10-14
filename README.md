@@ -48,14 +48,13 @@ in any LaTeX file.
 ```
 results in:
 
-![train on a track](https://glossary.ivev.bau.tu-bs.de/tiki-download_file.php?fileId=28&display&scale=.4 "train on a track")
+![train on a track](https://raw.githubusercontent.com/railtoolkit/tikz-trackschematic/master/doc/symbology/symbols_png/train_direction_forward.png "train on a track")
 
 ------------
 
 # Symbology and meaning
 
-A transnational symbol library with common traits of railway operation. 
-A [glossary](https://glossary.ivev.bau.tu-bs.de/tiki-index.php?page=_Symbology) for further information regarding meaning of the symbols.
+Please consult the [symbology](https://github.com/railtoolkit/tikz-trackschematic/blob/master/test/test_symbology_table.pdf) for further information regarding meaning of the symbols.
 
 ------------
 
