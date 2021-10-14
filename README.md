@@ -4,6 +4,7 @@
 
 # Installation
 
+
 The tikz library is contained in the files:
 * tikz-trackschematic.sty
 * tikzlibrarytrackschematic.code.tex,
@@ -15,6 +16,9 @@ The tikz library is contained in the files:
 * tikzlibrarytrackschematic.measures.code.tex.
 
 These files should be copied wherever TeX can find it, for example in your $TEXMF folder.
+
+Alternatively, the tikz library is provided by CTAN as "[tikz-trackschematic](https://ctan.org/pkg/tikz-trackschematic)" and is thus part of the TeX Live distribution or can be installed via MiKTeX.
+
 The library can then be loaded through the command
 ```TeX
 \usepackage{tikz-trackschematic}
