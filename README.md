@@ -64,6 +64,10 @@ Please consult the [symbology](https://github.com/railtoolkit/tikz-trackschemati
 
 # History
 
+## Version 0.6.2
+
+  bug fixing
+
 ## Version 0.6.1
   
   * removed package requirement lmodern
