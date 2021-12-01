@@ -151,8 +151,8 @@
     The orientation options/pgfkeys inhibit their meaning from reading left to right as \texttt{forward} and relate \texttt{left}/\texttt{right} to that movement.
     \begin{center}
       \begin{tikzpicture}[font=\ttfamily]
-        \draw[<->] (-0.5,0) node[left] {backward} -- (0.5,0) node[right] {forward};
-        \draw[<->] (0,-0.5) node[below] {right} -- (0,0.5) node[above] {left};
+        \draw[<->] (-0.5,0) node[left]  {backward} -- ++(1,0) node[right] {forward};
+        \draw[<->] (0,-0.5) node[below] {right}    -- ++(0,1) node[above] {left};
       \end{tikzpicture}
     \end{center}
 
