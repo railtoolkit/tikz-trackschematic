@@ -13,7 +13,7 @@ Please note we have a code of conduct, please follow it in all your interactions
    variables, exposed ports, useful file locations and container parameters.
 3. The versioning scheme we use is [SemVer](http://semver.org/). Increase the version numbers in the following files to the new version that this Pull Request would represent:
     1. README.md
-    2. doc/versionhistory.tex and recompile manual.tex
+    2. doc/versionhistory.tex and recompile manual.tex & snippets.tex
     3. src/tikz-trackschematic.sty
 4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you 
    do not have permission to do that, you may request the second reviewer to merge it for you.
