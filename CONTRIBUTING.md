@@ -20,3 +20,4 @@ Please note we have a code of conduct, please follow it in all your interactions
 5. The following versioning steps will be taken care of by the maintainer:
     1. git repo with tag
     2. CITATION.cff including DOI for current version
+    3. sync Overleaf project
