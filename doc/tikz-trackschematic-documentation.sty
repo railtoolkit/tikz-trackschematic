@@ -80,7 +80,10 @@
 }%
 
 \RequirePackage{longtable,tikz,siunitx,adjustbox,rotating}
-\sisetup{math-rm=\mathsf}
+\sisetup{
+  text-family-to-math = true,
+  text-series-to-math = true
+}
 
 \IfFileExists{tikz-trackschematic-dev.sty}{%
   \RequirePackage[dev]{tikz-trackschematic}%

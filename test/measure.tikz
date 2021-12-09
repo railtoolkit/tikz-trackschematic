@@ -23,10 +23,10 @@
 }
 
 \trackdistance between (3,-1) and (X1-2) label (4,50);
-\trackdistance between (X1-2) and (X2-3) label (\SI[math-rm=\mathsf]{6,50}{\metre});
+\trackdistance between (X1-2) and (X2-3) label (\sffamily \SI{6,50}{\metre});
 \trackdistance between (X1-4) and (X2-4) label (5,50);
 
 \tikzset{hectometer base={(A3)},orientation=right};
-\hectometer[] at (X2-1) mileage (\SI[math-rm=\mathsf]{6,505}{\kilo\metre});
+\hectometer[] at (X2-1) mileage (\sffamily \SI{6,505}{\kilo\metre});
 \hectometer[shift label={(0.3,-1)}] at (X2-2) mileage (name);
 % \measureline between (a) and (b);
