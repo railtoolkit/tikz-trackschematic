@@ -140,7 +140,7 @@ Please consult the [symbology](https://github.com/railtoolkit/tikz-trackschemati
   
   [![Open Source Initiative Approved License logo](https://opensource.org/files/OSIApproved_100X125.png "Open Source Initiative Approved License logo")](https://opensource.org)
 
-  Copyright (c) 2018 - 2021, Martin Scheidt \<m.scheidt@tu-bs.de\> (ISC License)
+  Copyright (c) 2018 - 2022, Martin Scheidt \<m.scheidt@tu-bs.de\> (ISC License)
 
   Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 

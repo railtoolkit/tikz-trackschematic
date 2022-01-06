@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Copyright (c) 2018 - 2021, Martin Scheidt (ISC license)
+# Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
 # Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 echo "specify version ( e.g. v0.6 ):"
