@@ -1,0 +1,38 @@
+%!TEX TS-program = pdflatexmk
+
+% Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\documentclass[border=2]{standalone}
+
+\usepackage[dev]{tikz-trackschematic}
+
+\begin{document}
+  \begin{tikzpicture}
+  
+    \foreach \i in {1,2,...,3}{
+      \coordinate (A\i) at ($(0,0) + (0,-\i)$);% base coordinate
+      \coordinate (B\i) at ($(8,0) + (0,-\i)$);% base coordinate
+      %
+      \maintrack (A\i) --   (B\i); % draw main tracks on base coordinate
+      %
+      % coordinates for testing symbols
+      \coordinate (X\i-1) at ($(1,0) + (0,-\i)$);
+      \coordinate (X\i-2) at ($(3,0) + (0,-\i)$);
+      \coordinate (X\i-3) at ($(5,0) + (0,-\i)$);
+      \coordinate (X\i-4) at ($(7,0) + (0,-\i)$);
+    }
+
+    \pylon[side=left ] at (X1-1);
+    \pylon[] at (X1-2);
+    \pylon[side=both ] at (X1-3);
+    \pylon[side=right] at (X1-4);
+    \pylon[side=left ] at (X2-1);
+    \pylon[side=right] at (X2-2);
+    \pylon[side=left ] at (X2-4);
+    \pylon[side=right] at (X2-4);
+    \pylon[side=right] at (X3-1);
+    \pylon[side=left ] at (X3-2);
+
+  \end{tikzpicture}
+\end{document}
