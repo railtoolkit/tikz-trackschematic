@@ -244,6 +244,9 @@ TSWLatexianTemp*
 Output
 .tex
 
+# Testing
+.testing
+
 ## -- macOS ignore
 # General
 .DS_Store
