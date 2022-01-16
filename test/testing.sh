@@ -68,7 +68,11 @@ check_imagemagick
 
 mkdir -p .testing
 
-# TODO: for-loop
-pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error *.tex 2>&1 > /dev/null
-compare -metric DSSIM -colorspace RGB .testing/*.pdf *_expected.pdf .testing/*_diff.png
+for TEST in $1*.tex; do
+  echo "Testing: ${TEST%.*}"
+  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $TEST 2>&1 > /dev/null
+  compare -metric DSSIM -colorspace RGB .testing/${TEST%.*}.pdf ${TEST%.*}_expected.pdf .testing/${TEST%.*}_diff.png
+  echo "% difference"
+done
 
+log_n "tests passed!"
