@@ -52,7 +52,7 @@ in any LaTeX file.
 ```
 results in:
 
-![train on a track](https://raw.githubusercontent.com/railtoolkit/tikz-trackschematic/master/doc/symbology/symbols_png/train_direction_forward.png "train on a track")
+![train on a track](https://raw.githubusercontent.com/railtoolkit/tikz-trackschematic/master/doc/examples/minimal_working_example.png "train on a track")
 
 The library can also be used in [Overleaf](https://www.overleaf.com/read/crrxfcdzbhbd).
 
@@ -60,7 +60,7 @@ The library can also be used in [Overleaf](https://www.overleaf.com/read/crrxfcd
 
 # Symbology and meaning
 
-Please consult the [symbology](https://github.com/railtoolkit/tikz-trackschematic/blob/master/test/test_symbology_table.pdf) for further information regarding meaning of the symbols.
+Please consult the [symbology table](https://github.com/railtoolkit/tikz-trackschematic/blob/master/doc/symbology_table.pdf) for further information regarding meaning of the symbols.
 
 ------------
 
