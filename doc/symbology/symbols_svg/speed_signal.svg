@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.839pt" height="18.004pt" viewBox="0 0 20.839 18.004" version="1.1">
+<defs>
+<clipPath id="clip1">
+  <path d="M 0 0 L 20.839844 0 L 20.839844 13 L 0 13 Z M 0 0 "/>
+</clipPath>
+<clipPath id="clip2">
+  <path d="M 10 6 L 20.839844 6 L 20.839844 18 L 10 18 Z M 10 6 "/>
+</clipPath>
+<clipPath id="clip3">
+  <path d="M 0 0 L 20.839844 0 L 20.839844 18.003906 L 0 18.003906 Z M 0 0 "/>
+</clipPath>
+</defs>
+<g id="surface1">
+<g clip-path="url(#clip1)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -0.00190625 0.00190625 L -0.00190625 -11.337937 L 19.841844 -11.337937 " transform="matrix(1,0,0,-1,0.498,0.498)"/>
+</g>
+<g clip-path="url(#clip2)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 10.417969 6.265625 L 10.417969 17.40625 C 10.417969 17.460938 10.457031 17.484375 10.507812 17.457031 L 20.253906 11.886719 C 20.300781 11.859375 20.300781 11.8125 20.253906 11.789062 L 10.507812 6.214844 C 10.457031 6.1875 10.417969 6.210938 10.417969 6.265625 Z M 10.417969 6.265625 "/>
+</g>
+<g clip-path="url(#clip3)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 9.919969 -5.767625 L 9.919969 -16.90825 C 9.919969 -16.962937 9.959031 -16.986375 10.009813 -16.959031 L 19.755906 -11.388719 C 19.802781 -11.361375 19.802781 -11.3145 19.755906 -11.291062 L 10.009813 -5.716844 C 9.959031 -5.6895 9.919969 -5.712937 9.919969 -5.767625 Z M 9.919969 -5.767625 " transform="matrix(1,0,0,-1,0.498,0.498)"/>
+</g>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 0.609375 0.496094 C 0.609375 0.433594 0.5625 0.382812 0.496094 0.382812 C 0.433594 0.382812 0.382812 0.433594 0.382812 0.496094 C 0.382812 0.5625 0.433594 0.609375 0.496094 0.609375 C 0.5625 0.609375 0.609375 0.5625 0.609375 0.496094 Z M 0.609375 0.496094 "/>
+</g>
+</svg>

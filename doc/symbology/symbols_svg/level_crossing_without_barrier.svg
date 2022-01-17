@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12.335pt" height="35.012pt" viewBox="0 0 12.335 35.012" version="1.1">
+<defs>
+<clipPath id="clip1">
+  <path d="M 0 19 L 1 19 L 1 35.011719 L 0 35.011719 Z M 0 19 "/>
+</clipPath>
+<clipPath id="clip2">
+  <path d="M 11 19 L 12.335938 19 L 12.335938 35.011719 L 11 35.011719 Z M 11 19 "/>
+</clipPath>
+<clipPath id="clip3">
+  <path d="M 11 0 L 12.335938 0 L 12.335938 16 L 11 16 Z M 11 0 "/>
+</clipPath>
+</defs>
+<g id="surface1">
+<g clip-path="url(#clip1)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -5.670906 -2.833844 L -5.670906 -17.009625 " transform="matrix(1,0,0,-1,6.167,17.506)"/>
+</g>
+<g clip-path="url(#clip2)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5.668938 -2.833844 L 5.668938 -17.009625 " transform="matrix(1,0,0,-1,6.167,17.506)"/>
+</g>
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -5.670906 2.834125 L -5.670906 17.009906 " transform="matrix(1,0,0,-1,6.167,17.506)"/>
+<g clip-path="url(#clip3)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5.668938 2.834125 L 5.668938 17.009906 " transform="matrix(1,0,0,-1,6.167,17.506)"/>
+</g>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 6.28125 17.507812 C 6.28125 17.445312 6.230469 17.394531 6.167969 17.394531 C 6.105469 17.394531 6.054688 17.445312 6.054688 17.507812 C 6.054688 17.570312 6.105469 17.621094 6.167969 17.621094 C 6.230469 17.621094 6.28125 17.570312 6.28125 17.507812 Z M 6.28125 17.507812 "/>
+</g>
+</svg>

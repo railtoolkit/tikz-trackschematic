@@ -1,0 +1,12 @@
+% Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
+% Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+\coordinate (A) at (-0.5,0);
+\coordinate (B) at ( 0.5,0);
+
+% symbol
+\secondarytrack (A) -- (B);
+
+% anchor
+\anchor at (A);
+\anchor at (B);

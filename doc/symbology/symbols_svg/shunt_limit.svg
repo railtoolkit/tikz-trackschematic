@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.839pt" height="12.335pt" viewBox="0 0 20.839 12.335" version="1.1">
+<defs>
+<clipPath id="clip1">
+  <path d="M 17 6 L 20.839844 6 L 20.839844 12 L 17 12 Z M 17 6 "/>
+</clipPath>
+<clipPath id="clip2">
+  <path d="M 3 0 L 20.839844 0 L 20.839844 12.335938 L 3 12.335938 Z M 3 0 "/>
+</clipPath>
+</defs>
+<g id="surface1">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -0.00190625 0.00190625 L -0.00190625 -11.337937 L 19.841844 -11.337937 " transform="matrix(1,0,0,-1,0.498,0.498)"/>
+<g clip-path="url(#clip1)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 17.605469 6.167969 C 19.070312 6.167969 20.339844 7.4375 20.339844 9.003906 C 20.339844 10.566406 19.070312 11.835938 17.605469 11.835938 C 17.550781 11.835938 17.507812 11.792969 17.507812 11.738281 L 17.507812 6.265625 C 17.507812 6.210938 17.550781 6.167969 17.605469 6.167969 Z M 17.605469 6.167969 "/>
+</g>
+<g clip-path="url(#clip2)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 17.107469 -5.669969 C 18.572312 -5.669969 19.841844 -6.9395 19.841844 -8.505906 C 19.841844 -10.068406 18.572312 -11.337937 17.107469 -11.337937 C 17.052781 -11.337937 17.009812 -11.294969 17.009812 -11.240281 L 17.009812 -5.767625 C 17.009812 -5.712937 17.052781 -5.669969 17.107469 -5.669969 Z M 17.107469 -5.669969 " transform="matrix(1,0,0,-1,0.498,0.498)"/>
+</g>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 0.609375 0.496094 C 0.609375 0.433594 0.5625 0.382812 0.496094 0.382812 C 0.433594 0.382812 0.382812 0.433594 0.382812 0.496094 C 0.382812 0.5625 0.433594 0.609375 0.496094 0.609375 C 0.5625 0.609375 0.609375 0.5625 0.609375 0.496094 Z M 0.609375 0.496094 "/>
+</g>
+</svg>

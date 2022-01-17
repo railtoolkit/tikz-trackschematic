@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="179.748pt" height="66.362pt" viewBox="0 0 179.748 66.362" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30.339pt" height="1.993pt" viewBox="0 0 30.339 1.993" version="1.1">
+<defs>
+<clipPath id="clip1">
+  <path d="M 0 0 L 30.339844 0 L 30.339844 1.992188 L 0 1.992188 Z M 0 0 "/>
+</clipPath>
+<clipPath id="clip2">
+  <path d="M 0 0 L 2 0 L 2 1.992188 L 0 1.992188 Z M 0 0 "/>
+</clipPath>
+<clipPath id="clip3">
+  <path d="M 29 0 L 30 0 L 30 1.992188 L 29 1.992188 Z M 29 0 "/>
+</clipPath>
+</defs>
 <g id="surface1">
-<path style="fill:none;stroke-width:1.99255;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 0.0009375 0.0013125 L 170.079062 0.0013125 " transform="matrix(1,0,0,-1,4.835,33.181)"/>
+<g clip-path="url(#clip1)" clip-rule="nonzero">
+<path style="fill:none;stroke-width:1.99255;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -14.172906 0.00090625 L 14.17475 0.00090625 " transform="matrix(1,0,0,-1,15.169,0.997)"/>
+</g>
+<g clip-path="url(#clip2)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 1.109375 0.996094 C 1.109375 0.933594 1.058594 0.882812 0.996094 0.882812 C 0.933594 0.882812 0.882812 0.933594 0.882812 0.996094 C 0.882812 1.058594 0.933594 1.109375 0.996094 1.109375 C 1.058594 1.109375 1.109375 1.058594 1.109375 0.996094 Z M 1.109375 0.996094 "/>
+</g>
+<g clip-path="url(#clip3)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 29.457031 0.996094 C 29.457031 0.933594 29.40625 0.882812 29.34375 0.882812 C 29.28125 0.882812 29.230469 0.933594 29.230469 0.996094 C 29.230469 1.058594 29.28125 1.109375 29.34375 1.109375 C 29.40625 1.109375 29.457031 1.058594 29.457031 0.996094 Z M 29.457031 0.996094 "/>
+</g>
 </g>
 </svg>
