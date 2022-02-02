@@ -66,6 +66,12 @@ Please consult the [symbology table](https://github.com/railtoolkit/tikz-tracksc
 
 # History
 
+## Version 0.6.3
+  
+  ADDED: anchor for SVG export
+  FIXED: documented (slip-)turnout option: points=moving
+  FIXED: spelling error in documentation
+
 ## Version 0.6.2
 
   bug fixing

@@ -20,6 +20,8 @@
 
 %\newcommand{\initials}{fullname}
 \newcommand{\MS}{Martin Scheidt}
+\newcommand{\GW}{Gregor Wehrle}
+\newcommand{\authorlist}{\MS, \GW}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -27,7 +29,7 @@
 \hypersetup{%
   pdftitle={tikz-trackschematic},
   pdfsubject={A tikz toolbox for track schematics},
-  pdfauthor={Martin Scheidt},
+  pdfauthor={\authorlist},
   pdfkeywords={latex, tikz, library, railway, track layout, schematic}
 }
 
@@ -35,7 +37,7 @@
 
 \title{\tikz\node[scale=1.2]{\color{gray}\Huge\sffamily \{\textcolor{black}{Ti\textcolor{orange}{\emph{k}}Z}-\textcolor{blue}{trackschematic}\}};}
 \subtitle{A Ti\emph{k}Z library for track schematics}
-\author{\vhListAllAuthorsLong}
+\author{\authorlist}
 \date{Version \vhCurrentVersion~ from \vhCurrentDate}
 
 \maketitle
@@ -460,7 +462,7 @@
           \item \texttt{branch=left} or \texttt{branch=right} (mandatory)
           \item \texttt{operation=manual} (optional) % \texttt{operation=remote} (default)
           \item \texttt{fouling point} (optional)
-          \item \texttt{points=left} or \texttt{points=right} (optional)
+          \item \texttt{points=left}, \texttt{points=right}, or \texttt{points=moving} (optional, default: \emph{none})
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
@@ -504,8 +506,8 @@
           \item \texttt{slip=double} (default), \texttt{slip=none}, \texttt{slip=left} or \texttt{slip=right} (mandatory)
           \item \texttt{operation=manual} (optional) % \texttt{operation=remote} (default)
           \item \texttt{fouling point} (optional)
-          \item \texttt{forward points=left} or \texttt{forward points=right} (optional)
-          \item \texttt{backward points=left} or \texttt{backward points=right} (optional)
+          \item \texttt{forward points=left}, \texttt{forward points=right}, or \texttt{forward points=moving} (optional, default: \emph{none})
+          \item \texttt{backward points=left},\texttt{backward points=right}, or \texttt{backward points=moving} (optional, default: \emph{none})
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
