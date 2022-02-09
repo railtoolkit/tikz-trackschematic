@@ -20,3 +20,4 @@ latex
 latex-fonts
 latex-uni8
 metafont
+cm-super
