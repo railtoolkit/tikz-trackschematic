@@ -16,4 +16,4 @@ collectbox
 tools
 ltablex
 epstopdf-pkg
-latex-uni8
+latex-fonts
