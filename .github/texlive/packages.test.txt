@@ -11,3 +11,4 @@ etoolbox
 standalone
 adjustbox
 collectbox
+booktabs
