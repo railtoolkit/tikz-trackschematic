@@ -13,3 +13,4 @@ xltabular
 # for test compilation
 standalone
 collectbox
+tabularx
