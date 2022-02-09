@@ -5,3 +5,6 @@ latex-bin
 pgf
 xkeyval
 etoolbox
+
+# for test compilation
+standalone

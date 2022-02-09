@@ -34,8 +34,8 @@ jobs:
         # with:
         #   packages-path: .github/texlive/packages.test.txt
 
-      # - name: "install tikz-trackschematic"
-      #   run: chmod +x dev-install.sh && ./dev-install.sh -b
+      - name: "install tikz-trackschematic"
+        run: chmod +x dev-install.sh && ./dev-install.sh -b
 
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
