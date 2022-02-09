@@ -1,0 +1,7 @@
+# Engine used to compile (pdflatex)
+latex-bin
+
+# Direct dependencies
+pgf
+xkeyval
+etoolbox

@@ -1,3 +1,0 @@
-pgf
-xkeyval
-etoolbox
