@@ -40,8 +40,27 @@ check_tex_distro() {
   exit 1
 }
 
+check_trackschematic() {
+  # check for tikz-trackschematic
+  status=0
+  TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
+  DEVDIR="tex/latex/tikz-trackschematic-dev"
+
+  ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic.sty >> /dev/null 2>&1 || status=1
+  if [ $status = 0 ]; then
+    if [ "$verbose" -eq 1 ]; then
+      echo "tikz-trackschematic found"
+    fi
+    return 0
+  fi
+  
+  echo "Library 'tikz-trackschematic' not found."
+  echo "Be sure to have tikz-trackschematic installed!"
+  exit 1
+}
+
 check_imagemagick() {
-  # check for ImageMagick
+  # check for ImageMagick/compare
   status=0
   command -v compare >/dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
@@ -52,13 +71,14 @@ check_imagemagick() {
   fi
   
   echo "Program 'compare' not found."
-  echo "Be sure to have imagemagick installed!"
+  echo "Be sure to have ImageMagick installed!"
   exit 1
 }
 
 #-------------------------------------------------------------------------------
 
 check_tex_distro
+check_trackschematic
 check_imagemagick
 
 mkdir -p .testing
@@ -67,7 +87,7 @@ for TEST in $1*.tex; do
   if [ "$verbose" -eq 1 ]; then
     echo "Testing: ${TEST%.*}"
   fi
-  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $TEST 2>&1 > /dev/null
+  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $TEST # 2>&1 > /dev/null
   compare -metric DSSIM -colorspace RGB .testing/${TEST%.*}.pdf ${TEST%.*}_expected.pdf .testing/${TEST%.*}_diff.png
   if [ "$verbose" -eq 1 ]; then
     echo "% difference"
