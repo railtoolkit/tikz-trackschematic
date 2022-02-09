@@ -14,3 +14,4 @@ xltabular
 standalone
 collectbox
 tools
+ltablex
