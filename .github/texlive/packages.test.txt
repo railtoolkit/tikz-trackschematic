@@ -17,3 +17,6 @@ tools
 ltablex
 epstopdf-pkg
 latex
+latex-fonts
+latex-uni8
+metafont
