@@ -20,6 +20,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: "checkout"
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        uses: actions/checkout@v2
+
       # - name: "install TeXLive"
       #   # Actually pick a version, do not point on master, or the build won't be reproducible
       #   uses: DanySK/setup-texlive-action@master
@@ -30,10 +34,6 @@ jobs:
         uses: teatimeguest/setup-texlive-action@v1
         with:
           package-file: .github/texlive/requirements.txt
-
-      - name: "checkout"
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@v2
 
       - name: "install tikz-trackschematic"
         run: |
