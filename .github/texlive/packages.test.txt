@@ -1,7 +1,7 @@
-# Engine used to compile (pdflatex)
+## -- Engine used to compile (pdflatex)
 latex-bin
 
-# Direct dependencies
+## -- Direct dependencies
 tikz-trackschematic
 pgf
 xkeyval
@@ -10,10 +10,10 @@ adjustbox
 booktabs
 xltabular
 
-# for test compilation
+## -- Indirect dependencies
 standalone
 collectbox
 tools
 ltablex
 epstopdf-pkg
-latex-fonts
+latex
