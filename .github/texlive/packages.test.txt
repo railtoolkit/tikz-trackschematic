@@ -10,3 +10,4 @@ etoolbox
 # for test compilation
 standalone
 adjustbox
+collectbox
