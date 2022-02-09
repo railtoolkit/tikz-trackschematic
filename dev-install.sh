@@ -8,13 +8,17 @@ set -e
 
 ## -- pass getopts
 
-usage() { echo "Usage: dev-install.sh [-q]"; }
+usage() { echo "Usage: dev-install.sh [-q] [-b]"; }
 
 verbose=1
+batch_mode=0
 
-while getopts ":q" opt; do
+while getopts ":qb" opt; do
   case ${opt} in
     q ) verbose=0
+      ;;
+    b ) batch_mode=1
+        verbose=0
       ;;
     \? ) usage
          exit 1
@@ -79,7 +83,7 @@ DEVDIR="tex/latex/tikz-trackschematic-dev"
 
 PROJECTDIR=$(pwd -P)
 
-if [ "$verbose" -eq 1 ]; then
+if [ "$batch_mode" -eq 0 ]; then
   echo ""
   echo "Do you wish to link this package from"
   echo "$PROJECTDIR/src to"

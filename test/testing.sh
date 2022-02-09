@@ -49,13 +49,13 @@ check_trackschematic() {
   ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic.sty >> /dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
     if [ "$verbose" -eq 1 ]; then
-      echo "tikz-trackschematic found"
+      echo "tikz-trackschematic-dev found"
     fi
     return 0
   fi
   
-  echo "Library 'tikz-trackschematic' not found."
-  echo "Be sure to have tikz-trackschematic installed!"
+  echo "Library 'tikz-trackschematic-dev' not found."
+  echo "Be sure to have tikz-trackschematic-dev installed!"
   exit 1
 }
 
@@ -87,7 +87,7 @@ for TEST in $1*.tex; do
   if [ "$verbose" -eq 1 ]; then
     echo "Testing: ${TEST%.*}"
   fi
-  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $TEST # 2>&1 > /dev/null
+  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $TEST 2>&1 > /dev/null
   compare -metric DSSIM -colorspace RGB .testing/${TEST%.*}.pdf ${TEST%.*}_expected.pdf .testing/${TEST%.*}_diff.png
   if [ "$verbose" -eq 1 ]; then
     echo "% difference"
