@@ -3,9 +3,9 @@ latex-bin
 
 # Direct dependencies
 tikz-trackschematic
-#pgf
-#xkeyval
-#etoolbox
+pgf
+xkeyval
+etoolbox
 
 # for test compilation
 standalone
