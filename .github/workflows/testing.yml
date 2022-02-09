@@ -24,16 +24,18 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
-      # - name: "install TeXLive"
-      #   # Actually pick a version, do not point on master, or the build won't be reproducible
+      - name: "Setup TeX Live"
+      # ##
       #   uses: DanySK/setup-texlive-action@master
-      #   # You can omit the following if the default path is ok with you
       #   with:
       #     requirements-file: .github/texlive/requirements.txt
-      - name: "Setup TeX Live"
-        uses: teatimeguest/setup-texlive-action@v1
-        with:
-          package-file: .github/texlive/requirements.txt
+      # ##
+      #   uses: teatimeguest/setup-texlive-action@v1
+      #   with:
+      #     package-file: .github/texlive/requirements.txt
+      # ##
+        uses: paolobrasolin/setup-texlive-action@v1
+          packages-path: ${{ github.workspace }}/.github/texlive/requirements.txt
 
       - name: "install tikz-trackschematic"
         run: |

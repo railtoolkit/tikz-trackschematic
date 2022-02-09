@@ -44,7 +44,7 @@ check_trackschematic() {
   # check for tikz-trackschematic
   status=0
   TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
-  DEVDIR="tex/latex/tikz-trackschematic-dev"
+  DEVDIR="tex/latex/local/tikz-trackschematic-dev"
 
   ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic.sty >> /dev/null 2>&1 || status=1
   if [ $status = 0 ]; then

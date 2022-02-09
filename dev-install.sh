@@ -26,12 +26,15 @@ while getopts ":qb" opt; do
   esac
 done
 
+## -- variables
+
+# destination folder inside the TeX Live installation
+DEVDIR="tex/latex/local/tikz-trackschematic-dev"
+
 ## -- commands
 
-TEXlsr=`which mktexlsr`
-
+# check for kpsewhich (and mktexlsr)
 check_texlive() {
-  # check for kpsewhich
   status=0
   command -v kpsewhich >/dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
@@ -78,9 +81,6 @@ check_texlive
 check_sudo
 
 TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
-
-DEVDIR="tex/latex/tikz-trackschematic-dev"
-
 PROJECTDIR=$(pwd -P)
 
 if [ "$batch_mode" -eq 0 ]; then
@@ -101,12 +101,36 @@ fi
 
 ## -- copying files
 
+# make sure that destination folder exists
 if [ ! -d "$TEXMFLOCAL/$DEVDIR" ]; then
   $rootrun mkdir -p $TEXMFLOCAL/$DEVDIR
 fi
 
+# copy every file in src/ and rename it
 for SRC in src/*; do
-  $rootrun ln -sfn $PROJECTDIR/$SRC $TEXMFLOCAL/$DEVDIR/${SRC##*/}
+  FILE=$(basename "$SRC") # remove path
+  NAME=${FILE%.*} # remove extension
+  PREFIX=${NAME%%.*}
+  POSTFIX=${NAME#*.}
+  EXT=${SRC##*.}
+
+  if [ "$PREFIX" = "$POSTFIX" ]; then
+    DST="$PREFIX-dev.$EXT"
+  else
+    DST="$PREFIX-dev.$POSTFIX.$EXT"
+  fi
+
+  $rootrun ln -sfn $PROJECTDIR/$SRC $TEXMFLOCAL/$DEVDIR/$DST
+
+  if [ "$verbose" -eq 1 ]; then
+    echo "linked '$DST'"
+  fi
 done
 
-$rootrun $TEXlsr --quiet
+# update TeX Live installation
+TEXlsr=`which mktexlsr`
+if [ "$verbose" -eq 1 ]; then
+  $rootrun $TEXlsr
+else
+  $rootrun $TEXlsr --quiet
+fi
