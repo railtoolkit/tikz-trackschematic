@@ -2,9 +2,10 @@
 latex-bin
 
 # Direct dependencies
-pgf
-xkeyval
-etoolbox
+tikz-trackschematic
+#pgf
+#xkeyval
+#etoolbox
 
 # for test compilation
 standalone
