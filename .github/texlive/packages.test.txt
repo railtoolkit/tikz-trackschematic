@@ -9,7 +9,6 @@ etoolbox
 adjustbox
 booktabs
 xltabular
-multicol
 
 # for test compilation
 standalone
