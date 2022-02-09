@@ -25,26 +25,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: "Setup TeX Live"
-        # ##
-        # uses: DanySK/setup-texlive-action@master
-        # with:
-        #   requirements-file: .github/texlive/packages.test.txt
-        ##
         uses: teatimeguest/setup-texlive-action@v1
         with:
           package-file: .github/texlive/packages.test.txt
-        # ##
-        # uses: paolobrasolin/setup-texlive-action@v1
-        # with:
-        #   packages-path: .github/texlive/packages.test.txt
 
       - name: "install tikz-trackschematic"
-        run: |
-          chmod +x dev-install.sh
-          ./dev-install.sh -b
+        run: chmod +x dev-install.sh && ./dev-install.sh -b
 
       - name: "test tikz-trackschematic"
-        run: |
-          cd test
-          chmod +x testing.sh
-          ./testing.sh
+        run: cd test && chmod +x testing.sh && ./testing.sh

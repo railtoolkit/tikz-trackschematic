@@ -20,24 +20,22 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
-      # - name: "Setup TeX Live"
-      #   # ##
-      #   # uses: DanySK/setup-texlive-action@master
-      #   # with:
-      #   #   requirements-file: .github/texlive/packages.test.txt
-      #   # ##
-      #   # uses: teatimeguest/setup-texlive-action@v1
-      #   # with:
-      #   #   package-file: .github/texlive/packages.test.txt
-      #   # ##
-      #   # uses: paolobrasolin/setup-texlive-action@v1
-      #   # with:
-      #   #   packages-path: .github/texlive/packages.test.txt
+      - name: "Setup TeX Live"
+        # ##
+        # uses: DanySK/setup-texlive-action@master
+        # with:
+        #   requirements-file: .github/texlive/packages.test.txt
+        # ##
+        uses: teatimeguest/setup-texlive-action@v1
+        with:
+          package-file: .github/texlive/packages.test.txt
+        # ##
+        # uses: paolobrasolin/setup-texlive-action@v1
+        # with:
+        #   packages-path: .github/texlive/packages.test.txt
 
       # - name: "install tikz-trackschematic"
-      #   run: |
-      #     chmod +x dev-install.sh
-      #     ./dev-install.sh -b
+      #   run: chmod +x dev-install.sh && ./dev-install.sh -b
 
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1

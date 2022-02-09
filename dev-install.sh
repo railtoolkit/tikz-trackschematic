@@ -18,7 +18,7 @@ while getopts ":qb" opt; do
     q ) verbose=0
       ;;
     b ) batch_mode=1
-        verbose=0
+        # verbose=0
       ;;
     \? ) usage
          exit 1
@@ -37,9 +37,10 @@ DEVDIR="tex/latex/local/tikz-trackschematic-dev"
 check_texlive() {
   status=0
   command -v kpsewhich >/dev/null 2>&1 || status=1
+  command -v mktexlsr  >/dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
-    if [ "$verbose" -eq 1 ]; then
-      echo "kpsewhich found"
+    if [ $verbose = 1 ]; then
+      echo "kpsewhich and mktexlsr found"
     fi
     return 0
   fi
@@ -54,14 +55,14 @@ check_sudo() {
   rootrun=""
   # If we are root, we do note require sudo
   if [ "$EUID"  = 0 ]; then
-    if [ "$verbose" -eq 1 ]; then
+    if [ $verbose = 1 ]; then
       echo "you are root"
     fi
     return 0
   fi
 
   if sudo -v >/dev/null 2>&1; then
-    if [ "$verbose" -eq 1 ]; then
+    if [ $verbose = 1 ]; then
       echo "sudo ok"
     fi
     rootrun="sudo"
@@ -83,12 +84,20 @@ check_sudo
 TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
 PROJECTDIR=$(pwd -P)
 
+if [ "`echo -n`" = "-n" ]; then
+  n=""
+  c="\c"
+else
+  n="-n"
+  c=""
+fi
+
 if [ "$batch_mode" -eq 0 ]; then
   echo ""
   echo "Do you wish to link this package from"
   echo "$PROJECTDIR/src to"
   echo "$TEXMFLOCAL/$DEVDIR?"
-  echo "(y/n)"
+  echo $n "(y/n) $c"
   while true; do
     read -p "" answer
     case $answer in
@@ -122,14 +131,14 @@ for SRC in src/*; do
 
   $rootrun ln -sfn $PROJECTDIR/$SRC $TEXMFLOCAL/$DEVDIR/$DST
 
-  if [ "$verbose" -eq 1 ]; then
+  if [ $verbose = 1 ]; then
     echo "linked '$DST'"
   fi
 done
 
 # update TeX Live installation
 TEXlsr=`which mktexlsr`
-if [ "$verbose" -eq 1 ]; then
+if [ $verbose = 1 ]; then
   $rootrun $TEXlsr
 else
   $rootrun $TEXlsr --quiet

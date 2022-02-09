@@ -22,6 +22,9 @@ while getopts ":q" opt; do
   esac
 done
 
+## -- variables
+TESTDIR="../test"
+
 ## -- commands
 
 check_tex_distro() {
@@ -29,7 +32,7 @@ check_tex_distro() {
   status=0
   command -v pdflatex >/dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
-    if [ "$verbose" -eq 1 ]; then
+    if [ $verbose = 1 ]; then
       echo "pdflatex found"
     fi
     return 0
@@ -46,9 +49,9 @@ check_trackschematic() {
   TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
   DEVDIR="tex/latex/local/tikz-trackschematic-dev"
 
-  ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic.sty >> /dev/null 2>&1 || status=1
+  ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
-    if [ "$verbose" -eq 1 ]; then
+    if [ $verbose = 1 ]; then
       echo "tikz-trackschematic-dev found"
     fi
     return 0
@@ -64,7 +67,7 @@ check_imagemagick() {
   status=0
   command -v compare >/dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
-    if [ "$verbose" -eq 1 ]; then
+    if [ $verbose = 1 ]; then
       echo "compare found"
     fi
     return 0
@@ -75,25 +78,44 @@ check_imagemagick() {
   exit 1
 }
 
-#-------------------------------------------------------------------------------
+## -- checking system
 
 check_tex_distro
 check_trackschematic
 check_imagemagick
 
+if [ "`echo -n`" = "-n" ]; then
+  n=""
+  c="\c"
+else
+  n="-n"
+  c=""
+fi
+
+## -- doing the tests
+
 mkdir -p .testing
 
-for TEST in $1*.tex; do
-  if [ "$verbose" -eq 1 ]; then
-    echo "Testing: ${TEST%.*}"
+if [ $verbose = 1 ]; then
+  echo "==========="
+  echo "Comparison of the expected appearance with the freshly created."
+  echo "-----------"
+fi
+
+for TEST in `ls $TESTDIR/*.tex`; do
+  FILE=$(basename "$TEST") # remove path
+  NAME=${FILE%.*} # remove extension
+  if [ $verbose = 1 ]; then
+    echo $n "'$NAME' test: $c"
   fi
-  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $TEST 2>&1 > /dev/null
-  compare -metric DSSIM -colorspace RGB .testing/${TEST%.*}.pdf ${TEST%.*}_expected.pdf .testing/${TEST%.*}_diff.png
-  if [ "$verbose" -eq 1 ]; then
-    echo "% difference"
+  pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $FILE 2>&1 > /dev/null
+  compare -metric DSSIM -colorspace RGB .testing/${NAME}.pdf ${NAME}_expected.pdf NULL:
+  if [ $verbose = 1 ]; then
+    echo "% difference." # it is actually not in percent! But it helps them humans...
   fi
 done
 
-if [ "$verbose" -eq 1 ]; then
+if [ $verbose = 1 ]; then
+  echo "-----------"
   echo "tests passed!"
 fi
