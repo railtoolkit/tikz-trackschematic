@@ -6,9 +6,11 @@ tikz-trackschematic
 pgf
 xkeyval
 etoolbox
+adjustbox
+booktabs
+xltabular
+multicol
 
 # for test compilation
 standalone
-adjustbox
 collectbox
-booktabs
