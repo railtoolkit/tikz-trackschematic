@@ -34,7 +34,7 @@ jobs:
       - name: "install tikz-trackschematic"
         run: |
           chmod +x dev-install.sh
-          ./dev-install.sh --silent
+          ./dev-install.sh -q
 
       - name: "test tikz-trackschematic"
         run: |
