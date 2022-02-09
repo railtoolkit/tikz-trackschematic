@@ -9,3 +9,4 @@ etoolbox
 
 # for test compilation
 standalone
+adjustbox
