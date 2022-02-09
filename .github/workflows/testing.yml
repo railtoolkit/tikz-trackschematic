@@ -35,6 +35,7 @@ jobs:
       #     package-file: .github/texlive/requirements.txt
       # ##
         uses: paolobrasolin/setup-texlive-action@v1
+        with:
           packages-path: .github/texlive/requirements.txt
 
       - name: "install tikz-trackschematic"
