@@ -26,6 +26,9 @@ jobs:
       - name: "change ImageMagick policy to allow pdf->png conversion"
         run: sudo sed -i 's/^.*policy.*coder.*none.*PDF.*//' /etc/ImageMagick-6/policy.xml
 
+      - name: "install ghostscript"
+        run: sudo apt-get install -y ghostscript
+        
       #   ##
       # - name: "setup TeX Live (via apt-get)"
       #   # old TeX Live version: 2019
