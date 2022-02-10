@@ -20,19 +20,26 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
-      - name: "setup TeX Live"
-        # ##
-        # uses: DanySK/setup-texlive-action@master
-        # with:
-        #   requirements-file: .github/texlive/packages.test.txt
-        # ##
-        uses: teatimeguest/setup-texlive-action@v1
-        with:
-          package-file: .github/texlive/packages.test.txt
-        # ##
-        # uses: paolobrasolin/setup-texlive-action@v1
-        # with:
-        #   packages-path: .github/texlive/packages.test.txt
+        ##
+      - name: "setup TeX Live (via apt-get)"
+        run: |
+          sudo apt-get update -y || sudo apt-get update -y || sudo apt-get update -y
+          sudo apt-get install -y texlive-latex-base || sudo apt-get install -y texlive-latex-base || sudo apt-get install -y texlive-latex-base
+      #   ##
+      # - name: "setup TeX Live (via DanySK)"
+      #   uses: DanySK/setup-texlive-action@master
+      #   with:
+      #     requirements-file: .github/texlive/packages.test.txt
+      #   ##
+      # - name: "setup TeX Live (via teatimeguest)"
+      #   uses: teatimeguest/setup-texlive-action@v1
+      #   with:
+      #     package-file: .github/texlive/packages.test.txt
+      #   ##
+      # - name: "setup TeX Live (via paolobrasolin)"
+      #   uses: paolobrasolin/setup-texlive-action@v1
+      #   with:
+      #     packages-path: .github/texlive/packages.test.txt
 
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b
