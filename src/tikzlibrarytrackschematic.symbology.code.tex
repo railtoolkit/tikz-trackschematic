@@ -8,12 +8,15 @@
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
 \ProvidesFileRCS{tikzlibrarytrackschematic.symbology.code.tex}%
+%%%%%%%%%%%%%%%
+% global settings
+%%%%%%%%%%%%%%%
+\RequirePackage{booktabs,xltabular,multicol,adjustbox}%
+\usetikzlibrary{calc}%
 %
 %%%%%%%%%%%%%%%
 % commands
 %%%%%%%%%%%%%%%
-\RequirePackage{adjustbox}%
-\usetikzlibrary{calc}%
 %
 \DeclareRobustCommand{\tsSymbol}[2][1]{%
   \adjustbox{valign=c}{%
@@ -32,7 +35,6 @@
 %   \newglossaryentry{main_track}{name={main track},description={},symbol={\tsSymbol{main_track}}}%
 % }{}%
 %%
-\RequirePackage{booktabs,xltabular,multicol}%
 %% command
 \DeclareRobustCommand\tsFullSymbology{%
   \begin{xltabular}{\textwidth}{cX}%
