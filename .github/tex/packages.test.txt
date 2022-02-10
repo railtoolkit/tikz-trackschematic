@@ -1,3 +1,6 @@
+## -- engine used to compile (pdflatex)
+latex-bin
+
 ## -- direct dependencies
 tikz-trackschematic
 pgf
@@ -6,8 +9,7 @@ etoolbox
 adjustbox
 booktabs
 xltabular
+tools
 
 ## -- indirect dependencies
 standalone
-collectbox
-ltablex
