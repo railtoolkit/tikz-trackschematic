@@ -23,6 +23,9 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
+      - name: "update runner"
+        run: sudo apt-get update -y && sudo apt-get upgrade -y imagemagick
+
       #   ##
       # - name: "setup TeX Live (via apt-get)"
       #   # old TeX Live version: 2019
