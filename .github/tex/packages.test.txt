@@ -1,0 +1,13 @@
+## -- direct dependencies
+tikz-trackschematic
+pgf
+xkeyval
+etoolbox
+adjustbox
+booktabs
+xltabular
+
+## -- indirect dependencies
+standalone
+collectbox
+ltablex
