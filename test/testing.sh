@@ -93,6 +93,21 @@ else
 fi
 
 ## -- doing the tests
+#
+# compare metrics
+#
+# AE:    absolute error count, number of different pixels (-fuzz affected)
+# DSSIM: structural dissimilarity index
+# FUZZ:  mean color distance
+# MAE:   mean absolute error (normalized), average channel error distance
+# MEPP:  mean error per pixel (normalized mean error, normalized peak error)
+# MSE:   mean error squared, average of the channel error squared
+# NCC:   normalized cross correlation
+# PAE:   peak absolute (normalized peak absolute)
+# PHASH: perceptual hash for the sRGB and HCLp colorspaces.
+# PSNR:  peak signal to noise ratio
+# RMSE:  root mean squared (normalized root mean squared)
+# SSIM:  structural similarity index
 
 mkdir -p .testing
 
@@ -109,7 +124,10 @@ for TEST in `ls $TESTDIR/*.tex`; do
     echo $n "'$NAME' test: $c"
   fi
   pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $FILE 2>&1 > /dev/null
-  compare -metric DSSIM -colorspace RGB .testing/${NAME}.pdf ${NAME}_expected.pdf NULL:
+  if [ $verbose = 1 ]; then
+    echo $n "build complete, $c" # it is actually not in percent! But it helps them humans...
+  fi
+  compare -metric RMSE -colorspace RGB .testing/${NAME}.pdf ${NAME}_expected.pdf NULL:
   if [ $verbose = 1 ]; then
     echo "% difference." # it is actually not in percent! But it helps them humans...
   fi

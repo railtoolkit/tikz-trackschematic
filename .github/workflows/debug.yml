@@ -23,8 +23,8 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
-      - name: "update runner"
-        run: sudo apt-get update -y && sudo apt-get upgrade -y imagemagick
+      - name: "change ImageMagick policy to allow pdf->png conversion"
+        run: sudo sed -i 's/^.*policy.*coder.*none.*PDF.*//' /etc/ImageMagick-6/policy.xml
 
       #   ##
       # - name: "setup TeX Live (via apt-get)"
