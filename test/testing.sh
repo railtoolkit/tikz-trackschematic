@@ -121,7 +121,7 @@ for TEST in `ls $TESTDIR/*.tex`; do
   FILE=$(basename "$TEST") # remove path
   NAME=${FILE%.*} # remove extension
   if [ $verbose = 1 ]; then
-    echo $n "'$NAME' test: $c"
+    echo $n " - '$NAME' test: $c"
   fi
   pdflatex -output-directory=.testing -interaction=batchmode -halt-on-error $FILE 2>&1 > /dev/null
   if [ $verbose = 1 ]; then
