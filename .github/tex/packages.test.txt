@@ -13,3 +13,4 @@ tools
 
 ## -- indirect dependencies
 standalone
+epstopdf-pkg
