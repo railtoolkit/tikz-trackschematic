@@ -24,10 +24,17 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
-      - name: "setup TeX Live"
-        uses: teatimeguest/setup-texlive-action@v1
+      - name: "change ImageMagick policy to allow pdf->png conversion"
+        run: sudo sed -i 's/^.*policy.*coder.*none.*PDF.*//' /etc/ImageMagick-6/policy.xml
+
+      - name: "install ghostscript"
+        run: sudo apt-get install -y ghostscript
+        
+      - name: "setup TeX Live (via paolobrasolin)"
+        uses: paolobrasolin/setup-texlive-action@v1
         with:
-          package-file: .github/texlive/packages.test.txt
+          profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
+          packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b
