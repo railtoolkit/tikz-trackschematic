@@ -33,8 +33,8 @@ jobs:
       - name: "setup TeX Live (via paolobrasolin)"
         uses: paolobrasolin/setup-texlive-action@v1
         with:
-          profile-path:  ${{ github.workspace }}/.github/tex/minimal.profile.txt
-          packages-path: ${{ github.workspace }}/.github/tex/test.packages.txt
+          profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
+          packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b

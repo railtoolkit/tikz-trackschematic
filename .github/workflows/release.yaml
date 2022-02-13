@@ -1,4 +1,6 @@
-name: "release"
+# github action to publish a release
+#
+name: release
 
 # Controls when the workflow will run
 on:
