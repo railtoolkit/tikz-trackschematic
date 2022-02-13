@@ -40,19 +40,19 @@ jobs:
       #   # old TeX Live version: 2019
       #   uses: DanySK/setup-texlive-action@master
       #   with:
-      #     requirements-file: .github/tex/packages.test.txt
+      #     requirements-file: .github/tex/test.packages.txt
       #   ##
       # - name: "setup TeX Live (via teatimeguest)"
       #   # tlmgr needs updates and fails
       #   uses: teatimeguest/setup-texlive-action@v1
       #   with:
-      #     package-file: .github/tex/packages.test.txt
+      #     package-file: .github/tex/test.packages.txt
       #   ##
       - name: "setup TeX Live (via paolobrasolin)"
         uses: paolobrasolin/setup-texlive-action@v1
         with:
-          profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
-          packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
+          profile-path:  ${{ github.workspace }}/.github/tex/minimal.profile.txt
+          packages-path: ${{ github.workspace }}/.github/tex/test.packages.txt
 
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b

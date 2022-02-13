@@ -1,0 +1,13 @@
+# .github/tex/medium.profile.txt
+# used for paolobrasolin/setup-texlive-action@v1
+# Install the scheme:
+#
+#    medium scheme (<small> + more packages and languages)
+#
+selected_scheme scheme-medium
+# Omit documentation files:
+tlpdbopt_install_docfiles 0
+# Omit source files:
+tlpdbopt_install_srcfiles 0
+# Avoid doing backups:
+tlpdbopt_autobackup 0

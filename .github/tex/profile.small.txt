@@ -1,0 +1,13 @@
+# .github/tex/small.profile.txt
+# used for paolobrasolin/setup-texlive-action@v1
+# Install the scheme:
+#
+#    small scheme (<basic> + xetex, metapost, and a few languages)
+#
+selected_scheme scheme-small
+# Omit documentation files:
+tlpdbopt_install_docfiles 0
+# Omit source files:
+tlpdbopt_install_srcfiles 0
+# Avoid doing backups:
+tlpdbopt_autobackup 0

@@ -1,5 +1,9 @@
-# .github/texlive.profile
-# Install the scheme minimal:
+# .github/tex/minimal.profile.txt
+# used for paolobrasolin/setup-texlive-action@v1
+# Install the scheme:
+#
+#   minimal scheme (plain only)
+#
 selected_scheme scheme-minimal
 # Omit documentation files:
 tlpdbopt_install_docfiles 0
