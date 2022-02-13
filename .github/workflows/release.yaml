@@ -1,0 +1,89 @@
+name: "release"
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    tags:
+      - "v*"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    name: "test"
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "checkout"
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        uses: actions/checkout@v2
+
+      - name: "change ImageMagick policy to allow pdf->png conversion"
+        run: sudo sed -i 's/^.*policy.*coder.*none.*PDF.*//' /etc/ImageMagick-6/policy.xml
+
+      - name: "install ghostscript"
+        run: sudo apt-get install -y ghostscript
+        
+      - name: "setup TeX Live (via paolobrasolin)"
+        uses: paolobrasolin/setup-texlive-action@v1
+        with:
+          profile-path:  ${{ github.workspace }}/.github/tex/minimal.profile.txt
+          packages-path: ${{ github.workspace }}/.github/tex/test.packages.txt
+
+      - name: "install tikz-trackschematic"
+        run: chmod +x dev-install.sh && ./dev-install.sh -b
+
+      - name: "test tikz-trackschematic"
+        run: cd test && chmod +x testing.sh && ./testing.sh
+
+  release:
+    needs: test
+    name: "make release"
+      # The type of runner that the job will run on
+      runs-on: ubuntu-latest
+
+    steps:
+      - name: "checkout"
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        uses: actions/checkout@v2
+
+      - name: "create tikz-trackschematic package"
+        env:
+          TAG_NAME: ${{ contains(github.event.head_commit.message, '[commit var]') }}
+        run: chmod +x create-release.sh ./create-release.sh -v ${TAG_NAME}
+      
+      - name: "create release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+        
+      - name: "upload release asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: tikz-trackschematic-${TAG_NAME}.zip
+          asset_name: tikz-trackschematic-${TAG_NAME}.zip
+          asset_content_type: application/zip
+
+      - name: "publish release"
+        uses: StuYarrow/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          id: ${{ steps.create_release.outputs.id }}
