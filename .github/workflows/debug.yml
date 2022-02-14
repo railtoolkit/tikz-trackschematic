@@ -1,16 +1,16 @@
-# This is a basic workflow to help you get started with Actions
+### github action to publish a debug
+##
+name: "debug"
 
-name: debug
-
-# Controls when the workflow will run
+## Controls when the workflow will run
 on:
   push:
     branches: [ github-action ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  ## Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+## A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   debug:
@@ -28,7 +28,8 @@ jobs:
 
       - name: "install ghostscript"
         run: sudo apt-get install -y ghostscript
-        
+      
+      ###### multiple options for a TeX environment
       #   ##
       # - name: "setup TeX Live (via apt-get)"
       #   # old TeX Live version: 2019
@@ -57,8 +58,23 @@ jobs:
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
+      - name: "test tikz-trackschematic"
+        run: cd test && chmod +x testing.sh && ./testing.sh && cd ..
+
+        ## create varibale ${{ steps.tag.outputs.tag }}
+      - name: "get tag"
+        id: tag
+        uses: dawidd6/action-get-tag@v1
         with:
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: railtoolkit,kaat0
+          # Optionally strip `v` prefix
+          strip_v: false
+
+      - name: "create tikz-trackschematic package"
+        run: chmod +x create-release.sh ./create-release.sh -v ${{ steps.tag.outputs.tag }}
+
+      #   ## opening a debug console
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
+      #   with:
+      #     ## limits ssh access and adds the ssh public keys of the listed GitHub users
+      #     limit-access-to-users: railtoolkit,kaat0
