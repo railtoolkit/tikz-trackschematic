@@ -44,6 +44,8 @@ else
   VERSION=$2
 fi
 
+RELEASE="tikz-trackschematic-$VERSION"
+
 ## -- commands
 
 check_readme() {
@@ -90,18 +92,17 @@ DATEISO=$(echo $LINE | egrep -o '\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])'
 # DATE=$(echo $DATEISO | sed -e "s|-|\\\/|g") # with escape character for sed
 # DATE=$(date "+%Y\/%m\/%d") # with escape character for sed
 
-## update version number and delete line below in tikz-trackschematic.sty
+## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
 sed -i '.backup' -e "s|VERSIONDATE|$DATEISO|g" src/tikz-trackschematic.sty
 sed -i '' -e "/create-release/c\ " src/tikz-trackschematic.sty
-
 
 ## (OPTIONAL) recompile manual.tex, examples, symboly_table and snippets.tex` 
 
 
 ## create zip-archive
 # create temporary folder
-TMP="tikz-trackschematic-$VERSION"
-mkdir $TMP
+TMP=$RELEASE
+mkdir -p $TMP
 
 # copy README and .sty-file
 cp README.md $TMP/README.md
@@ -112,8 +113,8 @@ cp doc/manual.pdf  $TMP/tikz-trackschematic.pdf
 cp doc/manual.tex  $TMP/tikz-trackschematic.tex
 cp doc/snippets.pdf  $TMP/tikz-trackschematic-snippets.pdf
 cp doc/snippets.tex  $TMP/tikz-trackschematic-snippets.tex
-cp doc/symbology_table.pdf  $TMP/tikz-trackschematic-symbology-table.pdf
-cp doc/symbology_table.tex  $TMP/tikz-trackschematic-symbology-table.tex
+cp doc/symbology-table.pdf  $TMP/tikz-trackschematic-symbology-table.pdf
+cp doc/symbology-table.tex  $TMP/tikz-trackschematic-symbology-table.tex
 mkdir $TMP/tikz-trackschematic-examples
 mkdir $TMP/tikz-trackschematic-snippets
 cp -R doc/examples/*  $TMP/tikz-trackschematic-examples/
@@ -124,16 +125,22 @@ fi
 
 # copy src-files
 for SRC in src/*; do
-  cp $SRC $TMP
+  EXT=${SRC##*.}
+  # do not copy backup created by sed
+  if [ $EXT != "backup" ]; then
+    cp $SRC $TMP/
+  fi
 done
-
 if [ $verbose = 1 ]; then
   echo "copied src-files"
 fi
 
 # zip package
-zip -r $TMP.zip $TMP/*
+zip -r $RELEASE.zip $TMP/*
 
-# cleanup
+## cleanup
+# remove TMP-folder
 rm -rf $TMP/*
 rmdir $TMP
+# undo changes to tikz-trackschematic.sty by sed
+mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
