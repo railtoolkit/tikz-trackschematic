@@ -4,8 +4,8 @@ name: "debug"
 
 ## Controls when the workflow will run
 on:
-  push:
-    branches: [ github-action ]
+  # push:
+  #   branches: [ github-action ]
 
   ## Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -41,19 +41,19 @@ jobs:
       #   # old TeX Live version: 2019
       #   uses: DanySK/setup-texlive-action@master
       #   with:
-      #     requirements-file: .github/tex/test.packages.txt
+      #     requirements-file: .github/tex/packages.test.txt
       #   ##
       # - name: "setup TeX Live (via teatimeguest)"
       #   # tlmgr needs updates and fails
       #   uses: teatimeguest/setup-texlive-action@v1
       #   with:
-      #     package-file: .github/tex/test.packages.txt
+      #     package-file: .github/tex/packages.test.txt
       #   ##
       - name: "setup TeX Live (via paolobrasolin)"
         uses: paolobrasolin/setup-texlive-action@v1
         with:
-          profile-path:  ${{ github.workspace }}/.github/tex/minimal.profile.txt
-          packages-path: ${{ github.workspace }}/.github/tex/test.packages.txt
+          profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
+          packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b
@@ -61,16 +61,16 @@ jobs:
       - name: "test tikz-trackschematic"
         run: cd test && chmod +x testing.sh && ./testing.sh && cd ..
 
-        ## create varibale ${{ steps.tag.outputs.tag }}
-      - name: "get tag"
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-        with:
-          # Optionally strip `v` prefix
-          strip_v: false
+      #   ## create varibale ${{ steps.tag.outputs.tag }}
+      # - name: "get tag"
+      #   id: tag
+      #   uses: dawidd6/action-get-tag@v1
+      #   with:
+      #     # Optionally strip `v` prefix
+      #     strip_v: false
 
-      - name: "create tikz-trackschematic package"
-        run: chmod +x create-release.sh ./create-release.sh -v ${{ steps.tag.outputs.tag }}
+      # - name: "create tikz-trackschematic package"
+      #   run: chmod +x create-release.sh && ./create-release.sh -v ${{ steps.tag.outputs.tag }}
 
       #   ## opening a debug console
       # - name: Setup upterm session

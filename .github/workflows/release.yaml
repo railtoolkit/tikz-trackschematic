@@ -1,15 +1,15 @@
-# github action to publish a release
-#
-name: "release"
+### github action to make and publish a release
+##
+name: release
 
-# Controls when the workflow will run
+## Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  ## Triggers the workflow on push or pull request events but only for the master branch
   push:
     tags:
       - "v*"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+## A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -18,10 +18,16 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
+        ## create varibale ${{ steps.tag.outputs.tag }}
+      - name: "get tag"
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          # Optionally strip `v` prefix
+          strip_v: false
+
       - name: "create tikz-trackschematic package"
-        env:
-          TAG_NAME: ${{ contains(github.event.head_commit.message, '[commit var]') }}
-        run: chmod +x create-release.sh && ./create-release.sh -v ${TAG_NAME}
+        run: chmod +x create-release.sh && ./create-release.sh -v ${{ steps.tag.outputs.tag }}
       
       - name: "create release"
         id: create_release
@@ -31,10 +37,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+          body: "release information"
           draft: false
           prerelease: false
         
@@ -44,8 +47,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tikz-trackschematic-${TAG_NAME}.zip
-          asset_name: tikz-trackschematic-${TAG_NAME}.zip
+          asset_path: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
+          asset_name: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
           asset_content_type: application/zip
 
       - name: "publish release"
