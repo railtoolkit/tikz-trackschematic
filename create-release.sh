@@ -107,9 +107,12 @@ check_zip
 
 ## extract DATE from versionhistory.tex
 LINE=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
-DATEISO=$(echo $LINE | egrep -o '\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+DATEISO=$(echo $LINE | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
 # DATE=$(echo $DATEISO | sed -e "s|-|\\\/|g") # with escape character for sed
 # DATE=$(date "+%Y\/%m\/%d") # with escape character for sed
+if [ $verbose = 1 ]; then
+  echo "The date $DATEISO was extracted from versionhistory.tex."
+fi
 
 ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
 sed -i '.backup' -e "s|VERSIONDATE|$DATEISO|g" src/tikz-trackschematic.sty
