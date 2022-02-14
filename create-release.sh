@@ -82,11 +82,28 @@ check_versionhistory() {
   exit 1
 }
 
+# check for zip
+check_zip() {
+  status=0
+  command -v zip >/dev/null 2>&1 || status=1
+  if [ $status = 0 ]; then
+    if [ $verbose = 1 ]; then
+      echo "zip found"
+    fi
+    return 0
+  fi
+  
+  echo "Program 'zip' not found."
+  echo "Be sure to have zip installed!"
+  exit 1
+}
+
 ## -- creating the release
 
 ## check if $VERSION is present in README.md and versionhistory.tex
 check_readme
 check_versionhistory
+check_zip
 
 ## extract DATE from versionhistory.tex
 LINE=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
