@@ -39,27 +39,27 @@ fi
 
 if [ "$batch_mode" = 0 ]; then
   echo $n "specify version ( e.g. v0.6 ): $c"
-  read VERSION
+  read VERSION_STR
 else
-  VERSION=$2
+  VERSION_STR=$2
 fi
-
-RELEASE="tikz-trackschematic-$VERSION"
+VERSION_NUM=$(cut -c 2- <<< $VERSION_STR)
+RELEASE="tikz-trackschematic-$VERSION_STR"
 
 ## -- commands
 
 check_readme() {
   # check if $VERSION is present in README.md
   status=0
-  grep -qs "Version ${VERSION:1}" README.md || status=1
+  grep -qs "Version $VERSION_NUM" README.md || status=1
   if [ $status = 0 ]; then
     if [ $verbose = 1 ]; then
-      echo "Version ${VERSION:1} is present in README.md."
+      echo "Version $VERSION_NUM is present in README.md."
     fi
     return 0
   fi
   
-  echo "Version ${VERSION:1} not found in README.md."
+  echo "Version $VERSION_NUM not found in README.md."
   echo "Be sure to edit README.md and specify current version!"
   exit 1
 }
@@ -67,15 +67,15 @@ check_readme() {
 check_versionhistory() {
   # check if $VERSION is present in doc/versionhistory.tex
   status=0
-  grep -qs "vhEntry{${VERSION:1}" doc/versionhistory.tex || status=1
+  grep -qs "vhEntry{$VERSION_NUM" doc/versionhistory.tex || status=1
   if [ $status = 0 ]; then
     if [ $verbose = 1 ]; then
-      echo "Version ${VERSION:1} is present in versionhistory.tex."
+      echo "Version $VERSION_NUM is present in versionhistory.tex."
     fi
     return 0
   fi
   
-  echo "Version ${VERSION:1} not found in versionhistory.tex."
+  echo "Version $VERSION_NUM not found in versionhistory.tex."
   echo "Be sure to edit versionhistory.tex and specify current version!"
   exit 1
 }
@@ -87,7 +87,7 @@ check_readme
 check_versionhistory
 
 ## extract DATE from versionhistory.tex
-LINE=$(grep "vhEntry{${VERSION:1}" doc/versionhistory.tex)
+LINE=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
 DATEISO=$(echo $LINE | egrep -o '\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
 # DATE=$(echo $DATEISO | sed -e "s|-|\\\/|g") # with escape character for sed
 # DATE=$(date "+%Y\/%m\/%d") # with escape character for sed
