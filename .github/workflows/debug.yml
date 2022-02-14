@@ -58,8 +58,8 @@ jobs:
       - name: "install tikz-trackschematic"
         run: chmod +x dev-install.sh && ./dev-install.sh -b
 
-      - name: "test tikz-trackschematic"
-        run: cd test && chmod +x testing.sh && ./testing.sh && cd ..
+      # - name: "test tikz-trackschematic"
+      #   run: cd test && ./testing.sh && cd ..
 
       #   ## create varibale ${{ steps.tag.outputs.tag }}
       # - name: "get tag"
@@ -70,7 +70,7 @@ jobs:
       #     strip_v: false
 
       # - name: "create tikz-trackschematic package"
-      #   run: chmod +x create-release.sh && ./create-release.sh -v ${{ steps.tag.outputs.tag }}
+      #   run: ./create-release.sh -v ${{ steps.tag.outputs.tag }}
 
         ## opening a debug console
       - name: Setup upterm session
