@@ -29,6 +29,8 @@ while getopts ":v" opt; do
   esac
 done
 
+## -- cross platform helpers
+
 if [ "`echo -n`" = "-n" ]; then
   n=""
   c="\c"
@@ -36,6 +38,13 @@ else
   n="-n"
   c=""
 fi
+
+# https://stackoverflow.com/questions/2320564/sed-i-command-for-in-place-editing-to-work-with-both-gnu-sed-and-bsd-osx
+sedi () {
+    sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@"
+}
+
+## -- get input
 
 if [ "$batch_mode" = 0 ]; then
   echo $n "specify version ( e.g. v0.6 ): $c"
@@ -115,8 +124,11 @@ if [ $verbose = 1 ]; then
 fi
 
 ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
-sed -i '.backup' -e "s|VERSIONDATE|$DATEISO|g" src/tikz-trackschematic.sty
-sed -i '' -e "/create-release/c\ " src/tikz-trackschematic.sty
+sed -i".backup" -e"s/VERSIONDATE/$DATEISO/g" src/tikz-trackschematic.sty
+sedi "/create-release/d" src/tikz-trackschematic.sty
+if [ $verbose = 1 ]; then
+  echo "Updated version in src/tikz-trackschematic.sty"
+fi
 
 ## (OPTIONAL) recompile manual.tex, examples, symboly_table and snippets.tex` 
 
@@ -159,6 +171,10 @@ fi
 
 # zip package
 zip -r $RELEASE.zip $TMP/*
+if [ $verbose = 1 ]; then
+  echo "compressed the release in $RELEASE.zip"
+fi
+
 
 ## cleanup
 # remove TMP-folder
@@ -166,3 +182,6 @@ rm -rf $TMP/*
 rmdir $TMP
 # undo changes to tikz-trackschematic.sty by sed
 mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
+if [ $verbose = 1 ]; then
+  echo "clean up done!"
+fi
