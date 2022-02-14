@@ -1,6 +1,6 @@
 # github action to publish a release
 #
-name: release
+name: "release"
 
 # Controls when the workflow will run
 on:
@@ -11,11 +11,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-    name: "make release"
-      # The type of runner that the job will run on
-      runs-on: ubuntu-latest
-
+  release:
+    runs-on: ubuntu-latest
     steps:
       - name: "checkout"
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -24,7 +21,7 @@ jobs:
       - name: "create tikz-trackschematic package"
         env:
           TAG_NAME: ${{ contains(github.event.head_commit.message, '[commit var]') }}
-        run: chmod +x create-release.sh ./create-release.sh -v ${TAG_NAME}
+        run: chmod +x create-release.sh && ./create-release.sh -v ${TAG_NAME}
       
       - name: "create release"
         id: create_release
