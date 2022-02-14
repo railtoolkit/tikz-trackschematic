@@ -43,7 +43,9 @@ if [ "$batch_mode" = 0 ]; then
 else
   VERSION_STR=$2
 fi
-VERSION_NUM=$(cut -c 2- <<< $VERSION_STR)
+# remove leading character "v"
+VERSION_NUM=$(echo $VERSION_STR | cut -c 2-)
+
 RELEASE="tikz-trackschematic-$VERSION_STR"
 
 ## -- commands
