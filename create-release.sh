@@ -191,7 +191,7 @@ check_url1
 check_url2
 
 ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
-sed -i".backup" -e"s/VERSIONDATE/$DATE/g" src/tikz-trackschematic.sty
+sed -i".backup" -e"s/VERSIONDATE/$DATE $VERSION_STR/g" src/tikz-trackschematic.sty
 sedi "/create-release/d" src/tikz-trackschematic.sty
 if [ $verbose = 1 ]; then
   echo "Updated version in src/tikz-trackschematic.sty"
@@ -253,7 +253,7 @@ BOTTOM=$(( $BOTTOM - 2 ))
 TOP=$(( $TOP + 1 ))
 # extract the excerpt
 awk "NR>$TOP&&NR<$BOTTOM" CHANGELOG.md > release-note-$VERSION_STR.md
-sedi "s/###/#/g" release-note-$VERSION_STR.md
+sedi "s/###/##/g" release-note-$VERSION_STR.md
 
 
 ## -- cleanup
