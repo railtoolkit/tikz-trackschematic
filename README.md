@@ -25,6 +25,8 @@ The library can then be loaded through the command
 ```
 in any LaTeX file.
 
+The library can also be used in [Overleaf](https://www.overleaf.com/read/crrxfcdzbhbd).
+
 ------------
 
 # Minimal working example
@@ -54,75 +56,11 @@ results in:
 
 ![train on a track](https://raw.githubusercontent.com/railtoolkit/tikz-trackschematic/master/doc/examples/minimal_working_example.png "train on a track")
 
-The library can also be used in [Overleaf](https://www.overleaf.com/read/crrxfcdzbhbd).
-
 ------------
 
 # Symbology and meaning
 
 Please consult the [symbology table](https://github.com/railtoolkit/tikz-trackschematic/blob/master/doc/symbology_table.pdf) for further information regarding meaning of the symbols.
-
-------------
-
-# History
-
-## Version 0.6.3
-  
-  ADDED: anchor for SVG export
-  FIXED: documented (slip-)turnout option: points=moving
-  FIXED: spelling error in documentation
-
-## Version 0.6.2
-
-  bug fixing
-
-## Version 0.6.1
-  
-  * removed package requirement lmodern
-  * minor correction in manual
-  * added citation information
-
-## Version 0.6
-
-  * created an encapsulating package for future flexibility
-  * added symbols for direction control, track marking, pylons and electric wiring
-  * change symbol for friction bufferstop;
-  * changed load command to \usepackage{tikz-trackschematic}
-
-## Version 0.5.1
-  
-  * modified symbol "end of movement authority"
-  * added symbols "braking point" and "danger point"
-
-## Version 0.5
-  
-  * new improved syntax for topology
-  * documentation
-
-## Version 0.4
-
-  * added document for symbology
-  * renamed overview to snippets
-  * reworked library for common tikz library layout
-
-## Version 0.3
-
-  * moved snippet folder to root folder
-  * added shunting movements
-  * added points to turnouts
-  * added moving trains
-  * defined and used color foreground and background
-
-
-## Version 0.2
-
-  * added transmitters
-  * reorganized src library
-  * minor improvements
-
-## Version 0.1
-
-  Basic concept of a library with railway topology symbols and some examples.
 
 ------------
 

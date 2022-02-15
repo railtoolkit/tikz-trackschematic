@@ -59,19 +59,19 @@ RELEASE="tikz-trackschematic-$VERSION_STR"
 
 ## -- commands
 
-check_readme() {
-  # check if $VERSION is present in README.md
+# check for zip
+check_zip() {
   status=0
-  grep -qs "Version $VERSION_NUM" README.md || status=1
+  command -v zip >/dev/null 2>&1 || status=1
   if [ $status = 0 ]; then
     if [ $verbose = 1 ]; then
-      echo "Version $VERSION_NUM is present in README.md."
+      echo "zip found"
     fi
     return 0
   fi
   
-  echo "Version $VERSION_NUM not found in README.md."
-  echo "Be sure to edit README.md and specify current version!"
+  echo "Program 'zip' not found."
+  echo "Be sure to have zip installed!"
   exit 1
 }
 
@@ -91,49 +91,116 @@ check_versionhistory() {
   exit 1
 }
 
-# check for zip
-check_zip() {
+check_changelog() {
+  # check if $VERSION is present in CHANGELOG.md
   status=0
-  command -v zip >/dev/null 2>&1 || status=1
+  grep -qs "Version \[$VERSION_NUM\]" CHANGELOG.md || status=1
   if [ $status = 0 ]; then
     if [ $verbose = 1 ]; then
-      echo "zip found"
+      echo "Version $VERSION_NUM is present in CHANGELOG.md."
     fi
     return 0
   fi
   
-  echo "Program 'zip' not found."
-  echo "Be sure to have zip installed!"
+  echo "Version $VERSION_NUM not found in CHANGELOG.md."
+  echo "Be sure to edit CHANGELOG.md and specify current version!"
   exit 1
+}
+
+check_date() {
+  ## extract DATE from versionhistory.tex and CHANGELOG.md
+  LINE_1=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
+  LINE_2=$(grep "Version \[$VERSION_NUM\]" CHANGELOG.md)
+  DATEISO_1=$(echo $LINE_1 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+  DATEISO_2=$(echo $LINE_2 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+
+  if [ $DATEISO_1 = $DATEISO_2 ]; then
+    # DATE=$(echo $DATEISO | sed -e "s|-|\\\/|g") # with escape character for sed
+    # DATE=$(date "+%Y\/%m\/%d") # with escape character for sed
+    DATE="$DATEISO_1" 
+    if [ $verbose = 1 ]; then
+      echo "The date $DATE was extracted from versionhistory.tex and CHANGELOG.md."
+    fi
+    return 0
+  fi
+  
+  echo "The date in versionhistory.tex and CHANGELOG.md did not match."
+  echo "Be sure to edit versionhistory.tex or CHANGELOG.md and modifiy the date!"
+  exit 1
+}
+
+check_url1() {
+  ## extract urls from CHANGELOG.md
+  status=0
+  LINE=$(grep "\[$VERSION_NUM\]: https://" CHANGELOG.md)
+  echo $LINE | grep -qs "...$VERSION_STR"  || status=1
+  if [ $status = 0 ]; then
+    if [ $verbose = 1 ]; then
+      echo "Version $VERSION_NUM URL is present in CHANGELOG.md."
+    fi
+    return 0
+  fi
+  
+  echo "Version $VERSION_NUM URL was not found in CHANGELOG.md."
+  echo "Be sure to edit CHANGELOG.md and specify a URL for the current version!"
+  exit 1
+}
+
+check_url2() {
+  ## extract urls from CHANGELOG.md
+  status=0
+  LINE=$(grep "\[Unreleased\]: https://" CHANGELOG.md)
+  echo $LINE | grep -qs "/$VERSION_STR..."  || status=1
+  if [ $status = 0 ]; then
+    if [ $verbose = 1 ]; then
+      echo "The URL for [Unreleased] was also updated in CHANGELOG.md! Thx!"
+    fi
+    return 0
+  fi
+  
+  echo "WARNING: URL for [Unreleased] in CHANGELOG.md does not reflect the current version $VERSION_NUM."
+  echo "WARNING: Be sure to edit CHANGELOG.md and specify current version!"
+
+  if [ "$batch_mode" -eq 0 ]; then
+    echo "Do you wish to continue without updated URL for [Unreleased]?"
+    echo $n "(y/n) $c"
+    while true; do
+      read -p "" answer
+      case $answer in
+        [Yy]* ) break;;
+        [Nn]* ) exit 1;;
+        * ) echo "Please answer yes or no.";;
+      esac
+    done
+  else
+    echo "ERROR: Aborting in batch mode!"
+    exit 1
+  fi
 }
 
 ## -- creating the release
 
-## check if $VERSION is present in README.md and versionhistory.tex
-check_readme
-check_versionhistory
+## check for installed software
 check_zip
 
-## extract DATE from versionhistory.tex
-LINE=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
-DATEISO=$(echo $LINE | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
-# DATE=$(echo $DATEISO | sed -e "s|-|\\\/|g") # with escape character for sed
-# DATE=$(date "+%Y\/%m\/%d") # with escape character for sed
-if [ $verbose = 1 ]; then
-  echo "The date $DATEISO was extracted from versionhistory.tex."
-fi
+## check if $VERSION is present in README.md and versionhistory.tex
+check_versionhistory
+check_changelog
+check_date
+check_url1
+check_url2
 
 ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
-sed -i".backup" -e"s/VERSIONDATE/$DATEISO/g" src/tikz-trackschematic.sty
+sed -i".backup" -e"s/VERSIONDATE/$DATE/g" src/tikz-trackschematic.sty
 sedi "/create-release/d" src/tikz-trackschematic.sty
 if [ $verbose = 1 ]; then
   echo "Updated version in src/tikz-trackschematic.sty"
 fi
 
-## (OPTIONAL) recompile manual.tex, examples, symboly_table and snippets.tex` 
+## -- (OPTIONAL) recompile manual.tex, examples, symboly_table and snippets.tex` 
 
 
-## create zip-archive
+## -- create zip-archive
 # create temporary folder
 TMP=$RELEASE
 mkdir -p $TMP
@@ -176,12 +243,25 @@ if [ $verbose = 1 ]; then
 fi
 
 
-## cleanup
+## -- create release note as excerpt from CHANGELOG.md
+# determine beginning and end in CHANGELOG.md 
+TOP=$(grep -n "Version \[$VERSION_NUM\]" CHANGELOG.md | cut -d: -f1)
+awk "NR>$TOP" CHANGELOG.md > release-note-tmp.md
+BOTTOM=$(grep -n -m 1 "## Version" release-note-tmp.md | cut -d: -f1)
+BOTTOM=$(( $TOP + $BOTTOM ))
+BOTTOM=$(( $BOTTOM - 2 ))
+TOP=$(( $TOP + 1 ))
+# extract the excerpt
+awk "NR>$TOP&&NR<$BOTTOM" CHANGELOG.md > release-note-$VERSION_STR.md
+sedi "s/###/#/g" release-note-$VERSION_STR.md
+
+
+## -- cleanup
 # remove TMP-folder
-rm -rf $TMP/*
-rmdir $TMP
+rm -rf $TMP
 # undo changes to tikz-trackschematic.sty by sed
 mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
+rm release-note-tmp.md
 if [ $verbose = 1 ]; then
   echo "clean up done!"
 fi
