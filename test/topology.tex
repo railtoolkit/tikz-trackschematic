@@ -31,8 +31,9 @@
     }
 
     \tracklabel at (X1-1) label (12);
-    \tracklabel at (X1-3) label (really long text);
+    \tracklabel at (X1-3) label (\Large really long text);
     \tracklabel at (X2-2) label (22);
+    \derailer[forward,branch=left,shift label={(-0.5,-0.5)}] at (X2-3) label (X2-3);
 
     \derailer[forward ,branch=left ] at (X3-1) label (X3-1);
     \derailer[backward,branch=left ] at (X3-2) label (X3-2);
