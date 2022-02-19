@@ -12,6 +12,7 @@ The tikz library is contained in the files:
 * tikzlibrarytrackschematic.trafficcontrol.code.tex,
 * tikzlibrarytrackschematic.vehicles.code.tex,
 * tikzlibrarytrackschematic.constructions.code.tex,
+* tikzlibrarytrackschematic.symbology.code.tex,
 * tikzlibrarytrackschematic.electrics.code.tex, and
 * tikzlibrarytrackschematic.measures.code.tex.
 
