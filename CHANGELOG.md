@@ -17,6 +17,9 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
   
   * transmitters for balises
 
+### Fixed
+
+  * wrong option for labels in vehicles
 
 ## Version [0.6.3] - 2022-02-15
 
