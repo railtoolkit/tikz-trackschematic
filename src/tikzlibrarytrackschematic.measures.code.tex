@@ -1,6 +1,3 @@
-%!TEX TS-program = pdflatexmk
-%!TEX root = ../test/test.tex
-%
 %% symbol library for TikZ track schematics
 %
 % Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
@@ -14,13 +11,6 @@
 %%%%%%%%%%%%%%%
 \RequirePackage{tikz,etoolbox}%
 \usetikzlibrary{calc,intersections,arrows.meta}%
-%
-% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
-\providecommand{\gettikzxy}[3]{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
-  \edef#2{\the\pgf@x}%
-  \edef#3{\the\pgf@y}%
-}%
 %
 %%%%%%%%%%%%%%%
 % tikz keys for multiple use
@@ -210,10 +200,6 @@
     \def\labelcommand{#2}% beware of leading and tailing spaces!
     \def\labelcontent{#3}%
     %
-    \gettikzxy{\basecoord}{\basecoordX}{\basecoordY}%
-    \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-      \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-    }
     %% orientation setup
     \ifdefstring{\orientation}{left}{% orientation
       \def\align{right}%
@@ -230,14 +216,14 @@
     %%       (0,0.75) (ts-hm-b1)  (ts-hm-b2)
     %% (0,0)•   • ------- • --------- • ----- •(ts-hm-l) label
     %%
-    \coordinate (ts-hm-l) at (0,\basecoordY);%
+    \path let \p1=\basecoord in coordinate (ts-hm-l) at (0,\y1);%
     \ifdefstring{\labelcoord}{(none)}{%
       \coordinate (ts-hm-b1) at (ts-hm-l);%
       \coordinate (ts-hm-b2) at (ts-hm-l);%
     }{% initialize if NOT default
       \coordinate (ts-hm-b1) at ($(ts-hm-l) + (0,0.5)$);%
-      \coordinate (ts-hm-b2) at ($(ts-hm-l) + (\labelcoordX,0.25)$);%
-      \coordinate (ts-hm-l)  at ($(ts-hm-l) + (\labelcoordX,\labelcoordY)$);%
+      \path let \p1=\labelcoord in coordinate (ts-hm-b2) at ($(ts-hm-l) + (\x1,0.25)$);%
+      \path let \p1=\labelcoord in coordinate (ts-hm-l)  at ($(ts-hm-l) + (\x1,\y1)$);%
     }%
     %% symbol
     \path[draw=\hectometercolor,dashed,shorten <=0.75cm]%

@@ -1,6 +1,3 @@
-%!TEX TS-program = pdflatexmk
-%!TEX root = ../test/test.tex
-%
 %% symbol library for TikZ track schematics
 %
 % Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
@@ -14,13 +11,6 @@
 %%%%%%%%%%%%%%%
 \RequirePackage{tikz,etoolbox}%
 \usetikzlibrary{calc,intersections,arrows.meta}%
-%
-% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
-\providecommand{\gettikzxy}[3]{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
-  \edef#2{\the\pgf@x}%
-  \edef#3{\the\pgf@y}%
-}%
 %
 %%%%%%%%%%%%%%%
 % tikz keys for multiple use
@@ -126,8 +116,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%
@@ -201,8 +190,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%
@@ -277,8 +265,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%
@@ -352,8 +339,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%
@@ -428,8 +414,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%
@@ -504,8 +489,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%
@@ -588,8 +572,7 @@
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       \node[\align] at (label-coord) {\footnotesize \labelcontent};%
     }%

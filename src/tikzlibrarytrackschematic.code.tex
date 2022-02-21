@@ -45,8 +45,7 @@
 %     \ifdefstring{\labelcontent}{}{}{% label NOT empty
 %       \coordinate (label-coord) at (coord);%
 %       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-%         \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-%         \coordinate (label-coord) at ($(label-coord)+(\labelcoordX,\labelcoordY)$);%
+%         \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
 %       }%
 %       \node at (label-coord) {\footnotesize \labelcontent};%
 %     }%

@@ -69,7 +69,6 @@ Please consult the [symbology table](https://github.com/railtoolkit/tikz-tracksc
 
   * rethink syntax
   * provide option for internationalziation (i18n)
-  * replace "\gettikzxy" with "\path let" syntax
   * rewrite library with better coding skills
   * include support for glossaries package
 

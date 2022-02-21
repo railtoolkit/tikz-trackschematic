@@ -1,6 +1,3 @@
-%!TEX TS-program = pdflatexmk
-%!TEX root = ../test/test.tex
-%
 %% symbol library for TikZ track schematics
 %
 % Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
@@ -14,13 +11,6 @@
 %%%%%%%%%%%%%%%
 \RequirePackage{tikz,etoolbox}%
 \usetikzlibrary{calc,patterns}%
-%
-% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
-\providecommand{\gettikzxy}[3]{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
-  \edef#2{\the\pgf@x}%
-  \edef#3{\the\pgf@y}%
-}%
 %
 %%%%%%%%%%%%%%%
 % tikz keys for multiple use
@@ -123,8 +113,7 @@
       \coordinate (ts-tl-l) at (0,0);%
       \ifdefstring{\labelcoord}{(none)}{% default coord
       }{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-tl-l) at ($(ts-tl-l)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (ts-tl-l) at ($(ts-tl-l)+(\x1,\y1)$);%
       }%
       \node at (ts-tl-l) {\labelcontent};%
     }%
@@ -301,8 +290,7 @@
       \tikzset{every node/.style={text=\foreground}};%
       \coordinate (ts-y-l) at ($\branchfactor*(0,-8pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-y-l) at ($(ts-y-l)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (ts-y-l) at ($(ts-y-l)+(\x1,\y1)$);%
       }%
       \node at (ts-y-l) {\footnotesize \labelcontent};%
     }%
@@ -524,16 +512,14 @@
     \ifdefstring{\labelcontentleft}{}{}{% label NOT empty
       \coordinate (ts-sy-l1) at ($(2pt,0) + \branchfactor*(0, 10pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-sy-l1) at ($(ts-sy-l1)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (ts-sy-l1) at ($(ts-sy-l1)+(\x1,\y1)$);%
       }%
       \node[left]  at (ts-sy-l1) {\footnotesize \labelcontentleft};%
     }%
     \ifdefstring{\labelcontentright}{}{}{% label NOT empty
       \coordinate (ts-sy-l2) at ($(2pt,0) + \branchfactor*(0,-10pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-sy-l2) at ($(ts-sy-l2)-(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (ts-sy-l2) at ($(ts-sy-l2)+(\x1,\y1)$);%
       }%
       \node[right] at (ts-sy-l2) {\footnotesize \labelcontentright};%
     }%
@@ -585,8 +571,7 @@
       \tikzset{every node/.style={text=\foreground}};%
       \coordinate (ts-x-l) at ($(2pt,0) + \branchfactor*(0,-9pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-x-l) at ($(ts-x-l)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (ts-x-l) at ($(ts-x-l)+(\x1,\y1)$);%
       }%
       \node[right] at (ts-x-l) {\footnotesize \labelcontent};%
     }%
@@ -662,8 +647,7 @@
       \tikzset{every node/.style={text=\foreground}};%
       \coordinate (ts-dr-l) at ($\branchfactor*(0,-10pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-dr-l) at ($(ts-dr-l)+(\labelcoordX,\labelcoordY)$);%
+        \path let \p1=\labelcoord in coordinate (ts-dr-l) at ($(ts-dr-l)+(\x1,\y1)$);%
       }%
       \node[right] at (ts-dr-l) {\footnotesize \labelcontent};%
     }%

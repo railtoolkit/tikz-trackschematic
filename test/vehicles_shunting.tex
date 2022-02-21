@@ -25,9 +25,9 @@
       \coordinate (T\i-3) at ($(7,0) + 2*(0,-\i)$);
     }
 
-    \parkedvehicles[length=0.5cm] at (T1-1) label (T1-1);
-    \parkedvehicles[]             at (T1-2) label (T1-2);
-    \parkedvehicles[length=1.5cm] at (T1-3) label (T1-3);
+    \parkedvehicles[length=0.5cm]           at (T1-1) label (T1-1);
+    \parkedvehicles[shift label={(0,-0.5)}] at (T1-2) label (T1-2);
+    \parkedvehicles[length=1.5cm]           at (T1-3) label (T1-3);
 
     \shunting[forward]               at (T2-2) label (T2-2);
     \shunting[forward ,length=2.5cm] at (T2-3) label (T2-3);

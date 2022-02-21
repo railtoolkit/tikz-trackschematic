@@ -1,6 +1,3 @@
-%!TEX TS-program = pdflatexmk
-%!TEX root = ../test/test.tex
-%
 %% symbol library for TikZ track schematics
 %
 % Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
@@ -14,13 +11,6 @@
 %%%%%%%%%%%%%%%
 \RequirePackage{tikz,etoolbox}%
 \usetikzlibrary{calc}%
-%
-% https://tex.stackexchange.com/questions/56353/extract-x-y-coordinate-of-an-arbitrary-point-on-curve-in-tikz
-\providecommand{\gettikzxy}[3]{%
-  \tikz@scan@one@point\pgfutil@firstofone#1\relax%
-  \edef#2{\the\pgf@x}%
-  \edef#3{\the\pgf@y}%
-}%
 %
 \ifdeflength{\objectlength}{}{% Not defined, so define it!
   \newlength{\objectlength}%
@@ -68,7 +58,7 @@
 %% command: parked vehicles
 \newcommand\parkedvehicles{}% just for safety
 \def\parkedvehicles[#1]#2(#3)#4(#5){% \parkedvehicles[options] at (coord) label (name);
-  \pic[parked,operation=undefined,#1] at (#3) {vehicles={#2/#4/#5}}% symbol
+  \pic[parked,operation=undefined,forward,#1] at (#3) {vehicles={#2/#4/#5}}% symbol
 }%
 %% command: shunting movements
 \newcommand\shunting{}% just for safety
@@ -112,7 +102,7 @@
   run=none,% DEFAULT
   /tikz/run/.forward to=/tikz/trackschematic/vehicles/run,%
   %% label
-  label align/.store in=\labelalign,% (coord)
+  label align/.store in=\labelalign,% left, right OR center
   label align=center,% DEFAULT
   /tikz/label align/.forward to=/tikz/trackschematic/vehicles/label align,%
   %% train bend
@@ -129,7 +119,7 @@
 \newtoggle{is_shunting}\settoggle{is_shunting}{false}%
 \newtoggle{in_train_mode}\settoggle{in_train_mode}{false}%
 \newtoggle{train_is_a_ghost}\settoggle{train_is_a_ghost}{false}%
-\newtoggle{bend}\settoggle{bend}{false}%
+\newtoggle{single_bend}\settoggle{single_bend}{false}%
 \newtoggle{double_bend}\settoggle{double_bend}{false}%
 %
 %%%%%%%%%%%%%%%
@@ -139,211 +129,169 @@
 \tikzset{%
   pics/vehicles/.default=,%
   pics/vehicles/.style args={#1/#2/#3}{code={%
-    %% settings
+    %%
+    %%%%%%%[steps]%%%%%%
+    %%
+    %% 0. setup settings
+    %% 1. calculate coordinates
+    %% - calculation of vehicle coordinates:
+    %%
+    %%                rear bend   front bend
+    %%                (ts-b-r1)   (ts-b-f1)
+    %%   (ts-v-r1)•__________•_______•__________•(ts-v-f1)
+    %%            |                              \
+    %%            |         label•(ts-v-l)        •(ts-v-f) front tip
+    %%            |__________ _______ __________ /
+    %%   (ts-v-r2)•          •       •          •(ts-v-f2)
+    %%                (ts-b-r2)   (ts-b-f2)
+    %%
+    %% - the base coord is depend on usage
+    %%      for parked: (ts-v-l)
+    %%            else: (ts-v-f)
+    %%
+    %% 2. set style for line and background
+    %% 3. draw arrows for speed indication
+    %% 4. draw vehicle shape
+    %% 5. draw operation mode
+    %% 6. draw label
+    %%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 0. settings
     \def\coordcommand{#1}% beware of leading and tailing spaces!
     \def\labelcommand{#2}% beware of leading and tailing spaces!
     \def\labelcontent{#3}%
-    %% bend
-    % determine number of bends and
-    % find front and back bend from head to tail
-    \ifdefstring{\bendrightcoord}{(none)}{}{% initialize if NOT default
-      \gettikzxy{\bendrightcoord}{\bendrightX}{\bendrightY}%
-      \settoggle{bend}{true}%
-      \ifdefstring{\face}{forward}{%
-        \pgfmathsetlengthmacro\forwardbendX{\bendrightX}%
-        \pgfmathsetlengthmacro\forwardbendY{\bendrightY}%
-        \pgfmathsetlengthmacro\bendlength{\objectlength + \bendrightX}%
-        \pgfmathsetmacro\forwardbendTYPE{1}%
-      }{% face backward
-        \pgfmathsetlengthmacro\backwardbendX{\bendrightX}%
-        \pgfmathsetlengthmacro\backwardbendY{\bendrightY}%
-        \pgfmathsetlengthmacro\bendlength{\objectlength - \bendrightX}%
-        \pgfmathsetmacro\backwardbendTYPE{1}%
-      }% END \ifdefstring{\face}{forward}
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %% bend setup
+    % determine number of bends and find front and rear bend from left to right
+    \ifdefstring{\bendleftcoord}{(none)}{}{% NOT default
+      \settoggle{single_bend}{true}%
+      \path \bendleftcoord;\pgfgetlastxy{\bendX}{\bendY}% absolut coord
+      \pgfmathsetmacro\bendfactor{1}%
     }%
-    \ifdefstring{\bendleftcoord}{(none)}{}{% initialize if NOT default
-      \gettikzxy{\bendleftcoord}{\bendleftX}{\bendleftY}%
-      \iftoggle{bend}{%
+    \ifdefstring{\bendrightcoord}{(none)}{}{% NOT default
+      \iftoggle{single_bend}{%
         \settoggle{double_bend}{true}%
-        \ifdefstring{\face}{forward}{%
-          \ifdimcomp{\bendrightX}{>}{\bendleftX}{%
-            \pgfmathsetlengthmacro\forwardbendX{\bendrightX}%
-            \pgfmathsetmacro\forwardbendTYPE{1}%
-            \pgfmathsetlengthmacro\backwardbendX{\bendleftX}%
-            \pgfmathsetlengthmacro\backwardbendY{\bendleftY}%
-            \pgfmathsetmacro\backwardbendTYPE{-1}%
-          }{% {\bendrightX}{<}{\bendleftX}
-            \pgfmathsetlengthmacro\forwardbendX{\bendleftX}%
-            \pgfmathsetmacro\forwardbendTYPE{-1}%
-            \pgfmathsetlengthmacro\backwardbendX{\bendrightX}%
-            \pgfmathsetlengthmacro\backwardbendY{\bendrightY}%
-            \pgfmathsetmacro\backwardbendTYPE{1}
+        \settoggle{single_bend}{false}%
+        \path \bendrightcoord;\pgfgetlastxy{\bendrightX}{\bendrightY}
+        \ifdimcomp{\bendrightX}{>}{\bendX}{% which one comes first?
+          \ifdefstring{\face}{forward}{%
+            \pgfmathsetmacro\frontBendfactor{1}%
+            \pgfmathsetmacro\rearBendfactor{-1}%
+            \pgfmathsetlengthmacro\frontBendX{\bendrightX}%
+            \pgfmathsetlengthmacro\rearBendX{\bendX}%
+            \pgfmathsetlengthmacro\rearBendY{\bendY}%
+          }{% face backward
+            \pgfmathsetmacro\frontBendfactor{-1}%
+            \pgfmathsetmacro\rearBendfactor{1}%
+            \pgfmathsetlengthmacro\frontBendX{\bendX}%
+            \pgfmathsetlengthmacro\rearBendX{\bendrightX}%
+            \pgfmathsetlengthmacro\rearBendY{\bendrightY}%
           }%
-        }{% face backward
-          \ifdimcomp{\bendrightX}{<}{\bendleftX}{%
-            \pgfmathsetlengthmacro\backwardbendX{\bendrightX}%
-            \pgfmathsetmacro\backwardbendTYPE{-1}%
-            \pgfmathsetlengthmacro\forwardbendX{\bendleftX}%
-            \pgfmathsetlengthmacro\forwardbendY{\bendleftY}%
-            \pgfmathsetmacro\forwardbendTYPE{1}%
-          }{% {\bendrightX}{>}{\bendleftX}
-            \pgfmathsetlengthmacro\backwardbendX{\bendleftX}%
-            \pgfmathsetmacro\backwardbendTYPE{1}%
-            \pgfmathsetlengthmacro\forwardbendX{\bendrightX}%
-            \pgfmathsetlengthmacro\forwardbendY{\bendrightY}%
-            \pgfmathsetmacro\forwardbendTYPE{-1}%
+        }{% {\bendrightX}{<}{\bendleftX}%
+          \ifdefstring{\face}{forward}{%
+            \pgfmathsetmacro\frontBendfactor{-1}%
+            \pgfmathsetmacro\rearBendfactor{1}%
+            \pgfmathsetlengthmacro\frontBendX{\bendX}%
+            \pgfmathsetlengthmacro\rearBendX{\bendrightX}%
+            \pgfmathsetlengthmacro\rearBendY{\bendrightY}%
+          }{% face backward
+            \pgfmathsetmacro\frontBendfactor{1}%
+            \pgfmathsetmacro\rearBendfactor{-1}%
+            \pgfmathsetlengthmacro\frontBendX{\bendrightX}%
+            \pgfmathsetlengthmacro\rearBendX{\bendX}%
+            \pgfmathsetlengthmacro\rearBendY{\bendY}%
           }%
         }%
       }{% NOT double bend
-        \settoggle{bend}{true}%
-        \ifdefstring{\face}{forward}{%
-          \pgfmathsetlengthmacro\forwardbendX{\bendleftX}%
-          \pgfmathsetlengthmacro\forwardbendY{\bendleftY}%
-          \pgfmathsetlengthmacro\bendlength{\objectlength + \bendleftX}%
-          \pgfmathsetmacro\forwardbendTYPE{-1}%
-        }{% face backward
-          \pgfmathsetlengthmacro\backwardbendX{\bendleftX}%
-          \pgfmathsetlengthmacro\backwardbendY{\bendleftY}%
-          \pgfmathsetlengthmacro\bendlength{\objectlength - \bendleftX}%
-          \pgfmathsetmacro\backwardbendTYPE{-1}%
-        }% END \ifdefstring{\face}{forward}
+        \settoggle{single_bend}{true}%
+        \path \bendrightcoord;\pgfgetlastxy{\bendX}{\bendY}% absolut coord
+        \pgfmathsetmacro\bendfactor{-1}%
       }%
     }%
-    %%
-    %% calculation of vehicle coordinates
-    %%
-    %%                 backward bend   forward bend
-    %%                     (ts-b-b1)   (ts-b-f1)
-    %%           (ts-v-4)•_______•_______•_______•(ts-v-1)
-    %%                   /                       \
-    %% backward (ts-v-r)•       label•(ts-v-l)    •(ts-v-f) forward
-    %%                   \_______ _______ _______/
-    %%           (ts-v-3)•       •       •       •(ts-v-2)
-    %%                     (ts-b-b2)   (ts-b-f2) 
-    %%
-    \iftoggle{is_parked}{% vehicle parked
-      \coordinate (ts-v-1) at ($ 0.5*(\objectlength,0) + (0, 0.3)$);%
-      \coordinate (ts-v-2) at ($ 0.5*(\objectlength,0) + (0,-0.3)$);%
-      \coordinate (ts-v-3) at ($-0.5*(\objectlength,0) + (0,-0.3)$);%
-      \coordinate (ts-v-4) at ($-0.5*(\objectlength,0) + (0, 0.3)$);%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 1. coordinate calculations
+    %% basic coords for corners
+    \iftoggle{is_parked}{%
+      \coordinate (ts-v-f1) at ($ 0.5*(\objectlength,0) + (0, 0.3)$);%
+      \coordinate (ts-v-f2) at ($ 0.5*(\objectlength,0) + (0,-0.3)$);%
+      \coordinate (ts-v-r1) at ($-0.5*(\objectlength,0) + (0, 0.3)$);%
+      \coordinate (ts-v-r2) at ($-0.5*(\objectlength,0) + (0,-0.3)$);%
+    }{%
+      \coordinate (ts-v-f1) at ($\facefactor*(-0.3,0) + (0, 0.3)$);%
+      \coordinate (ts-v-f2) at ($\facefactor*(-0.3,0) + (0,-0.3)$);%
+      \coordinate (ts-v-r1) at ($\facefactor*(-\objectlength,0) + (0, 0.3)$);%
+      \coordinate (ts-v-r2) at ($\facefactor*(-\objectlength,0) + (0,-0.3)$);%
+    }%
+    %% front tip for traveling direction
+    \iftoggle{is_parked}{%
       \coordinate (ts-v-f) at ($ 0.5*(\objectlength,0) + (0, 0  )$);%
-      \coordinate (ts-v-r) at ($-0.5*(\objectlength,0) + (0, 0  )$);%
-      \iftoggle{bend}{% currently not supported for parked vehicles
-        % \coordinate (ts-b-f1) at (ts-v-1);%
-        % \coordinate (ts-b-f2) at (ts-v-2);%
-        % \coordinate (ts-b-b1) at (ts-v-4);%
-        % \coordinate (ts-b-b2) at (ts-v-3);%
-      }{% NOT bend
-        \coordinate (ts-b-f1) at (ts-v-1);%
-        \coordinate (ts-b-f2) at (ts-v-2);%
-        \coordinate (ts-b-b1) at (ts-v-4);%
-        \coordinate (ts-b-b2) at (ts-v-3);%
-      }%
-      \ifdefstring{\labelcoord}{(none)}{%
-        \coordinate (ts-v-l)  at (0,0);%
-      }{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-v-l)  at (\labelcoordX,\labelcoordY);%
-      }%
-    }{% vehicle NOT parked
-      \ifdefstring{\face}{forward}{% face
-        \pgfmathsetmacro{\facefactor}{1}%
-        \coordinate (ts-v-1)  at (-0.3, 0.3);%
-        \coordinate (ts-v-2)  at (-0.3,-0.3);%
-        \coordinate (ts-v-f)  at (0,0);%
-        \iftoggle{double_bend}{%
-          \coordinate (ts-v-3)  at ($(-\objectlength,-0.3) + (0,\backwardbendY)$);%
-          \coordinate (ts-v-4)  at ($(-\objectlength, 0.3) + (0,\backwardbendY)$);%
-          \coordinate (ts-v-r)  at ($(-\objectlength, 0  ) + (0,\backwardbendY)$);%
-          \coordinate (ts-b-f1) at ($( \forwardbendX, 0.3) + \forwardbendTYPE*(-0.1,0)$);%
-          \coordinate (ts-b-f2) at ($( \forwardbendX,-0.3) + \forwardbendTYPE*( 0.1,0)$);%
-          \coordinate (ts-b-b1) at ($(\backwardbendX, 0.3) + \backwardbendTYPE*( 0.1,0) + (0,\backwardbendY)$);%
-          \coordinate (ts-b-b2) at ($(\backwardbendX,-0.3) + \backwardbendTYPE*(-0.1,0) + (0,\backwardbendY)$);%
-        }{% NOT double bend   
-          \iftoggle{bend}{%
-          \coordinate (ts-b-f1) at ($( \forwardbendX, 0.3) + \forwardbendTYPE*(-0.1,0)$);%
-          \coordinate (ts-b-f2) at ($( \forwardbendX,-0.3) + \forwardbendTYPE*( 0.1,0)$);%
-          \coordinate (ts-b-b1) at (ts-b-f1);%
-          \coordinate (ts-b-b2) at (ts-b-f2);%
-          \coordinate (ts-v-3)  at ($(-\objectlength,-0.2) + \forwardbendTYPE*(0,-\bendlength) + \forwardbendTYPE*( 0.2,0)$);%
-          \coordinate (ts-v-4)  at ($(-\objectlength, 0.2) + \forwardbendTYPE*(0,-\bendlength) + \forwardbendTYPE*(-0.2,0)$);%
-          \coordinate (ts-v-r)  at ($(-\objectlength, 0  ) + \forwardbendTYPE*(0,-\bendlength)$);%
-          }{% NOT bend
-            \coordinate (ts-b-f1) at (ts-v-1);%
-            \coordinate (ts-b-f2) at (ts-v-2);%
-            \coordinate (ts-v-3)  at ($(-\objectlength,0) + (0,-0.3)$);%
-            \coordinate (ts-v-4)  at ($(-\objectlength,0) + (0, 0.3)$);%
-            \coordinate (ts-b-b1) at (ts-v-4);%
-            \coordinate (ts-b-b2) at (ts-v-3);%
-            \coordinate (ts-v-r)  at ($(-\objectlength,0)$);%
-          }%
-        }%
-      }{%
-        \ifdefstring{\face}{backward}{% face
-          \pgfmathsetmacro{\facefactor}{-1}%
-          \coordinate (ts-v-3)  at (0.3,-0.3);%
-          \coordinate (ts-v-4)  at (0.3, 0.3);%
-          \coordinate (ts-v-r)  at (0,0);%
-          \iftoggle{double_bend}{%
-            \coordinate (ts-v-1)  at ($( \objectlength, 0.3) + (0,\forwardbendY)$);%
-            \coordinate (ts-v-2)  at ($( \objectlength,-0.3) + (0,\forwardbendY)$);%
-            \coordinate (ts-v-f)  at ($( \objectlength, 0  ) + (0,\forwardbendY)$);%
-            \coordinate (ts-b-f1) at ($( \forwardbendX, 0.3) + \forwardbendTYPE*( 0.1,0) + (0,\forwardbendY)$);%
-            \coordinate (ts-b-f2) at ($( \forwardbendX,-0.3) + \forwardbendTYPE*(-0.1,0) + (0,\forwardbendY)$);%
-            \coordinate (ts-b-b1) at ($(\backwardbendX, 0.3) + \backwardbendTYPE*(-0.1,0)$);%
-            \coordinate (ts-b-b2) at ($(\backwardbendX,-0.3) + \backwardbendTYPE*( 0.1,0)$);%
-          }{% NOT double bend
-            \iftoggle{bend}{%
-            \coordinate (ts-b-b1) at ($( \backwardbendX, 0.3) + \backwardbendTYPE*( 0.1,0)$);%
-            \coordinate (ts-b-b2) at ($( \backwardbendX,-0.3) + \backwardbendTYPE*(-0.1,0)$);%
-            \coordinate (ts-b-f1) at (ts-b-b1);%
-            \coordinate (ts-b-f2) at (ts-b-b2);%
-            \coordinate (ts-v-1)  at ($( \objectlength, 0.2) + \backwardbendTYPE*(0,-\bendlength) + \backwardbendTYPE*( 0.2,0)$);%
-            \coordinate (ts-v-2)  at ($( \objectlength,-0.2) + \backwardbendTYPE*(0,-\bendlength) + \backwardbendTYPE*(-0.2,0)$);%
-            \coordinate (ts-v-f)  at ($( \objectlength, 0  ) + \backwardbendTYPE*(0,-\bendlength)$);%
-            }{% NOT bend
-              \coordinate (ts-b-b1) at (ts-v-4);%
-              \coordinate (ts-b-b2) at (ts-v-3);%
-              \coordinate (ts-v-1)  at ($(\objectlength,0) + (0, 0.3)$);%
-              \coordinate (ts-v-2)  at ($(\objectlength,0) + (0,-0.3)$);%
-              \coordinate (ts-b-f1) at (ts-v-1);%
-              \coordinate (ts-b-f2) at (ts-v-2);%
-              \coordinate (ts-v-f)  at ($(\objectlength,0)$);%
-            }%
-          }%
-        }{% error message
-          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
-        }%
-      }% end \ifdefstring{\face}
-      %% label coord for NOT parked
-      \ifdefstring{\labelcoord}{(none)}{%
-        \coordinate (ts-v-l) at ($\facefactor*-0.5*(\objectlength,0) + (0,0)$);%
-      }{% initialize if NOT default
-        \gettikzxy{\labelcoord}{\labelcoordX}{\labelcoordY}%
-        \coordinate (ts-v-l)  at (\labelcoordX,\labelcoordY);%
-      }%
+    }{%
+      \coordinate (ts-v-f) at (0,0);%
     }%
+    %% bend - DEFAULT: no bend
+    \coordinate (ts-b-f1) at (ts-v-f1);%
+    \coordinate (ts-b-f2) at (ts-v-f2);%
+    \coordinate (ts-b-r1) at (ts-v-r1);%
+    \coordinate (ts-b-r2) at (ts-v-r2);%
     %
-    %% vehicle style
+    \iftoggle{single_bend}{%
+      % \bendX is a absolut coordinate
+      % make them relative to  base
+      \path (0,0);\pgfgetlastxy{\baseX}{\baseY}% absolut coord
+      % calc bend position
+      \coordinate (ts-b-r1) at ($(-\baseX,0) + (\bendX, 0.3) + \facefactor*\bendfactor*( 0.1,0)$);%
+      \coordinate (ts-b-r2) at ($(-\baseX,0) + (\bendX,-0.3) + \facefactor*\bendfactor*(-0.1,0)$);%
+      % calc length from bend to end with factor ~0.7071 at 45 degree to a projected length
+      \pgfmathsetlengthmacro\bendlength{(\facefactor*\objectlength - \baseX + \bendX)*0.7071}%
+      \coordinate (ts-v-r1) at ($(ts-b-r1) + (-\bendlength,0) + \facefactor*\bendfactor*( 0.1,\bendlength) + (0,-0.1)$);%
+      \coordinate (ts-v-r2) at ($(ts-b-r2) + (-\bendlength,0) + \facefactor*\bendfactor*(-0.1,\bendlength) + (0, 0.1)$);%
+    }{}%
+    \iftoggle{double_bend}{%
+      % \bendX and \bendY are absolut coords
+      % make them relative to  base
+      \path (0,0);\pgfgetlastxy{\baseX}{\baseY}% absolut coord
+      % calc bend position
+      \coordinate (ts-b-f1) at ($(-\baseX,0) + (\frontBendX, 0.3) + \facefactor*\frontBendfactor*(-0.1,0)$);%
+      \coordinate (ts-b-f2) at ($(-\baseX,0) + (\frontBendX,-0.3) + \facefactor*\frontBendfactor*( 0.1,0)$);%
+      \coordinate (ts-b-r1) at ($(-\baseX,0) + (\rearBendX, 0.3) + (0,-\baseY) + (0,\rearBendY) + \facefactor*\rearBendfactor*( 0.1,0)$);%
+      \coordinate (ts-b-r2) at ($(-\baseX,0) + (\rearBendX,-0.3) + (0,-\baseY) + (0,\rearBendY) + \facefactor*\rearBendfactor*(-0.1,0)$);%
+      % calc length from bend to end with factor ~1.4142 at 45 degree to a projected length
+      \pgfmathsetlengthmacro\bendlength{\facefactor*\objectlength - (\frontBendX - \rearBendX)*1.4142 - (\baseX - \frontBendX)}%
+      \coordinate (ts-v-r1) at ($(ts-b-r1) + (-\bendlength,0) + \facefactor*\rearBendfactor*(-0.1,0)$);%
+      \coordinate (ts-v-r2) at ($(ts-b-r2) + (-\bendlength,0) + \facefactor*\rearBendfactor*( 0.1,0)$);%
+    }{}%
+    %%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 2. vehicle style
     \iftoggle{in_train_mode}{% train mode
       \iftoggle{train_is_a_ghost}{% ghost train
         \tikzset{every path/.style={draw=\foreground, line width=0.8pt, dashed}};%
-        \coordinate (ts-v-l) at ($(ts-v-l) + (0,0.16)$);%
       }{% normal train
         \tikzset{every path/.style={draw=\foreground, line width=1pt, fill=\background}};%
       }%
     }{% shunting mode
       \tikzset{every path/.style={draw=\foreground, double, double distance=0.5mm, line width=0.3pt, fill=\background}};%
     }%
-    %
-    %% arrow shapes
+    %%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 3. arrow shapes
+    %% (order before vehicle shape due to background fill!)
     \iftoggle{is_shunting}{% arrow for shunting
       \iftoggle{in_shunting_mode}{% shunting mode
         \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
-                                         ($\facefactor*(-0.1, 0.3)$) --%
-                                         ($\facefactor*( 0.2, 0  )$) --%
-                                         ($\facefactor*(-0.1,-0.3)$) --%
-                                         ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                          ($\facefactor*(-0.1, 0.3)$) --%
+                                          ($\facefactor*( 0.2, 0  )$) --%
+                                          ($\facefactor*(-0.1,-0.3)$) --%
+                                          ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
         \path[line cap=rect,fill=none] ($\facefactor*(-0.1, 0.3)$) --%
                                        ($\facefactor*( 0.2, 0  )$) --%
                                        ($\facefactor*(-0.1,-0.3)$);% arrow shape
@@ -351,14 +299,14 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/vehicle/movement}{movement can only be combined with shunting}}%
       }%
     }{}% end \iftoggle{shunting_movement}
-    \ifdefstring{\trainrun}{none}{}{% arrow for train
+    \ifdefstring{\trainrun}{none}{}{% DEFAULT no arrow for train
       \iftoggle{in_train_mode}{% train mode
         \ifdefstring{\trainrun}{slow}{%
           \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
-                                           ($\facefactor*(-0.1, 0.3)$) --%
-                                           ($\facefactor*( 0.2, 0  )$) --%
-                                           ($\facefactor*(-0.1,-0.3)$) --%
-                                           ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                            ($\facefactor*(-0.1, 0.3)$) --%
+                                            ($\facefactor*( 0.2, 0  )$) --%
+                                            ($\facefactor*(-0.1,-0.3)$) --%
+                                            ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
           \path[fill=none] ($\facefactor*(-0.15, 0.3)$) --%
                            ($\facefactor*(-0.1 , 0.3)$) --%
                            ($\facefactor*( 0.2 , 0  )$) --%
@@ -367,10 +315,10 @@
         }{%
           \ifdefstring{\trainrun}{normal}{%
             \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
-                                             ($\facefactor*( 0.1, 0.3)$) --%
-                                             ($\facefactor*( 0.4, 0  )$) --%
-                                             ($\facefactor*( 0.1,-0.3)$) --%
-                                             ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                              ($\facefactor*( 0.1, 0.3)$) --%
+                                              ($\facefactor*( 0.4, 0  )$) --%
+                                              ($\facefactor*( 0.1,-0.3)$) --%
+                                              ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
             \path[fill=none] ($\facefactor*(-0.15, 0.3)$) --%
                              ($\facefactor*(-0.1 , 0.3)$) --%
                              ($\facefactor*( 0.2 , 0  )$) --%
@@ -385,10 +333,10 @@
           }{%
             \ifdefstring{\trainrun}{fast}{%
               \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
-                                               ($\facefactor*( 0.3, 0.3)$) --%
-                                               ($\facefactor*( 0.6, 0  )$) --%
-                                               ($\facefactor*( 0.3,-0.3)$) --%
-                                               ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                                ($\facefactor*( 0.3, 0.3)$) --%
+                                                ($\facefactor*( 0.6, 0  )$) --%
+                                                ($\facefactor*( 0.3,-0.3)$) --%
+                                                ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
               \path[fill=none] ($\facefactor*(-0.15, 0.3)$) --%
                                ($\facefactor*(-0.1 , 0.3)$) --%
                                ($\facefactor*( 0.2 , 0  )$) --%
@@ -414,11 +362,16 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/vehicle/run}{run can only be combined with train}}%
       }% end \iftoggle{in_train_mode}
     }% end \ifdefstring{\trainrun}{none} % end arrow shapes
-    %
-    %% vehicle shape
-    \path (ts-v-1) -- (ts-v-f) -- (ts-v-2) -- (ts-b-f2) -- (ts-b-b2) -- (ts-v-3) -- (ts-v-r) -- (ts-v-4) -- (ts-b-b1) -- (ts-b-f1) -- cycle;% vehicle shape
-    %
-    %% operated
+    %%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 4. vehicle shape
+    \path (ts-v-f)%
+      -- (ts-v-f1) -- (ts-b-f1) -- (ts-b-r1) -- (ts-v-r1)%
+      -- (ts-v-r2) -- (ts-b-r2) -- (ts-b-f2) -- (ts-v-f2)%
+      -- cycle;% vehicle shape
+    %%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 5. operation mode
     \iftoggle{is_parked}{}{% vehicle NOT parked
       \ifdefstring{\operationmode}{manual}{%
         \path[draw=none, fill=\foreground] ($\facefactor*(-0.4,0)$) circle (0.15);% dot
@@ -434,10 +387,22 @@
         }% end automatically_operated
       }% end manually_operated
     }%
-    %
-    %% label
+    %%
+    %%%%%%%%%%%%%%%%%%%%
+    %% 6. label
+    \iftoggle{is_parked}{%
+      \coordinate (ts-v-l)  at (0,0);% DEFAULT center
+    }{%
+      \coordinate (ts-v-l) at ($\facefactor*-0.5*(\objectlength,0)$);% DEFAULT center
+    }%
+    \iftoggle{train_is_a_ghost}{% ghost train
+      \coordinate (ts-v-l) at ($(ts-v-l) + (0,0.16)$);%
+    }{}%
+    \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
+      \path let \p1=\labelcoord in coordinate (ts-v-l) at ($(ts-v-l)+(\x1,\y1)$);%
+    }%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \ifdefstring{\labelalign}{center}{% label align default
+      \ifdefstring{\labelalign}{center}{% DEFAULT label align center
         \def\labelanchor{center}
       }{% label align NOT default
         \ifdefstring{\labelalign}{left}{% label align left
@@ -450,9 +415,10 @@
           }% \ifdefstring{\labelalign}{right}
         }% \ifdefstring{\labelalign}{left}
       }% \ifdefstring{\labelalign}{center}
-      \node[text=\foreground,anchor=\labelanchor,align=\labelalign] at (ts-v-l) {\footnotesize\emph{\labelcontent}};% label
+      \node[text=\foreground,anchor=\labelanchor,align=\labelalign] at (ts-v-l) {\footnotesize \labelcontent};% label
     }%
   }},% END pics/vehicles/.style args={#1/#2/#3}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % symbology entry
   symbology_parked_vehicles/.pic = {%
     \secondarytrack (0,0) -- (6,0);%
