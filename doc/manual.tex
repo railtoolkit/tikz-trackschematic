@@ -4,15 +4,7 @@
 
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\documentclass[
-  paper=a4,
-  % version=3.25,
-  pagesize=pdftex,
-  twoside=false,
-  toc=listof,
-  BCOR=0pt,
-  DIV=15,
-]{scrartcl}
+\documentclass{scrartcl}
 
 \usepackage{tikz-trackschematic-documentation}
 
@@ -21,7 +13,7 @@
 %\newcommand{\initials}{fullname}
 \newcommand{\MS}{Martin Scheidt}
 \newcommand{\GW}{Gregor Wehrle}
-\newcommand{\authorlist}{\MS, \GW}
+\newcommand{\authorlist}{by the project contributors}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -35,7 +27,7 @@
 
 \begin{document}
 
-\title{\tikz\node[scale=1.2]{\color{gray}\Huge\sffamily \{\textcolor{black}{Ti\textcolor{orange}{\emph{k}}Z}-\textcolor{blue}{trackschematic}\}};}
+\title{\color{gray}\Huge\sffamily \{\textcolor{black}{Ti\textcolor{orange}{\emph{k}}Z}-\textcolor{blue}{trackschematic}\}}
 \subtitle{A Ti\emph{k}Z library for track schematics}
 \author{\authorlist}
 \date{Version \vhCurrentVersion~ from \vhCurrentDate}
@@ -106,24 +98,7 @@
     Here is a complete working minimal example which will produce a single PDF file with the figure on the right:\\
     \begin{minipage}[c]{0.51\textwidth}
       \centering
-      \begin{lstlisting}[gobble=8]
-        \documentclass{standalone}
-
-        % loading the library
-        \usepackage{tikz-trackschematic}
-
-        \begin{document}
-          \begin{tikzpicture}
-
-            % draw a track
-            \maintrack  (0,0) -- (6,0);
-
-            % place a train on the track
-            \train[forward] at (5,0) label ();
-
-          \end{tikzpicture}
-        \end{document}
-      \end{lstlisting}
+      \lstinputlisting[firstline=0]{./examples/minimal_working_example.tex}
     \end{minipage}
     \hfil
     \begin{minipage}[c]{0.45\textwidth}
@@ -1403,7 +1378,7 @@
       \end{lstlisting}
 
 
-  \subsection{Messures}\label{sec:measures}
+  \subsection{Measures}\label{sec:measures}
 
     \symboldescription{Track distance}\label{sym:trackdistance}
       \tsSymbol[2.0]{track_distance}

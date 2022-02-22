@@ -1,19 +1,16 @@
-\documentclass{standalone} % LaTeX
-\usepackage{tikz-trackschematic} % loading the library
+\documentclass{standalone}
 
-\begin{document}
-  \begin{tikzpicture}
+% loading the library
+\usepackage{tikz-trackschematic}
 
-    % TikZ command: specify coordinates
-    \coordinate (A)   at (0,0);
-    \coordinate (B)   at (6,0);
-    \coordinate (T)   at (5,0);
+\begin{document} % LaTeX
+  \begin{tikzpicture} % TikZ
 
-    % draw a track
-    \maintrack (A) -- (B);
+    % draw a track with (x,y) coordinates
+    \maintrack (0,0) -- (6,0);
 
     % place a train on the track
-    \train[forward] at (T) label ();
+    \train[forward] at (5,0) label (T1);
 
   \end{tikzpicture}
 \end{document}
