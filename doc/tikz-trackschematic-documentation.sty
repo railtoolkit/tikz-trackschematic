@@ -8,11 +8,11 @@
 
 % ---[   HTML  ]---
 \usepackage{iftex}
-\usepackage[
-  HomeHTMLFilename=index,     % Filename of the homepage.
-  % IndexLanguage=english,      % Language for xindy index, glossary.
-  latexmk                    % Use latexmk to compile.
-]{lwarp}
+% \usepackage[
+%   HomeHTMLFilename=index,     % Filename of the homepage.
+%   % IndexLanguage=english,      % Language for xindy index, glossary.
+%   latexmk                    % Use latexmk to compile.
+% ]{lwarp}
 % --------[  Coding and Language  ]----------
 \ifPDFTeX
   \RequirePackage{scrhack,marginnote}
@@ -71,10 +71,10 @@
 
 \RequirePackage{longtable,tikz,adjustbox,rotating}
 \RequirePackage{siunitx}[=v2]
-% \sisetup{
-%   text-family-to-math = true,
-%   text-series-to-math = true
-% }
+\sisetup{
+  text-family-to-math = true,
+  text-series-to-math = true
+}
 
 \IfFileExists{tikz-trackschematic-dev.sty}{%
   \RequirePackage[dev]{tikz-trackschematic}%
