@@ -21,6 +21,7 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 ### Fixed
 
   * wrong option for labels in vehicles
+  * foreground of sidetrack (alias)
 
 ## Version [0.6.3] - 2022-02-15
 
