@@ -61,7 +61,7 @@ results in:
 
 # Symbology and meaning
 
-Please consult the [symbology table](https://github.com/railtoolkit/tikz-trackschematic/blob/master/doc/symbology_table.pdf) for further information regarding meaning of the symbols.
+Please consult the [symbology table](https://github.com/railtoolkit/tikz-trackschematic/blob/master/doc/symbology-table.pdf) for further information regarding meaning of the symbols.
 
 ------------
 
