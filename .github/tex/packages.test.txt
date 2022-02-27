@@ -16,3 +16,5 @@ standalone
 epstopdf-pkg
 ltablex
 collectbox
+geometry
+environ

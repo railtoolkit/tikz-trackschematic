@@ -187,7 +187,7 @@ for TEST in `ls $TESTDIR/*.tex`; do
   #
   ## if a test failed add to list
   if [ $add_to_list = 1 ]; then
-    if [ -z $FAILED ]; then
+    if [ -z "$FAILED" ]; then
       # first item
       FAILED="$NAME"
     else
