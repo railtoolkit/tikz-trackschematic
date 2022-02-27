@@ -17,6 +17,7 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
   
   * transmitters for balises
   * replaced "\gettikzxy" with "\path let" syntax
+  * label placement for derailers
 
 ### Fixed
 

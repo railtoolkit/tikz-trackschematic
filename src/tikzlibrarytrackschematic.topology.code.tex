@@ -645,11 +645,11 @@
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \tikzset{every node/.style={text=\foreground}};%
-      \coordinate (ts-dr-l) at ($\branchfactor*(0,-10pt)$);%
+      \coordinate (ts-dr-l) at ($\branchfactor*(0,-0.3)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-dr-l) at ($(ts-dr-l)+(\x1,\y1)$);%
       }%
-      \node[right] at (ts-dr-l) {\footnotesize \labelcontent};%
+      \node at (ts-dr-l) {\footnotesize \labelcontent};%
     }%
     %
   }},% END pics/derailer/.style args={#1/#2/#3}
