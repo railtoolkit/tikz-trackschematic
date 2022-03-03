@@ -257,77 +257,78 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/topology/branch}{“left“ OR “right“ as key required}}%
       }%
     }% end \ifdefstring{\branch}
-    %% turnout marker
-    \ifdefstring{\operationmode}{manual}{% operation=manual
-      \ifdefstring{\face}{forward}{%
-        \ifdefstring{\branch}{left}{% branch
-          \def\patterntype{north west lines}%
+    \begin{scope}[xscale=\facefactor, yscale=\branchfactor]%
+      %% turnout marker
+      \ifdefstring{\operationmode}{manual}{% operation=manual
+        \def\patterntype{north west lines}%
+        \ifdefstring{\face}{forward}{%
+          \ifdefstring{\branch}{right}{%
+            \def\patterntype{north east lines}%
+          }{}%
         }{%
-          \def\patterntype{north east lines}%
+          \ifdefstring{\branch}{left}{%
+            \def\patterntype{north east lines}%
+          }{}%
         }%
+        \path[draw=\foreground,pattern=\patterntype, pattern color=\foreground] (0,0) -- ++(0.4,0) -- ++(0,0.4) -- cycle;% turnout marker
       }{%
-        \ifdefstring{\branch}{right}{% branch
-          \def\patterntype{north west lines}%
+        \ifdefstring{\operationmode}{remote}{% operation=remote
+          \path[fill=\foreground] (0,0) -- ++(0.4,0) -- ++(0,0.4) -- cycle;% turnout marker
         }{%
-          \def\patterntype{north east lines}%
-        }%
+          \ifdefstring{\operationmode}{none}{%
+            \path[draw=\foreground] (0,0) -- ++(0.4,0) -- ++(0,0.4) -- cycle;% turnout marker
+          }{%
+            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/operation}{“manual“, “remote“ OR “none“ as key required}}%
+          }%
+        }
       }%
-      \path[draw=\foreground,pattern=\patterntype, pattern color=\foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
-    }{%
-      \ifdefstring{\operationmode}{remote}{% operation=remote
-        \path[fill=\foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
-      }{%
-        \ifdefstring{\operationmode}{none}{
-          \path[draw=\foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
+      %
+      %% fouling point indicator
+      \iftoggle{fouling_point}{%
+        \path[draw=\foreground] (0.7,0) -- ++(0,0.7);% fouling point indicator
+      }{}%
+      %
+      %% points
+      \ifdefstring{\points}{left}{% points left
+        \ifdefstring{\branch}{left}{%
+          \path[draw=\foreground,line width=1.5pt] (-0.035,0.1) -- ++(0.2,0.2);%
         }{%
-          \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/operation}{“manual“, “remote“ OR “none“ as key required}}%
+          \path[draw=\foreground,line width=1.5pt] (0.035,-0.1) -- ++(0.265,0);%
         }%
-      }
-    }%
+      }{%
+        \ifdefstring{\points}{right}{% points right
+          \ifdefstring{\branch}{left}{%
+            \path[draw=\foreground,line width=1.5pt] (0.035,-0.1) -- ++(0.265,0);%
+          }{%
+            \path[draw=\foreground,line width=1.5pt] (-0.035,0.1) -- ++(0.2,0.2);%
+          }%
+        }{%
+          \ifdefstring{\points}{moving}{% moving points
+            \fill[\foreground] (0.075,-0.1) circle (0.05);% points indicator left
+            \fill[\foreground] (0.225,-0.1) circle (0.05);% points indicator left
+            \fill[\foreground] (0.015,0.15) circle (0.05);% points indicator right
+            \fill[\foreground] (0.115,0.25) circle (0.05);% points indicator right
+          }{% error message
+            \ifdefstring{\points}{none}{%
+            }{%
+              \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/topology/turnout/points}{“left“, “right“ OR “moving“ as key required}}%
+            }%
+          }%
+        }%
+      }% end \ifdefstring{\points}
+    \end{scope}%
     %
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \tikzset{every node/.style={text=\foreground}};%
-      \coordinate (ts-y-l) at ($\branchfactor*(0,-8pt)$);%
+      \begin{scope}[xscale=\facefactor, yscale=\branchfactor]
+        \coordinate (ts-y-l) at (0,-8pt);%
+      \end{scope}
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-y-l) at ($(ts-y-l)+(\x1,\y1)$);%
       }%
       \node at (ts-y-l) {\footnotesize \labelcontent};%
     }%
-    %
-    %% fouling point indicator
-    \iftoggle{fouling_point}{%
-      \path[draw=\foreground] ($\facefactor*(0.7,0)$) -- ++($\branchfactor*(0,0.7)$);% fouling point indicator
-    }{}%
-    %
-    %% points
-    \ifdefstring{\points}{left}{% points left
-      \ifdefstring{\branch}{left}{%
-        \path[draw=\foreground,line width=1.5pt] ($\facefactor*(-0.035,0)+(0,0.1)$) -- ++($\facefactor*(0.2,0)+(0,0.2)$);%
-      }{%
-        \path[draw=\foreground,line width=1.5pt] ($\facefactor*( 0.035,0)+(0,0.1)$) -- ++($\facefactor*( 0.265,0  )$);%
-      }%
-    }{%
-      \ifdefstring{\points}{right}{% points right
-        \ifdefstring{\branch}{left}{%
-          \path[draw=\foreground,line width=1.5pt] ($\facefactor*( 0.035,0)+(0,-0.1)$) -- ++($\facefactor*( 0.265,0  )$);%
-        }{%
-          \path[draw=\foreground,line width=1.5pt] ($\facefactor*(-0.035,0)+(0,-0.1)$) -- ++($\facefactor*(0.2,0)+(0,-0.2)$);%
-        }%
-      }{%
-        \ifdefstring{\points}{moving}{% moving points
-          \fill[\foreground] ($\facefactor*(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($\facefactor*(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($\facefactor*(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
-          \fill[\foreground] ($\facefactor*(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
-        }{% error message
-          \ifdefstring{\points}{none}{%
-          }{%
-            \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/topology/turnout/points}{“left“, “right“ OR “moving“ as key required}}%
-          }%
-        }%
-      }%
-    }% end \ifdefstring{\points}
     %
   }},% END pics/turnout/.style args={#1/#2/#3}
   % symbology entry
