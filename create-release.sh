@@ -115,8 +115,7 @@ check_date() {
   DATEISO_2=$(echo $LINE_2 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
 
   if [ $DATEISO_1 = $DATEISO_2 ]; then
-    # DATE=$(echo $DATEISO | sed -e "s|-|\\\/|g") # with escape character for sed
-    # DATE=$(date "+%Y\/%m\/%d") # with escape character for sed
+    # DATE=$(date "+%Y-%m-%d")
     DATE="$DATEISO_1" 
     if [ $verbose = 1 ]; then
       echo "The date $DATE was extracted from versionhistory.tex and CHANGELOG.md."
@@ -191,8 +190,8 @@ check_url1
 check_url2
 
 ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
-sed -i".backup" -e"s/VERSIONDATE/$DATE $VERSION_STR/g" src/tikz-trackschematic.sty
-sedi "/create-release/d" src/tikz-trackschematic.sty
+sed -i".backup" -e"s/%\[VERSIONDATE/\[$DATE $VERSION_STR/g" src/tikz-trackschematic.sty
+sedi "/%%\[SCRIPT\]/d" src/tikz-trackschematic.sty
 if [ $verbose = 1 ]; then
   echo "Updated version in src/tikz-trackschematic.sty"
 fi
