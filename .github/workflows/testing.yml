@@ -29,12 +29,22 @@ jobs:
 
       - name: "install ghostscript"
         run: sudo apt-get install -y ghostscript
+
+      # get TeX Live installer for cachekey
+      - name: "get TeX Live installer"
+        id: texlive-installer
+        shell: bash
+        run: |
+          t=$(mktemp)
+          wget 'http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz' -qO "$t"
+          echo "::set-output name=path::$t"
         
       - name: "setup TeX Live (via paolobrasolin)"
         uses: paolobrasolin/setup-texlive-action@v1
         with:
           profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
           packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
+          cache-key: texlive-${{ hashFiles(steps.texlive-installer.outputs.path) }}
 
       - name: "install tikz-trackschematic"
         run: ./dev-install.sh -b
