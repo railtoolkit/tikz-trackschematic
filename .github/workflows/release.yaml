@@ -27,7 +27,7 @@ jobs:
           strip_v: false
 
       - name: "create tikz-trackschematic package"
-        run: ./create-release.sh -v ${{ steps.tag.outputs.tag }}
+        run: ./build.sh --batch-mode --release ${{ steps.tag.outputs.tag }}
       
       - name: "create release"
         id: create_release
