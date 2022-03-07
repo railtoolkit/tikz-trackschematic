@@ -486,19 +486,24 @@ run_test_cases() {
     #
     ## TeX build
     #
-    exit_code_pdflatex=0
-    pdflatex -output-directory=.tex -interaction=batchmode -halt-on-error ${NAME}.tex >> /dev/null 2>&1 || exit_code_pdflatex=1
+    EXIT_CODE=0
+    /usr/bin/time -p -o .tex/${NAME}.time \
+      pdflatex -output-directory=.tex -interaction=batchmode -halt-on-error ${NAME}.tex >> /dev/null 2>&1 || EXIT_CODE=1
+    #
+    TIME=$(awk "NR==2" .tex/${NAME}.time | cut -d " " -f2)
     # understanding TeX statistics:
     #   -> https://tex.stackexchange.com/questions/26208/components-of-latexs-memory-usage
     # TOP=$(grep -n "Here is how much of TeX's memory you used:" .tex/${NAME}.log | cut -d: -f1)
     # BOTTOM=$(($(grep -n "stack positions out of" .tex/${NAME}.log | cut -d: -f1) + 1))
     # awk "NR>$TOP&&NR<$BOTTOM" .tex/${NAME}.log  > .tex/${NAME}.statistics.log
-    memory_usage=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
-    memory_usage=$(($memory_usage/1000))
-    if [ $exit_code_pdflatex == 0 ]; then
+    MEMORY_USAGE=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
+    MEMORY_USAGE=$(($MEMORY_USAGE/1000))
+    if [ $EXIT_CODE == 0 ]; then
       if [ $VERBOSE == 1 ]; then
         echo $n " - ${GREEN}build succesful${COLOR_RESET}: $c"
-        echo "${memory_usage}k of memory used."
+        echo $n "in ${TIME}s $c"
+        echo $n "and with $c"
+        echo "${MEMORY_USAGE}k of memory used."
         # cat .tex/${NAME}.statistics.log
       fi
     else
