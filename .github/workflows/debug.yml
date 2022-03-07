@@ -55,11 +55,11 @@ jobs:
       #     profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
       #     packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
-      - name: "install tikz-trackschematic"
-        run: chmod +x dev-install.sh && ./dev-install.sh -b
+      # - name: "install tikz-trackschematic"
+      #   run: ./build.sh --local-dev-install
 
       # - name: "test tikz-trackschematic"
-      #   run: cd test && ./testing.sh && cd ..
+      #   run: ./build.sh --test
 
       #   ## create varibale ${{ steps.tag.outputs.tag }}
       # - name: "get tag"
@@ -70,11 +70,11 @@ jobs:
       #     strip_v: false
 
       # - name: "create tikz-trackschematic package"
-      #   run: ./create-release.sh -v ${{ steps.tag.outputs.tag }}
+      #   run: ./build.sh --release ${{ steps.tag.outputs.tag }} --batch-mode
 
         ## opening a debug console
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
         with:
           ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: railtoolkit,kaat0
+          limit-access-to-users: railtoolkit,kaat0,apriljunge
