@@ -71,7 +71,7 @@ process_arguments() {
           print_usage
           exit 1
         fi
-        if [ ${1:0:1} == "-" ]; then
+        if [ ${1:0:1} = "-" ]; then
           print_usage
           exit 1
         fi
@@ -93,7 +93,7 @@ COLOR_RESET="\033[0;m"
 
 ## -- cross platform helpers
 
-if [ "`echo -n`" == "-n" ]; then
+if [ "`echo -n`" = "-n" ]; then
   n=""; c="\c"
 else
   n="-n"; c=""
@@ -117,8 +117,8 @@ check_zip() {
   # check for zip
   STATUS=0
   command -v zip >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "zip found"
     fi
     return 0
@@ -134,7 +134,7 @@ check_version_number() {
     # loop condition - test format of $VERSION_STR:
     echo "$VERSION_STR" | egrep -q "v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?" && break;
     # loop test
-    if [ "$BATCHMODE" == 0 ]; then
+    if [ "$BATCHMODE" = 0 ]; then
       echo "${RED}Your version '$VERSION_STR' has not the correct format!${COLOR_RESET}"
       echo $n "Please specify as Semantic Versioning ( e.g. v1.0.0 ): $c"
       read VERSION_STR
@@ -152,8 +152,8 @@ check_versionhistory() {
   # check if $VERSION is present in doc/versionhistory.tex
   STATUS=0
   grep -qs "vhEntry{$VERSION_NUM" doc/versionhistory.tex || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "Version $VERSION_NUM is present in versionhistory.tex."
     fi
     return 0
@@ -168,8 +168,8 @@ check_changelog() {
   # check if $VERSION is present in CHANGELOG.md
   STATUS=0
   grep -qs "Version \[$VERSION_NUM\]" CHANGELOG.md || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "Version $VERSION_NUM is present in CHANGELOG.md."
     fi
     return 0
@@ -187,10 +187,10 @@ check_date() {
   DATEISO_1=$(echo $LINE_1 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
   DATEISO_2=$(echo $LINE_2 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
 
-  if [ $DATEISO_1 == $DATEISO_2 ]; then
+  if [ $DATEISO_1 = $DATEISO_2 ]; then
     # DATE=$(date "+%Y-%m-%d")
     DATE="$DATEISO_1" 
-    if [ $VERBOSE == 1 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "The date $DATE was extracted from versionhistory.tex and CHANGELOG.md."
     fi
     return 0
@@ -206,8 +206,8 @@ check_url1() {
   STATUS=0
   LINE=$(grep "\[$VERSION_NUM\]: https://" CHANGELOG.md)
   echo $LINE | grep -qs "...$VERSION_STR"  || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "Version $VERSION_NUM URL is present in CHANGELOG.md."
     fi
     return 0
@@ -223,8 +223,8 @@ check_url2() {
   STATUS=0
   LINE=$(grep "\[Unreleased\]: https://" CHANGELOG.md)
   echo $LINE | grep -qs "/$VERSION_STR..."  || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "The URL for [Unreleased] was also updated in CHANGELOG.md! Thx!"
     fi
     return 0
@@ -251,7 +251,7 @@ check_url2() {
 }
 
 create_release() {
-  if [ $BATCHMODE == 0 ]; then
+  if [ $BATCHMODE = 0 ]; then
     echo ""
     echo "Do you wish to create a release for the version $VERSION_NUM?"
     echo $n "(y/n) $c"
@@ -268,7 +268,7 @@ create_release() {
   ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
   sed -i".backup" -e"s/%\[VERSIONDATE/\[$DATE $VERSION_STR/g" src/tikz-trackschematic.sty
   sedi "/%%\[SCRIPT\]/d" src/tikz-trackschematic.sty
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     echo "Updated version in src/tikz-trackschematic.sty"
   fi
 
@@ -295,7 +295,7 @@ create_release() {
   mkdir $TMP/tikz-trackschematic-snippets
   cp -R doc/examples/*  $TMP/tikz-trackschematic-examples/
   cp -R doc/snippets/*  $TMP/tikz-trackschematic-snippets/
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     echo "copied documentation"
   fi
 
@@ -307,12 +307,12 @@ create_release() {
       cp $SRC $TMP/
     fi
   done
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     echo "copied src-files"
   fi
 
   # zip package
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     zip -r $RELEASE.zip $TMP/*
     echo "compressed the release in $RELEASE.zip"
   else
@@ -324,13 +324,13 @@ create_release() {
   rm -rf $TMP
   # undo changes to tikz-trackschematic.sty by sed
   mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     echo "clean up done!"
   fi
 }
 
 create_release_notes() {
-  if [ $BATCHMODE == 0 ]; then
+  if [ $BATCHMODE = 0 ]; then
     echo ""
     echo "Do you wish to create a release notes for the version $VERSION_NUM?"
     echo $n "(y/n) $c"
@@ -365,22 +365,22 @@ check_sudo() {
   # checks if sudo is available
   rootrun=""
   # If we are root, we do note require sudo
-  if [ "$EUID"  == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ "$EUID"  = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "you are root"
     fi
     return 0
   fi
 
   if sudo -v >/dev/null 2>&1; then
-    if [ $VERBOSE == 1 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "sudo ok"
     fi
     rootrun="sudo"
   else
     echo "sudo failed"
     # Check if user is root (might be unnecessary)
-    if ! [ $(id -u) == 0 ]; then
+    if ! [ $(id -u) = 0 ]; then
       echo "This script must be run as root" 1>&2
       exit 1
     fi
@@ -392,8 +392,8 @@ check_texlive() {
   STATUS=0
   command -v kpsewhich >/dev/null 2>&1 || STATUS=1
   command -v mktexlsr  >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "kpsewhich and mktexlsr found"
     fi
     TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
@@ -409,8 +409,8 @@ check_pdflatex() {
   # check for pdflatex
   STATUS=0
   command -v pdflatex >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "pdflatex found"
     fi
     return 0
@@ -428,8 +428,8 @@ check_trackschematic() {
   DEVDIR="tex/latex/local/tikz-trackschematic-dev"
 
   ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "tikz-trackschematic-dev found"
     fi
     return 0
@@ -444,8 +444,8 @@ check_imagemagick() {
   # check for ImageMagick/compare
   STATUS=0
   command -v compare >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "compare found"
     fi
     return 0
@@ -467,7 +467,7 @@ run_test_cases() {
   # Start with an empty List:
   FAILED=""
 
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     echo "==========="
     echo "Comparison of the expected appearance with the freshly created."
     echo "-----------"
@@ -479,7 +479,7 @@ run_test_cases() {
     NAME=${FILE%.*} # remove extension
     ADD_TO_LIST=0
     #
-    if [ $VERBOSE == 1 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "$NAME test:"
     fi
     #
@@ -498,8 +498,9 @@ run_test_cases() {
     # awk "NR>$TOP&&NR<$BOTTOM" .tex/${NAME}.log  > .tex/${NAME}.statistics.log
     MEMORY_USAGE=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
     MEMORY_USAGE=$(($MEMORY_USAGE/1000))
-    if [ $EXIT_CODE == 0 ]; then
-      if [ $VERBOSE == 1 ]; then
+    #
+    if [ $EXIT_CODE = 0 ]; then
+      if [ $VERBOSE = 1 ]; then
         echo $n " - ${GREEN}build succesful${COLOR_RESET}: $c"
         echo $n "in ${TIME}s $c"
         echo $n "and with $c"
@@ -509,7 +510,7 @@ run_test_cases() {
     else
       STATUS=1
       ADD_TO_LIST=1
-      if [ $VERBOSE == 1 ]; then
+      if [ $VERBOSE = 1 ]; then
         echo " - ${RED}build failed${COLOR_RESET}."
       fi
     fi
@@ -531,19 +532,19 @@ run_test_cases() {
     #
     EXIT_CODE=0
     compare -metric RMSE -colorspace RGB .tex/${NAME}.pdf ${NAME}_expected.pdf NULL: >> /dev/null 2>&1 || EXIT_CODE=1
-    if [ $EXIT_CODE == 0 ]; then
-      if [ $VERBOSE == 1 ]; then
+    if [ $EXIT_CODE = 0 ]; then
+      if [ $VERBOSE = 1 ]; then
         echo " - ${GREEN}comparison succesful${COLOR_RESET}."
       fi
     else
       STATUS=1
       ADD_TO_LIST=1
-      if [ $VERBOSE == 1 ]; then
+      if [ $VERBOSE = 1 ]; then
         echo " - ${RED}comparison failed${COLOR_RESET}."
       fi
     fi
     ## if a test failed add to list
-    if [ $ADD_TO_LIST == 1 ]; then
+    if [ $ADD_TO_LIST = 1 ]; then
       if [ -z "$FAILED" ]; then
         # first item
         FAILED="$NAME"
@@ -553,14 +554,14 @@ run_test_cases() {
     fi
   done
 
-  if [ $STATUS == 0 ]; then
-    if [ $VERBOSE == 1 ]; then
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "-----------"
       echo "${GREEN}All tests passed!${COLOR_RESET}"
     fi
     exit 0
   else
-    if [ $VERBOSE == 1 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "-----------"
       echo "${RED}The following tests failed: ${FAILED}!${COLOR_RESET}"
     else
@@ -574,7 +575,7 @@ link_dev_files() {
   # destination folder inside the TeX Live installation
   DEVDIR="tex/latex/local/tikz-trackschematic-dev"
   PROJECTDIR=$(pwd -P)
-  if [ $BATCHMODE == 0 ]; then
+  if [ $BATCHMODE = 0 ]; then
     echo ""
     echo "Do you wish to link this package from"
     echo "$PROJECTDIR/src to"
@@ -603,7 +604,7 @@ link_dev_files() {
     POSTFIX=${NAME#*.}
     EXT=${SRC##*.}
 
-    if [ "$PREFIX" == "$POSTFIX" ]; then
+    if [ "$PREFIX" = "$POSTFIX" ]; then
       DST="$PREFIX-dev.$EXT"
     else
       DST="$PREFIX-dev.$POSTFIX.$EXT"
@@ -611,14 +612,14 @@ link_dev_files() {
 
     $rootrun ln -sfn $PROJECTDIR/$SRC $TEXMFLOCAL/$DEVDIR/$DST
 
-    if [ $VERBOSE == 1 ]; then
+    if [ $VERBOSE = 1 ]; then
       echo "linked '$DST'"
     fi
   done
 
   # update TeX Live installation
   TEXlsr=`which mktexlsr`
-  if [ $VERBOSE == 1 ]; then
+  if [ $VERBOSE = 1 ]; then
     $rootrun $TEXlsr
   else
     $rootrun $TEXlsr --quiet
@@ -630,7 +631,7 @@ link_dev_files() {
 process_arguments $@
 
 ## do what is requested
-if [ $INSTALL == 1 ]; then
+if [ $INSTALL = 1 ]; then
   ##
   check_path
   check_texlive
@@ -641,7 +642,7 @@ if [ $INSTALL == 1 ]; then
 
 fi
 
-if [ $TESTING == 1 ]; then
+if [ $TESTING = 1 ]; then
   ##
   check_path
   check_pdflatex
@@ -657,7 +658,7 @@ if [ $TESTING == 1 ]; then
 
 fi
 
-if [ $RELEASE == 1 ]; then
+if [ $RELEASE = 1 ]; then
   ####
   # This script produces a .zip-file in accordance to the requirements for CTAN.
   # For more information see https://ctan.org/help/upload-pkg.
