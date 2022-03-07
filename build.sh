@@ -42,9 +42,11 @@ RELEASE=0
 
 process_arguments() {
   while true; do
+    # loop condition - test for empty string:
     if [ -z "$1" ]; then
       break;
     fi
+    # loop test
     case $1 in
       -h|--help)
         print_usage
@@ -120,7 +122,10 @@ check_zip() {
 }
 
 check_version_number() {
-  while [[ ! "$VERSION_STR" =~ ^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?$ ]]; do
+  while true; do
+    # loop condition - test format of $VERSION_STR:
+    echo "$VERSION_STR" | egrep -q "v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?" && break;
+    # loop test
     if [ "$BATCHMODE" = 0 ]; then
       echo "${RED}Your version '$VERSION_STR' has not the correct format!${COLOR_RESET}"
       echo $n "Please specify as Semantic Versioning ( e.g. v1.0.0 ): $c"
