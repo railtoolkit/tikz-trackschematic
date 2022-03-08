@@ -34,11 +34,17 @@ EOF
 
 ## -- processes getopts
 
-VERBOSE=0
-BATCHMODE=0
-INSTALL=0
-TESTING=0
-RELEASE=0
+# run variables
+VERBOSE=0   # set by cli argument
+BATCHMODE=0 # set by cli argument
+INSTALL=0   # set by cli argument
+TESTING=0   # set by cli argument
+RELEASE=0   # set by cli argument
+# 
+CONVERT=0   # set by check_imagemagick_policy
+CLEANUP=0   # set by check_imagemagick_policy
+#
+ERROR_OCCURRED=0
 
 process_arguments() {
   while true; do
@@ -274,7 +280,7 @@ create_release() {
 
   ## -- create zip-archive
   # create temporary folder
-  TMP=$RELEASE
+  TMP="tikz-trackschematic-$VERSION_STR"
   mkdir -p $TMP
 
   # copy README, CHANGELOG, LICENSE and CITATION
@@ -313,19 +319,10 @@ create_release() {
 
   # zip package
   if [ $VERBOSE = 1 ]; then
-    zip -r $RELEASE.zip $TMP/*
-    echo "compressed the release in $RELEASE.zip"
+    zip -r $TMP.zip $TMP/*
+    echo "compressed the release in $TMP.zip"
   else
-    zip -r $RELEASE.zip $TMP/*  >/dev/null 2>&1
-  fi
-
-  ## -- cleanup
-  # remove TMP-folder
-  rm -rf $TMP
-  # undo changes to tikz-trackschematic.sty by sed
-  mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
-  if [ $VERBOSE = 1 ]; then
-    echo "clean up done!"
+    zip -r $TMP.zip $TMP/*  >/dev/null 2>&1
   fi
 }
 
@@ -559,7 +556,6 @@ run_test_cases() {
       echo "-----------"
       echo "${GREEN}All tests passed!${COLOR_RESET}"
     fi
-    exit 0
   else
     if [ $VERBOSE = 1 ]; then
       echo "-----------"
@@ -567,8 +563,10 @@ run_test_cases() {
     else
       echo "${RED}Some or all tests failed!${COLOR_RESET}"
     fi
-    exit 1
+    ERROR_OCCURRED=1
   fi
+
+  cd ..
 }
 
 link_dev_files() {
@@ -626,6 +624,28 @@ link_dev_files() {
   fi
 }
 
+cleanup() {
+  ## -- cleanup
+  ## from create_release
+  if [ $RELEASE = 1 ]; then
+    # remove TMP-folder
+    rm -rf $TMP
+    # undo changes to tikz-trackschematic.sty by sed
+    mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
+  fi
+
+  ## from run_test_cases
+  if [ $TESTING = 1 ]; then
+    # remove TMP-folder
+    rm -rf test/.tex
+  fi
+
+  ##
+  if [ $VERBOSE = 1 ]; then
+    echo "Clean up done!"
+  fi
+}
+
 ## -- execution
 ## Process user arguments
 process_arguments $@
@@ -648,10 +668,6 @@ if [ $TESTING = 1 ]; then
   check_pdflatex
   check_trackschematic
   check_imagemagick
-  if [ ! -d $TESTDIR ]; then
-    echo "${RED}Did not find test directory!${COLOR_RESET}"
-    exit 1
-  fi
 
   ##
   run_test_cases
@@ -666,7 +682,6 @@ if [ $RELEASE = 1 ]; then
 
   ## check if version ist in the correct format
   check_version_number
-  RELEASE="tikz-trackschematic-$VERSION_STR"
 
   ## check if $VERSION is present in README.md and versionhistory.tex
   check_versionhistory
@@ -683,4 +698,12 @@ if [ $RELEASE = 1 ]; then
   create_release_notes
 fi
 
+##
+cleanup
+##
+if [ $ERROR_OCCURRED = 0 ]; then
+  exit 0
+else
+  exit 1
+fi
 #EOF
