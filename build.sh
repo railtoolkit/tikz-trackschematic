@@ -602,7 +602,7 @@ run_test_cases() {
     #
     if [ $EXIT_CODE = 0 ]; then
       if [ $VERBOSE = 1 ]; then
-        echo $n " - ${GREEN}build succesful${COLOR_RESET}: $c"
+        echo $n " - ${GREEN}build successful${COLOR_RESET}: $c"
         echo $n "in ${TIME}s $c"
         echo $n "and with $c"
         echo "${MEMORY_USAGE}k of memory used."
@@ -648,7 +648,7 @@ run_test_cases() {
 
     if [ $EXIT_CODE = 0 ]; then
       if [ $VERBOSE = 1 ]; then
-        echo " - ${GREEN}comparison succesful${COLOR_RESET}."
+        echo " - ${GREEN}comparison successful${COLOR_RESET}."
       fi
     else
       STATUS=1
