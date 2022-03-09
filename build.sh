@@ -24,7 +24,7 @@ install, test or release a package for tikz-trackschematic
 
  -b, --batch-mode         Run script with no interaction.
 
- -l, --local-dev-install  Install as dev-package in local TeX Live environment
+ -i, --install-dev        Install as dev-package in local TeX Live environment
 
  -t, --test               Tests the current src/ against the test/
 
@@ -63,7 +63,7 @@ process_arguments() {
       -m|--messy)
         CLEANUP=0
         ;;
-      -l|--local-dev-install)
+      -i|--install-dev)
         INSTALL=1
         ;;
       -t|--test)
@@ -266,10 +266,10 @@ check_imagemagick_policy() {
             * ) echo "Please answer yes or no.";;
           esac
         done
-      else
-        echo "${RED}Imagemagick policy is preventing converting PDFs to PNGS${COLOR_RESET}"
-        echo "${RED}and program 'pdftoppm' was not found!${COLOR_RESET}"
-        exit 1
+      # else
+      #   echo "${RED}Imagemagick policy is preventing converting PDFs to PNGS${COLOR_RESET}"
+      #   echo "${RED}and program 'pdftoppm' was not found!${COLOR_RESET}"
+      #   exit 1
       fi
       check_sudo
       POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
