@@ -22,7 +22,7 @@ install, test or release a package for tikz-trackschematic
 
  -m, --messy              Do not clean up afterwards.
 
- -b, --batch-mode         Run script with no interaction.
+ -n, --noninteractive     Run script with no interaction.
 
  -i, --install-dev        Install as dev-package in local TeX Live environment
 
@@ -35,12 +35,12 @@ EOF
 }
 
 ## -- processes getopts
-VERBOSE=0   # set by cli argument
-BATCHMODE=0 # set by cli argument
-INSTALL=0   # set by cli argument
-TESTING=0   # set by cli argument
-RELEASE=0   # set by cli argument
-CLEANUP=1   # set by cli argument
+VERBOSE=0    # set by cli argument
+NOINTERACT=0 # set by cli argument
+INSTALL=0    # set by cli argument
+TESTING=0    # set by cli argument
+RELEASE=0    # set by cli argument
+CLEANUP=1    # set by cli argument
 
 process_arguments() {
   while true; do
@@ -57,11 +57,11 @@ process_arguments() {
       -v|--verbose)
         VERBOSE=1
         ;;
-      -b|--batch-mode)
-        BATCHMODE=1
-        ;;
       -m|--messy)
         CLEANUP=0
+        ;;
+      -n|--noninteractive)
+        NOINTERACT=1
         ;;
       -i|--install-dev)
         INSTALL=1
@@ -253,7 +253,7 @@ check_imagemagick_policy() {
 
     if [ $PDFTOPPM_CONVERT = 0 ]; then
       ## modify ImageMagick-6/policy.xml
-      if [ $BATCHMODE = 0 ]; then
+      if [ $NOINTERACT = 0 ]; then
         echo ""
         echo "Be sure to have either poppler(-utils) installed or an ImageMagick policy which allows for PDF conversion!"
         echo "Do you wish to temporaly remove the policy preventing ImageMagick from converting PDFs?"
@@ -317,7 +317,7 @@ check_version_number() {
     # loop condition - test format of $VERSION_STR:
     echo "$VERSION_STR" | egrep -q "v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?" && break;
     # loop test
-    if [ $BATCHMODE = 0 ]; then
+    if [ $NOINTERACT = 0 ]; then
       echo "${RED}Your version '$VERSION_STR' has not the correct format!${COLOR_RESET}"
       echo $n "Please specify as Semantic Versioning ( e.g. v1.0.0 ): $c"
       read VERSION_STR
@@ -416,7 +416,7 @@ check_url2() {
   echo "WARNING: URL for [Unreleased] in CHANGELOG.md does not reflect the current version $VERSION_NUM."
   echo "WARNING: Be sure to edit CHANGELOG.md and specify current version!"
 
-  if [ $BATCHMODE = 0 ]; then
+  if [ $NOINTERACT = 0 ]; then
     echo "Do you wish to continue without updated URL for [Unreleased]?"
     echo $n "(y/n) $c"
     while true; do
@@ -440,7 +440,7 @@ create_release() {
   # This function produces a .zip-file in accordance to the requirements for CTAN.
   # For more information see https://ctan.org/help/upload-pkg.
   ####
-  if [ $BATCHMODE = 0 ]; then
+  if [ $NOINTERACT = 0 ]; then
     echo ""
     echo "Do you wish to create a release for the version $VERSION_NUM?"
     echo $n "(y/n) $c"
@@ -510,7 +510,7 @@ create_release() {
 }
 
 create_release_notes() {
-  if [ $BATCHMODE = 0 ]; then
+  if [ $NOINTERACT = 0 ]; then
     echo ""
     echo "Do you wish to create a release notes for the version $VERSION_NUM?"
     echo $n "(y/n) $c"
@@ -568,7 +568,7 @@ run_test_cases() {
     #
     EXIT_CODE=0
     /usr/bin/time -p -o .tex/${NAME}.time \
-      pdflatex -output-directory=.tex -interaction=batchmode -halt-on-error ${NAME}.tex >> /dev/null 2>&1 || EXIT_CODE=1
+      pdflatex -output-directory=.tex -interaction=NOINTERACT -halt-on-error ${NAME}.tex >> /dev/null 2>&1 || EXIT_CODE=1
     #
     TIME=$(awk "NR==2" .tex/${NAME}.time | cut -d " " -f2)
     # understanding TeX statistics:
@@ -669,7 +669,7 @@ link_dev_files() {
   # destination folder inside the TeX Live installation
   DEVDIR="tex/latex/local/tikz-trackschematic-dev"
   PROJECTDIR=$(pwd -P)
-  if [ $BATCHMODE = 0 ]; then
+  if [ $NOINTERACT = 0 ]; then
     echo ""
     echo "Do you wish to link this package from"
     echo "$PROJECTDIR/src to"

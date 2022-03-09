@@ -52,10 +52,10 @@ jobs:
           packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       # - name: "install tikz-trackschematic"
-      #   run: ./build.sh --batch-mode --install-dev
+      #   run: ./build.sh --noninteractive --install-dev
 
       # - name: "test tikz-trackschematic"
-      #   run: ./build.sh --batch-mode --test --verbose
+      #   run: ./build.sh --noninteractive --test --verbose
 
       #   ## create varibale ${{ steps.tag.outputs.tag }}
       # - name: "get tag"
@@ -66,7 +66,7 @@ jobs:
       #     strip_v: false
 
       # - name: "create tikz-trackschematic package"
-      #   run: ./build.sh --release ${{ steps.tag.outputs.tag }} --batch-mode
+      #   run: ./build.sh --noninteractive --release ${{ steps.tag.outputs.tag }}
 
         ## opening a debug console
       - name: Setup upterm session
