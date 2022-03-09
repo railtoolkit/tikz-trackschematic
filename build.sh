@@ -237,7 +237,7 @@ check_pdftoppm() {
 
 check_imagemagick_policy() {
   STATUS=1
-  identify -list policy | grep -q "pattern: PDF" || STATUS=0
+  convert -list policy | grep -q "pattern: PDF" || STATUS=0
   if [ $STATUS = 0 ]; then
     if [ $VERBOSE = 1 ]; then
       echo "ImageMagick allows to convert PDFs. Great!"
@@ -255,8 +255,7 @@ check_imagemagick_policy() {
       ## modify ImageMagick-6/policy.xml
       if [ $BATCHMODE = 0 ]; then
         echo ""
-        echo "Be sure to have either poppler(-utils) installed or"
-        echo "an ImageMagick policy which allows for PDF conversion!"
+        echo "Be sure to have either poppler(-utils) installed or an ImageMagick policy which allows for PDF conversion!"
         echo "Do you wish to temporaly remove the policy preventing ImageMagick from converting PDFs?"
         echo $n "(y/n) $c"
         while true; do
@@ -267,15 +266,20 @@ check_imagemagick_policy() {
             * ) echo "Please answer yes or no.";;
           esac
         done
-      # else
-      #   echo "${RED}ImageMagick policy is preventing converting PDFs to PNGs and${COLOR_RESET}"
-      #   echo "${RED}program 'pdftoppm' was not found!${COLOR_RESET}"
-      #   echo "${RED}Be sure to have either poppler(-utils) installed or${COLOR_RESET}"
-      #   echo "${RED}an ImageMagick policy which allows for PDF conversion!${COLOR_RESET}"
-      #   exit 1
       fi
       check_sudo
       POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
+      if [ $POLICY_PATH = "[built-in]" ]; then
+        VERSION=$(convert --version | grep "Version" | cut -d " " -f3 | cut -d "." -f1 )
+        POLICY_PATH="/etc/ImageMagick-${VERSION}/policy.xml"
+        if [ ! -d $POLICY_PATH ]; then
+          echo "${RED}ImageMagick policy is preventing converting PDFs to PNGs and${COLOR_RESET}"
+          echo "${RED}program 'pdftoppm' was not found!${COLOR_RESET}"
+          echo "${RED}Be sure to have either poppler(-utils) installed or${COLOR_RESET}"
+          echo "${RED}an ImageMagick policy which allows for PDF conversion!${COLOR_RESET}"
+          exit 1
+        fi
+      fi
       POLICY_MOD=1
       $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
       echo "${RED}Modified ${POLICY_PATH}!${COLOR_RESET}"
