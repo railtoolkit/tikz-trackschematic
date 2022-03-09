@@ -40,17 +40,16 @@ jobs:
       #   with:
       #     requirements-file: .github/tex/packages.test.txt
       #   ##
-      - name: "setup TeX Live (via teatimeguest)"
-        uses: teatimeguest/setup-texlive-action@v2
-        with:
-          package-file: .github/tex/packages.test.txt
-        ##
-      # - name: "setup TeX Live (via paolobrasolin)"
-      # #   # tlmgr needs updates and fails
-      #   uses: paolobrasolin/setup-texlive-action@v1
+      # - name: "setup TeX Live (via teatimeguest)"
+      #   uses: teatimeguest/setup-texlive-action@v2
       #   with:
-      #     profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
-      #     packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
+      #     package-file: .github/tex/packages.test.txt
+      #   ##
+      - name: "setup TeX Live (via paolobrasolin)"
+        uses: paolobrasolin/setup-texlive-action@v1
+        with:
+          profile-path:  ${{ github.workspace }}/.github/tex/texlive.profile.txt
+          packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       # - name: "install tikz-trackschematic"
       #   run: ./build.sh --batch-mode --install-dev
@@ -72,5 +71,5 @@ jobs:
         ## opening a debug console
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
-        # with:
-        #   limit-access-to-actor: true
+        with:
+          limit-access-to-actor: true
