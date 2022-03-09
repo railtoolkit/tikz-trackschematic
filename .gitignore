@@ -277,4 +277,5 @@ Temporary Items
 .apdisk
 
 # Archives for upload
-*.zip
+tikz-trackschematic-*.zip
+release-note-*.md

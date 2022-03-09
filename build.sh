@@ -20,6 +20,8 @@ install, test or release a package for tikz-trackschematic
 
  -v, --verbose            Run script in verbose mode.
 
+ -m, --messy              Do not clean up afterwards.
+
  -b, --batch-mode         Run script with no interaction.
 
  -l, --local-dev-install  Install as dev-package in local TeX Live environment
@@ -33,18 +35,12 @@ EOF
 }
 
 ## -- processes getopts
-
-# run variables
 VERBOSE=0   # set by cli argument
 BATCHMODE=0 # set by cli argument
 INSTALL=0   # set by cli argument
 TESTING=0   # set by cli argument
 RELEASE=0   # set by cli argument
-# 
-CONVERT=0   # set by check_imagemagick_policy
-CLEANUP=0   # set by check_imagemagick_policy
-#
-ERROR_OCCURRED=0
+CLEANUP=1   # set by cli argument
 
 process_arguments() {
   while true; do
@@ -63,6 +59,9 @@ process_arguments() {
         ;;
       -b|--batch-mode)
         BATCHMODE=1
+        ;;
+      -m|--messy)
+        CLEANUP=0
         ;;
       -l|--local-dev-install)
         INSTALL=1
@@ -91,6 +90,13 @@ process_arguments() {
     shift
   done
 }
+
+## -- run variables
+# 
+CONVERT=0    # set by check_imagemagick_policy
+POLICY_MOD=0 # set by check_imagemagick_policy
+#
+ERROR_OCCURRED=0
 
 ## -- colors
 RED="\033[0;31m"
@@ -257,6 +263,10 @@ check_url2() {
 }
 
 create_release() {
+  ####
+  # This function produces a .zip-file in accordance to the requirements for CTAN.
+  # For more information see https://ctan.org/help/upload-pkg.
+  ####
   if [ $BATCHMODE = 0 ]; then
     echo ""
     echo "Do you wish to create a release for the version $VERSION_NUM?"
@@ -351,11 +361,6 @@ create_release_notes() {
   # extract the excerpt
   awk "NR>$TOP&&NR<$BOTTOM" CHANGELOG.md > release-note-$VERSION_STR.md
   sedi "s/###/##/g" release-note-$VERSION_STR.md
-
-
-  ## -- cleanup
-  # remove TMP-file
-  rm release-note-tmp.md
 }
 
 check_sudo() {
@@ -451,6 +456,46 @@ check_imagemagick() {
   echo "Program 'compare' not found."
   echo "Be sure to have ImageMagick installed!"
   exit 1
+}
+
+check_imagemagick_policy() {
+  STATUS=1
+  identify -list policy | grep -q "pattern: PDF" || STATUS=0
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "Imagemagick allows to convert PDFs. Great!"
+    fi
+    return 0
+  else
+    if [ $VERBOSE = 1 ]; then
+      echo "Imagemagick does not allow to convert PDFs."
+    fi
+    CONVERT=1
+
+    ## check for alternative
+    STATUS_2=0
+    command -v pngtop >/dev/null 2>&1 || STATUS_2=1
+
+
+    ## modify ImageMagick-6/policy.xml
+    if [ $BATCHMODE = 0 ]; then
+      echo ""
+      echo "Do you wish to temporaly remove the policy preventing Imagemagick from converting PDFs?"
+      echo $n "(y/n) $c"
+      while true; do
+        read -p "" answer
+        case $answer in
+          [Yy]* ) break;;
+          [Nn]* ) exit 1;;
+          * ) echo "Please answer yes or no.";;
+        esac
+      done
+    fi
+    check_sudo
+    POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
+    POLICY_MOD=1
+    $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
+  fi
 }
 
 run_test_cases() {
@@ -627,63 +672,66 @@ link_dev_files() {
 cleanup() {
   ## -- cleanup
   ## from create_release
-  if [ $RELEASE = 1 ]; then
-    # remove TMP-folder
-    rm -rf $TMP
-    # undo changes to tikz-trackschematic.sty by sed
-    mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
-  fi
+  if [ $CLEANUP = 1 ]; then
+    if [ $RELEASE = 1 ]; then
+      # remove TMP-folder
+      rm -rf $TMP
+      # undo changes to tikz-trackschematic.sty by sed
+      mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
+      # remove TMP-release-note
+      rm release-note-tmp.md
+    fi
 
-  ## from run_test_cases
-  if [ $TESTING = 1 ]; then
-    # remove TMP-folder
-    rm -rf test/.tex
-  fi
+    ## from check_imagemagick_policy
+    if [ $POLICY_MOD = 1 ]; then
+      # undo changes to /etc/ImageMagick-6/policy.xml by sed
+      $rootrun mv ${POLICY_PATH}.backup $POLICY_PATH
+    fi
 
-  ##
-  if [ $VERBOSE = 1 ]; then
-    echo "Clean up done!"
+    ## from run_test_cases
+    if [ $TESTING = 1 ]; then
+      # remove TMP-folder
+      rm -rf test/.tex
+    fi
+
+    ##
+    if [ $VERBOSE = 1 ]; then
+      echo "Clean up done!"
+    fi
   fi
 }
 
 ## -- execution
 ## Process user arguments
 process_arguments $@
+check_path 
 
 ## do what is requested
 if [ $INSTALL = 1 ]; then
   ##
-  check_path
   check_texlive
   check_sudo
 
   ##
   link_dev_files
-
 fi
 
 if [ $TESTING = 1 ]; then
   ##
-  check_path
   check_pdflatex
   check_trackschematic
   check_imagemagick
+  check_imagemagick_policy
 
   ##
   run_test_cases
-
 fi
 
 if [ $RELEASE = 1 ]; then
-  ####
-  # This script produces a .zip-file in accordance to the requirements for CTAN.
-  # For more information see https://ctan.org/help/upload-pkg.
-  ####
-
   ## check if version ist in the correct format
   check_version_number
 
-  ## check if $VERSION is present in README.md and versionhistory.tex
+  ## check if $VERSION is present in CHANGELOG.md and versionhistory.tex
   check_versionhistory
   check_changelog
   check_url1
