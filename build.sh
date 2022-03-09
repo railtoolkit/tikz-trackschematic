@@ -30,8 +30,6 @@ install, test or release a package for tikz-trackschematic
  -u, --uninstall-dev      Deinstall dev-package from local TeX Live environment
                           The -u option overrides any previous -i options.
 
- -u, --uninstall-dev      Deinstall dev-package from local TeX Live environment
-
  -t, --test               Tests the current src/ against the test/
 
  -r, --release VERSION    Creates a .zip with the release for given VERSION
