@@ -93,8 +93,8 @@ process_arguments() {
 
 ## -- run variables
 # 
-CONVERT=0    # set by check_imagemagick_policy
-POLICY_MOD=0 # set by check_imagemagick_policy
+PDFTOPPM_CONVERT=0 # set by check_pdftoppm
+POLICY_MOD=0       # set by check_imagemagick_policy
 #
 ERROR_OCCURRED=0
 
@@ -458,6 +458,23 @@ check_imagemagick() {
   exit 1
 }
 
+check_pdftoppm() {
+  # check for poppler/pdftoppm
+  STATUS=0
+  command -v pdftoppm >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "pdftoppm found"
+    fi
+    PDFTOPPM_CONVERT=1
+    return 0
+  fi
+  
+  echo "Program 'pdftoppm' not found."
+  echo "Be sure to have poppler(-utils) installed!"
+  exit 1
+}
+
 check_imagemagick_policy() {
   STATUS=1
   identify -list policy | grep -q "pattern: PDF" || STATUS=0
@@ -470,31 +487,34 @@ check_imagemagick_policy() {
     if [ $VERBOSE = 1 ]; then
       echo "Imagemagick does not allow to convert PDFs."
     fi
-    CONVERT=1
 
     ## check for alternative
-    STATUS_2=0
-    command -v pngtop >/dev/null 2>&1 || STATUS_2=1
+    check_pdftoppm # if pdftoppm is available, then PDFTOPPM_CONVERT=1
 
-
-    ## modify ImageMagick-6/policy.xml
-    if [ $BATCHMODE = 0 ]; then
-      echo ""
-      echo "Do you wish to temporaly remove the policy preventing Imagemagick from converting PDFs?"
-      echo $n "(y/n) $c"
-      while true; do
-        read -p "" answer
-        case $answer in
-          [Yy]* ) break;;
-          [Nn]* ) exit 1;;
-          * ) echo "Please answer yes or no.";;
-        esac
-      done
+    if [ $PDFTOPPM_CONVERT = 0 ]; then
+      ## modify ImageMagick-6/policy.xml
+      if [ $BATCHMODE = 0 ]; then
+        echo ""
+        echo "Do you wish to temporaly remove the policy preventing Imagemagick from converting PDFs?"
+        echo $n "(y/n) $c"
+        while true; do
+          read -p "" answer
+          case $answer in
+            [Yy]* ) break;;
+            [Nn]* ) exit 1;;
+            * ) echo "Please answer yes or no.";;
+          esac
+        done
+      else
+        echo "${RED}Imagemagick policy is preventing converting PDFs to PNGS${COLOR_RESET}"
+        echo "${RED}and program 'pdftoppm' was not found!${COLOR_RESET}"
+        exit 1
+      fi
+      check_sudo
+      POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
+      POLICY_MOD=1
+      $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
     fi
-    check_sudo
-    POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
-    POLICY_MOD=1
-    $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
   fi
 }
 
@@ -573,7 +593,20 @@ run_test_cases() {
     # SSIM:  structural similarity index
     #
     EXIT_CODE=0
-    compare -metric RMSE -colorspace RGB .tex/${NAME}.pdf ${NAME}_expected.pdf NULL: >> /dev/null 2>&1 || EXIT_CODE=1
+    if [ $PDFTOPPM_CONVERT = 0 ]; then
+      # 'compare' will convert the pdf to png
+      # unless the policy of imagemagick prevents it
+      # -> this reasonably fast!
+      compare -metric RMSE -colorspace RGB .tex/${NAME}.pdf ${NAME}_expected.pdf NULL: >> /dev/null 2>&1 || EXIT_CODE=1
+    else
+      # use 'pdftoppm' convert the pdf to png
+      # then use 'compare' for comparison without converting
+      # -> this is slower!
+      pdftoppm -png -rx 600 -ry 600 .tex/${NAME}.pdf .tex/${NAME}
+      pdftoppm -png -rx 600 -ry 600 ${NAME}_expected.pdf .tex/${NAME}_expected
+      compare -metric RMSE -colorspace RGB .tex/${NAME}-1.png .tex/${NAME}_expected-1.png NULL: >> /dev/null 2>&1 || EXIT_CODE=1
+    fi
+
     if [ $EXIT_CODE = 0 ]; then
       if [ $VERBOSE = 1 ]; then
         echo " - ${GREEN}comparison succesful${COLOR_RESET}."
