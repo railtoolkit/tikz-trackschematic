@@ -267,9 +267,11 @@ check_imagemagick_policy() {
           esac
         done
       fi
+
       check_sudo
-      POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
-      if [ $POLICY_PATH = "[built-in]" ]; then
+
+      POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-*/policy.xml
+      if [ "$POLICY_PATH" = "[built-in]" ]; then
         VERSION=$(convert --version | grep "Version" | cut -d " " -f3 | cut -d "." -f1 )
         POLICY_PATH="/etc/ImageMagick-${VERSION}/policy.xml"
         if [ ! -d $POLICY_PATH ]; then
