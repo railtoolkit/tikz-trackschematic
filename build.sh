@@ -271,12 +271,13 @@ check_imagemagick_policy() {
       check_sudo
 
       POLICY_PATH=$(convert -list policy | grep "Path" | awk "NR==1" | cut -d " " -f2) # default /etc/ImageMagick-*/policy.xml
-      if [ "$POLICY_PATH" = "[built-in]" ]; then
+      if [ ! -d $POLICY_PATH ]; then
         VERSION=$(convert --version | grep "Version" | cut -d " " -f3 | cut -d "." -f1 )
         POLICY_PATH="/etc/ImageMagick-${VERSION}/policy.xml"
         if [ ! -d $POLICY_PATH ]; then
           echo "${RED}ImageMagick policy is preventing converting PDFs to PNGs and${COLOR_RESET}"
-          echo "${RED}program 'pdftoppm' was not found!${COLOR_RESET}"
+          echo "${RED}program 'pdftoppm' was not found.${COLOR_RESET}"
+          echo "${RED}Modifying the policy temporaly failed!${COLOR_RESET}"
           echo "${RED}Be sure to have either poppler(-utils) installed or${COLOR_RESET}"
           echo "${RED}an ImageMagick policy which allows for PDF conversion!${COLOR_RESET}"
           exit 1
@@ -285,7 +286,7 @@ check_imagemagick_policy() {
 
       POLICY_MOD=1
       $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
-      echo "${RED}Modified ${POLICY_PATH}!${COLOR_RESET}"
+      echo "Modified ${POLICY_PATH}!"
     fi
   fi
 }
