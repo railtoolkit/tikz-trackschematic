@@ -25,6 +25,10 @@ install, test or release a package for tikz-trackschematic
  -n, --noninteractive     Run script with no interaction.
 
  -i, --install-dev        Install as dev-package in local TeX Live environment
+                          The -i option overrides any previous -u options.
+
+ -u, --uninstall-dev      Deinstall dev-package from local TeX Live environment
+                          The -u option overrides any previous -i options.
 
  -t, --test               Tests the current src/ against the test/
 
@@ -65,6 +69,9 @@ process_arguments() {
         ;;
       -i|--install-dev)
         INSTALL=1
+        ;;
+      -u|--uninstall-dev)
+        INSTALL=2
         ;;
       -t|--test)
         TESTING=1
@@ -295,9 +302,9 @@ check_trackschematic() {
   # check for tikz-trackschematic
   STATUS=0
   TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
-  DEVDIR="tex/latex/local/tikz-trackschematic-dev"
+  DEVDIR=$(find $TEXMFLOCAL -name 'tikz-trackschematic-dev')
 
-  ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
+  ls $DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
     if [ $VERBOSE = 1 ]; then
       echo "tikz-trackschematic-dev found"
@@ -667,13 +674,13 @@ run_test_cases() {
 
 link_dev_files() {
   # destination folder inside the TeX Live installation
-  DEVDIR="tex/latex/local/tikz-trackschematic-dev"
+  TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
+  DEVDIR="$TEXMFLOCAL/tex/latex/tikz-trackschematic-dev"
   PROJECTDIR=$(pwd -P)
   if [ $NOINTERACT = 0 ]; then
     echo ""
-    echo "Do you wish to link this package from"
-    echo "$PROJECTDIR/src to"
-    echo "$TEXMFLOCAL/$DEVDIR?"
+    echo "Do you wish to install this package for development to"
+    echo "$DEVDIR?"
     echo $n "(y/n) $c"
     while true; do
       read -p "" answer
@@ -686,8 +693,8 @@ link_dev_files() {
   fi
 
   # make sure that destination folder exists
-  if [ ! -d "$TEXMFLOCAL/$DEVDIR" ]; then
-    $rootrun mkdir -p $TEXMFLOCAL/$DEVDIR
+  if [ ! -d "$DEVDIR" ]; then
+    $rootrun mkdir -p $DEVDIR
   fi
 
   # link every file in src/ and rename it
@@ -704,12 +711,44 @@ link_dev_files() {
       DST="$PREFIX-dev.$POSTFIX.$EXT"
     fi
 
-    $rootrun ln -sfn $PROJECTDIR/$SRC $TEXMFLOCAL/$DEVDIR/$DST
+    $rootrun ln -sfn $PROJECTDIR/$SRC $DEVDIR/$DST
 
     if [ $VERBOSE = 1 ]; then
       echo "linked '$DST'"
     fi
   done
+
+  # update TeX Live installation
+  TEXlsr=`which mktexlsr`
+  if [ $VERBOSE = 1 ]; then
+    $rootrun $TEXlsr
+  else
+    $rootrun $TEXlsr --quiet
+  fi
+}
+
+remove_dev_files() {
+  # destination folder inside the TeX Live installation
+  cd $DEVDIR # from check_trackschematic
+  if [ $NOINTERACT = 0 ]; then
+    echo ""
+    echo "Do you wish to remove the package '$DEVDIR'?"
+    echo $n "(y/n) $c"
+    while true; do
+      read -p "" answer
+      case $answer in
+        [Yy]* ) break;;
+        [Nn]* ) exit 1;;
+        * ) echo "Please answer yes or no.";;
+      esac
+    done
+  fi
+  if [ $VERBOSE = 1 ]; then
+    echo "removing $DEVDIR!"
+  fi
+  $rootrun rm -f *
+  cd ..
+  $rootrun rmdir tikz-trackschematic-dev
 
   # update TeX Live installation
   TEXlsr=`which mktexlsr`
@@ -759,12 +798,22 @@ check_path
 
 ## do what is requested
 if [ $INSTALL = 1 ]; then
-  ##
+  ## install package
   check_texlive
   check_sudo
 
   ##
   link_dev_files
+fi
+
+if [ $INSTALL = 2 ]; then
+  ## deinstall package
+  check_texlive
+  check_trackschematic
+  check_sudo
+
+  ##
+  remove_dev_files
 fi
 
 if [ $TESTING = 1 ]; then
