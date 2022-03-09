@@ -282,6 +282,7 @@ check_imagemagick_policy() {
           exit 1
         fi
       fi
+
       POLICY_MOD=1
       $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
       echo "${RED}Modified ${POLICY_PATH}!${COLOR_RESET}"
@@ -315,7 +316,7 @@ check_version_number() {
     # loop condition - test format of $VERSION_STR:
     echo "$VERSION_STR" | egrep -q "v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?" && break;
     # loop test
-    if [ "$BATCHMODE" = 0 ]; then
+    if [ $BATCHMODE = 0 ]; then
       echo "${RED}Your version '$VERSION_STR' has not the correct format!${COLOR_RESET}"
       echo $n "Please specify as Semantic Versioning ( e.g. v1.0.0 ): $c"
       read VERSION_STR
@@ -414,7 +415,7 @@ check_url2() {
   echo "WARNING: URL for [Unreleased] in CHANGELOG.md does not reflect the current version $VERSION_NUM."
   echo "WARNING: Be sure to edit CHANGELOG.md and specify current version!"
 
-  if [ "$BATCHMODE" -eq 0 ]; then
+  if [ $BATCHMODE = 0 ]; then
     echo "Do you wish to continue without updated URL for [Unreleased]?"
     echo $n "(y/n) $c"
     while true; do

@@ -53,10 +53,10 @@ jobs:
       #     packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       # - name: "install tikz-trackschematic"
-      #   run: ./build.sh --install-dev
+      #   run: ./build.sh --batch-mode --install-dev
 
       # - name: "test tikz-trackschematic"
-      #   run: ./build.sh --test
+      #   run: ./build.sh --batch-mode --test --verbose
 
       #   ## create varibale ${{ steps.tag.outputs.tag }}
       # - name: "get tag"
@@ -72,6 +72,5 @@ jobs:
         ## opening a debug console
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: railtoolkit,kaat0,apriljunge
+        # with:
+        #   limit-access-to-actor: true
