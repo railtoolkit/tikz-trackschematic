@@ -125,6 +125,8 @@ check_path() {
   fi
 }
 
+## checks for installed software
+
 check_zip() {
   # check for zip
   STATUS=0
@@ -140,6 +142,163 @@ check_zip() {
   echo "Be sure to have zip installed!"
   exit 1
 }
+
+check_sudo() {
+  # checks if sudo is available
+  rootrun=""
+  # If we are root, we do note require sudo
+  if [ "$EUID"  = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "you are root"
+    fi
+    return 0
+  fi
+
+  if sudo -v >/dev/null 2>&1; then
+    if [ $VERBOSE = 1 ]; then
+      echo "sudo ok"
+    fi
+    rootrun="sudo"
+  else
+    echo "sudo failed"
+    # Check if user is root (might be unnecessary)
+    if ! [ $(id -u) = 0 ]; then
+      echo "This script must be run as root" 1>&2
+      exit 1
+    fi
+  fi
+}
+
+check_texlive() {
+  # check for kpsewhich (and mktexlsr)
+  STATUS=0
+  command -v kpsewhich >/dev/null 2>&1 || STATUS=1
+  command -v mktexlsr  >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "kpsewhich and mktexlsr found"
+    fi
+    TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
+    return 0
+  fi
+  
+  echo "Program 'kpsewhich' not found."
+  echo "Be sure to use texlive or mactex!"
+  exit 1
+}
+
+check_pdflatex() {
+  # check for pdflatex
+  STATUS=0
+  command -v pdflatex >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "pdflatex found"
+    fi
+    return 0
+  fi
+  
+  echo "Program 'pdflatex' not found."
+  echo "Be sure to have texlive or mactex installed!"
+  exit 1
+}
+
+check_imagemagick() {
+  # check for ImageMagick/compare
+  STATUS=0
+  command -v compare >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "compare found"
+    fi
+    return 0
+  fi
+  
+  echo "Program 'compare' not found."
+  echo "Be sure to have ImageMagick installed!"
+  exit 1
+}
+
+check_pdftoppm() {
+  # check for poppler/pdftoppm
+  STATUS=0
+  command -v pdftoppm >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "pdftoppm found"
+    fi
+    PDFTOPPM_CONVERT=1
+    return 0
+  fi
+  
+  echo "Program 'pdftoppm' not found."
+  echo "Be sure to have poppler(-utils) installed!"
+  exit 1
+}
+
+check_imagemagick_policy() {
+  STATUS=1
+  identify -list policy | grep -q "pattern: PDF" || STATUS=0
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "Imagemagick allows to convert PDFs. Great!"
+    fi
+    return 0
+  else
+    if [ $VERBOSE = 1 ]; then
+      echo "Imagemagick does not allow to convert PDFs."
+    fi
+
+    ## check for alternative
+    check_pdftoppm # if pdftoppm is available, then PDFTOPPM_CONVERT=1
+
+    if [ $PDFTOPPM_CONVERT = 0 ]; then
+      ## modify ImageMagick-6/policy.xml
+      if [ $BATCHMODE = 0 ]; then
+        echo ""
+        echo "Do you wish to temporaly remove the policy preventing Imagemagick from converting PDFs?"
+        echo $n "(y/n) $c"
+        while true; do
+          read -p "" answer
+          case $answer in
+            [Yy]* ) break;;
+            [Nn]* ) exit 1;;
+            * ) echo "Please answer yes or no.";;
+          esac
+        done
+      else
+        echo "${RED}Imagemagick policy is preventing converting PDFs to PNGS${COLOR_RESET}"
+        echo "${RED}and program 'pdftoppm' was not found!${COLOR_RESET}"
+        exit 1
+      fi
+      check_sudo
+      POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
+      POLICY_MOD=1
+      $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
+    fi
+  fi
+}
+
+check_trackschematic() {
+  # check for tikz-trackschematic
+  STATUS=0
+  TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
+  DEVDIR="tex/latex/local/tikz-trackschematic-dev"
+
+  ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "tikz-trackschematic-dev found"
+    fi
+    return 0
+  fi
+  
+  echo "Library 'tikz-trackschematic-dev' not found."
+  echo "Be sure to have tikz-trackschematic-dev installed!"
+  exit 1
+}
+
+## checks for updated repository
 
 check_version_number() {
   while true; do
@@ -262,6 +421,8 @@ check_url2() {
   fi
 }
 
+## functionality
+
 create_release() {
   ####
   # This function produces a .zip-file in accordance to the requirements for CTAN.
@@ -361,161 +522,6 @@ create_release_notes() {
   # extract the excerpt
   awk "NR>$TOP&&NR<$BOTTOM" CHANGELOG.md > release-note-$VERSION_STR.md
   sedi "s/###/##/g" release-note-$VERSION_STR.md
-}
-
-check_sudo() {
-  # checks if sudo is available
-  rootrun=""
-  # If we are root, we do note require sudo
-  if [ "$EUID"  = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "you are root"
-    fi
-    return 0
-  fi
-
-  if sudo -v >/dev/null 2>&1; then
-    if [ $VERBOSE = 1 ]; then
-      echo "sudo ok"
-    fi
-    rootrun="sudo"
-  else
-    echo "sudo failed"
-    # Check if user is root (might be unnecessary)
-    if ! [ $(id -u) = 0 ]; then
-      echo "This script must be run as root" 1>&2
-      exit 1
-    fi
-  fi
-}
-
-check_texlive() {
-  # check for kpsewhich (and mktexlsr)
-  STATUS=0
-  command -v kpsewhich >/dev/null 2>&1 || STATUS=1
-  command -v mktexlsr  >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "kpsewhich and mktexlsr found"
-    fi
-    TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
-    return 0
-  fi
-  
-  echo "Program 'kpsewhich' not found."
-  echo "Be sure to use texlive or mactex!"
-  exit 1
-}
-
-check_pdflatex() {
-  # check for pdflatex
-  STATUS=0
-  command -v pdflatex >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "pdflatex found"
-    fi
-    return 0
-  fi
-  
-  echo "Program 'pdflatex' not found."
-  echo "Be sure to have texlive or mactex installed!"
-  exit 1
-}
-
-check_trackschematic() {
-  # check for tikz-trackschematic
-  STATUS=0
-  TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
-  DEVDIR="tex/latex/local/tikz-trackschematic-dev"
-
-  ls $TEXMFLOCAL/$DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
-  if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "tikz-trackschematic-dev found"
-    fi
-    return 0
-  fi
-  
-  echo "Library 'tikz-trackschematic-dev' not found."
-  echo "Be sure to have tikz-trackschematic-dev installed!"
-  exit 1
-}
-
-check_imagemagick() {
-  # check for ImageMagick/compare
-  STATUS=0
-  command -v compare >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "compare found"
-    fi
-    return 0
-  fi
-  
-  echo "Program 'compare' not found."
-  echo "Be sure to have ImageMagick installed!"
-  exit 1
-}
-
-check_pdftoppm() {
-  # check for poppler/pdftoppm
-  STATUS=0
-  command -v pdftoppm >/dev/null 2>&1 || STATUS=1
-  if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "pdftoppm found"
-    fi
-    PDFTOPPM_CONVERT=1
-    return 0
-  fi
-  
-  echo "Program 'pdftoppm' not found."
-  echo "Be sure to have poppler(-utils) installed!"
-  exit 1
-}
-
-check_imagemagick_policy() {
-  STATUS=1
-  identify -list policy | grep -q "pattern: PDF" || STATUS=0
-  if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "Imagemagick allows to convert PDFs. Great!"
-    fi
-    return 0
-  else
-    if [ $VERBOSE = 1 ]; then
-      echo "Imagemagick does not allow to convert PDFs."
-    fi
-
-    ## check for alternative
-    check_pdftoppm # if pdftoppm is available, then PDFTOPPM_CONVERT=1
-
-    if [ $PDFTOPPM_CONVERT = 0 ]; then
-      ## modify ImageMagick-6/policy.xml
-      if [ $BATCHMODE = 0 ]; then
-        echo ""
-        echo "Do you wish to temporaly remove the policy preventing Imagemagick from converting PDFs?"
-        echo $n "(y/n) $c"
-        while true; do
-          read -p "" answer
-          case $answer in
-            [Yy]* ) break;;
-            [Nn]* ) exit 1;;
-            * ) echo "Please answer yes or no.";;
-          esac
-        done
-      else
-        echo "${RED}Imagemagick policy is preventing converting PDFs to PNGS${COLOR_RESET}"
-        echo "${RED}and program 'pdftoppm' was not found!${COLOR_RESET}"
-        exit 1
-      fi
-      check_sudo
-      POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-6/policy.xml
-      POLICY_MOD=1
-      $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
-    fi
-  fi
 }
 
 run_test_cases() {
