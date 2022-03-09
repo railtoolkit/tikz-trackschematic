@@ -128,10 +128,24 @@ sedi () {
 ## -- commands
 
 check_path() {
-  if [ ! -d ../tikz-trackschematic ]; then
-    echo "${RED}Please run this script from inside the project folder!${COLOR_RESET}"
-    exit 1
+  # test for project specific files
+  STATUS=0
+  FILES=(doc/tikz-trackschematic-documentation.sty src/tikz-trackschematic.sty test/turnout.tex)
+  for FILE in ${FILES[@]}; do
+    if [ ! -e $FILE ]; then
+      STATUS=1
+    fi
+  done
+  
+  if [ $STATUS = 0 ]; then
+    if [ $VERBOSE = 1 ]; then
+      echo "Build script is within the project folder."
+    fi
+    return 0
   fi
+
+  echo "${RED}Please run this script from inside the project folder!${COLOR_RESET}"
+  exit 1
 }
 
 ## checks for installed software
