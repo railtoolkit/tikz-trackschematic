@@ -270,7 +270,7 @@ check_imagemagick_policy() {
 
       check_sudo
 
-      POLICY_PATH=$(identify -list policy | grep "Path" | cut -d " " -f2) # default /etc/ImageMagick-*/policy.xml
+      POLICY_PATH=$(convert -list policy | grep "Path" | awk "NR==1" | cut -d " " -f2) # default /etc/ImageMagick-*/policy.xml
       if [ "$POLICY_PATH" = "[built-in]" ]; then
         VERSION=$(convert --version | grep "Version" | cut -d " " -f3 | cut -d "." -f1 )
         POLICY_PATH="/etc/ImageMagick-${VERSION}/policy.xml"
