@@ -641,9 +641,9 @@ run_test_cases() {
       # use 'pdftoppm' convert the pdf to png
       # then use 'compare' for comparison without converting
       # -> this is slower!
-      pdftoppm -png -rx 144 -ry 144 .tex/${NAME}.pdf .tex/${NAME}
-      pdftoppm -png -rx 144 -ry 144 ${NAME}_expected.pdf .tex/${NAME}_expected
-      compare -metric RMSE -colorspace RGB .tex/${NAME}-1.png .tex/${NAME}_expected-1.png NULL: >> /dev/null 2>&1 || EXIT_CODE=1
+      pdftoppm -png -r 144 -singlefile .tex/${NAME}.pdf .tex/${NAME}
+      pdftoppm -png -r 144 -singlefile ${NAME}_expected.pdf .tex/${NAME}_expected
+      compare -metric RMSE -colorspace RGB .tex/${NAME}.png .tex/${NAME}_expected.png NULL: >> /dev/null 2>&1 || EXIT_CODE=1
     fi
 
     if [ $EXIT_CODE = 0 ]; then
