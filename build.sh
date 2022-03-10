@@ -29,7 +29,7 @@ install, test or release a package for tikz-trackschematic
 
  -m, --messy              Do not clean up afterwards.
 
- -n, --noninteractive     Run script with no interaction.
+ -n, --non-interactive    Run script with no interaction.
 
  -i, --install-dev        Install as dev-package in local TeX Live environment.
                           The -i option overrides any previous -u option.
@@ -56,9 +56,7 @@ CLEANUP=1    # set by cli argument
 process_arguments() {
   while true; do
     # loop condition - test for empty string:
-    if [ -z "$1" ]; then
-      break;
-    fi
+    if [ -z "$1" ]; then break; fi
     # loop test
     case $1 in
       -h|--help)
@@ -77,7 +75,7 @@ process_arguments() {
       -m|--messy)
         CLEANUP=0
         ;;
-      -n|--noninteractive)
+      -n|--non-interactive)
         NOINTERACT=1
         ;;
       -i|--install-dev)
@@ -136,7 +134,7 @@ fi
 log() {
   NO_LINE_BREAK=0
   COLOR=${COLOR_RESET}
-  if [ ${2:0:2} = "-n" ]; then
+  if [ "$2" = "-n" ]; then
     NO_LINE_BREAK=1
   fi
   if [ $1 = 1 ]; then

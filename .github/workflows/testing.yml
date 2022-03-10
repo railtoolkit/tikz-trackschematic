@@ -36,7 +36,7 @@ jobs:
           packages-path: ${{ github.workspace }}/.github/tex/packages.test.txt
 
       - name: "install tikz-trackschematic"
-        run: ./build.sh --noninteractive --install-dev
+        run: ./build.sh --non-interactive --install-dev
 
       - name: "test tikz-trackschematic"
-        run: ./build.sh --noninteractive --test --verbose
+        run: ./build.sh --non-interactive --test --verbose
