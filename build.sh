@@ -16,30 +16,37 @@ cat << EOF
 Usage: ./build.sh [OPTIONS]
 install, test or release a package for tikz-trackschematic
 
- -h, --help               Display help
+ -h, --help               Display this help message.
+
+ -s, --silent             Run script in silent mode.
+                          The -s option overrides any previous -v or -d options.
 
  -v, --verbose            Run script in verbose mode.
+                          The -v option overrides any previous -s or -d options.
+
+ -d, --debug              Run script in debug mode.
+                          The -d option overrides any previous -s or -v options.
 
  -m, --messy              Do not clean up afterwards.
 
  -n, --noninteractive     Run script with no interaction.
 
- -i, --install-dev        Install as dev-package in local TeX Live environment
-                          The -i option overrides any previous -u options.
+ -i, --install-dev        Install as dev-package in local TeX Live environment.
+                          The -i option overrides any previous -u option.
 
- -u, --uninstall-dev      Deinstall dev-package from local TeX Live environment
-                          The -u option overrides any previous -i options.
+ -u, --uninstall-dev      Deinstall dev-package from local TeX Live environment.
+                          The -u option overrides any previous -i option.
 
- -t, --test               Tests the current src/ against the test/
+ -t, --test               Tests the current src/ against the test/.
 
- -r, --release VERSION    Creates a .zip with the release for given VERSION
+ -r, --release VERSION    Creates a .zip with the release for given VERSION in
                           Semantic Versioning with leading 'v', e.g: v1.0.0
 
 EOF
 }
 
 ## -- processes getopts
-VERBOSE=0    # set by cli argument
+VERBOSITY=2  # set by cli argument
 NOINTERACT=0 # set by cli argument
 INSTALL=0    # set by cli argument
 TESTING=0    # set by cli argument
@@ -58,8 +65,14 @@ process_arguments() {
         print_usage
         exit 0
         ;;
+      -s|--silent)
+        VERBOSITY=0
+        ;;
       -v|--verbose)
-        VERBOSE=1
+        VERBOSITY=3
+        ;;
+      -d|--debug)
+        VERBOSITY=4
         ;;
       -m|--messy)
         CLEANUP=0
@@ -105,23 +118,51 @@ POLICY_MOD=0       # set by check_imagemagick_policy
 #
 ERROR_OCCURRED=0
 
-## -- colors
+## -- logging functions
+
+## colors
 RED="\033[0;31m"
 GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
 COLOR_RESET="\033[0;m"
 
-## -- cross platform helpers
-
+## cross platform echo option
 if [ "`echo -n`" = "-n" ]; then
   n=""; c="\c"
 else
   n="-n"; c=""
 fi
 
-# https://stackoverflow.com/questions/2320564/sed-i-command-for-in-place-editing-to-work-with-both-gnu-sed-and-bsd-osx
-sedi () {
-  sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@"
+log() {
+  NO_LINE_BREAK=0
+  COLOR=${COLOR_RESET}
+  if [ ${2:0:2} = "-n" ]; then
+    NO_LINE_BREAK=1
+  fi
+  if [ $1 = 1 ]; then
+    COLOR=${RED}
+  fi
+  if [ $1 = 2 ]; then
+    COLOR=${GREEN}
+  fi
+  if [ $1 = 4 ]; then
+    COLOR=${YELLOW}
+  fi
+  if [ $VERBOSITY -ge $1 ]; then
+    shift
+    if [ $NO_LINE_BREAK = 0 ]; then
+      echo "${COLOR}$@${COLOR_RESET}" | fold -s
+    else
+      shift
+      echo $n "${COLOR}$@ $c${COLOR_RESET}" | fold -s
+    fi
+  fi
 }
+log_show()  { log 0 $@; } # will always show
+log_error() { log 1 $@; } # print message in RED   ; but not when --silent
+log_info()  { log 2 $@; } # print message in GREEN ; but not when --silent
+log_note()  { log 3 $@; } # print message          ; with --verbose and --debug
+log_debug() { log 4 $@; } # print message in YELLOW; only with --debug
 
 ## -- commands
 
@@ -136,58 +177,56 @@ check_path() {
   done
   
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "Build script is within the project folder."
-    fi
+    log_note "Build script is within the project folder."
     return 0
   fi
 
-  echo "${RED}Please run this script from inside the project folder!${COLOR_RESET}"
+  log_error "Please run this script from inside the project folder!"
   exit 1
 }
 
 ## checks for installed software
+
+sedi () {
+  ## cross platform sed -i option without a backup file name
+  # https://stackoverflow.com/questions/2320564/sed-i-command-for-in-place-editing-to-work-with-both-gnu-sed-and-bsd-osx
+  sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@"
+}
 
 check_zip() {
   # check for zip
   STATUS=0
   command -v zip >/dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "zip found"
-    fi
+    log_note "zip found"
     return 0
   fi
   
-  echo "Program 'zip' not found."
-  echo "Be sure to have zip installed!"
+  log_error "Program 'zip' not found. Be sure to have zip installed!"
   exit 1
 }
 
 check_sudo() {
   # checks if sudo is available
+  STATUS=0
   rootrun=""
   # If we are root, we do note require sudo
   if [ "$EUID"  = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "you are root"
-    fi
+    log_note "you are root"
     return 0
   fi
 
-  if sudo -v >/dev/null 2>&1; then
-    if [ $VERBOSE = 1 ]; then
-      echo "sudo ok"
-    fi
+  command -v sudo >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "sudo found"
     rootrun="sudo"
+    return 0
   else
-    echo "sudo failed"
-    # Check if user is root (might be unnecessary)
-    if ! [ $(id -u) = 0 ]; then
-      echo "This script must be run as root" 1>&2
-      exit 1
-    fi
+    log_debug "sudo failed."
   fi
+
+  log_error "This script must be run as root!"
+  exit 1
 }
 
 check_texlive() {
@@ -196,15 +235,12 @@ check_texlive() {
   command -v kpsewhich >/dev/null 2>&1 || STATUS=1
   command -v mktexlsr  >/dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "kpsewhich and mktexlsr found"
-    fi
+    log_note "kpsewhich and mktexlsr found"
     TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
     return 0
   fi
   
-  echo "Program 'kpsewhich' not found."
-  echo "Be sure to use texlive or mactex!"
+  log_error "Program 'kpsewhich' or 'mktexlsr' not found. Be sure to use texlive or mactex!"
   exit 1
 }
 
@@ -213,14 +249,11 @@ check_pdflatex() {
   STATUS=0
   command -v pdflatex >/dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "pdflatex found"
-    fi
+    log_note "pdflatex found"
     return 0
   fi
   
-  echo "Program 'pdflatex' not found."
-  echo "Be sure to have texlive or mactex installed!"
+  log_error "Program 'pdflatex' not found. Be sure to have texlive or mactex installed!"
   exit 1
 }
 
@@ -229,14 +262,11 @@ check_imagemagick() {
   STATUS=0
   command -v compare >/dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "compare found"
-    fi
+    log_note "compare found"
     return 0
   fi
   
-  echo "Program 'compare' not found."
-  echo "Be sure to have ImageMagick installed!"
+  log_error "Program 'compare' not found. Be sure to have ImageMagick installed!"
   exit 1
 }
 
@@ -245,29 +275,23 @@ check_pdftoppm() {
   STATUS=0
   command -v pdftoppm >/dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "pdftoppm found"
-    fi
+    log_note "pdftoppm found"
     PDFTOPPM_CONVERT=1
     return 0
   fi
   
-  echo "Program 'pdftoppm' not found."
-  # exit 1
+  log_error "Program 'pdftoppm' not found."
+  # no # exit 1 ## can still modify ImageMagick policy!
 }
 
 check_imagemagick_policy() {
   STATUS=1
   convert -list policy | grep -q "pattern: PDF" || STATUS=0
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "ImageMagick allows to convert PDFs. Great!"
-    fi
+    log_note "ImageMagick allows to convert PDFs. Great!"
     return 0
   else
-    if [ $VERBOSE = 1 ]; then
-      echo "ImageMagick does not allow to convert PDFs."
-    fi
+    log_note "ImageMagick does not allow to convert PDFs."
 
     ## check for alternative
     check_pdftoppm # if pdftoppm is available, then PDFTOPPM_CONVERT=1
@@ -275,16 +299,16 @@ check_imagemagick_policy() {
     if [ $PDFTOPPM_CONVERT = 0 ]; then
       ## modify ImageMagick-6/policy.xml
       if [ $NOINTERACT = 0 ]; then
-        echo ""
-        echo "Be sure to have either poppler(-utils) installed or an ImageMagick policy which allows for PDF conversion!"
-        echo "Do you wish to temporaly remove the policy preventing ImageMagick from converting PDFs?"
-        echo $n "(y/n) $c"
+        log_show "Be sure to have either poppler(-utils) installed or an ImageMagick \
+                  policy which allows for PDF conversion! Do you wish to temporaly remove \
+                  the policy preventing ImageMagick from converting PDFs?"
+        log_show -n "(y/n)"
         while true; do
           read -p "" answer
           case $answer in
             [Yy]* ) break;;
             [Nn]* ) exit 1;;
-            * ) echo "Please answer yes or no.";;
+            * ) log_show "Please answer yes or no.";;
           esac
         done
       fi
@@ -296,18 +320,17 @@ check_imagemagick_policy() {
         VERSION=$(convert --version | grep "Version" | cut -d " " -f3 | cut -d "." -f1 )
         POLICY_PATH="/etc/ImageMagick-${VERSION}/policy.xml"
         if [ ! -e $POLICY_PATH ]; then
-          echo "${RED}ImageMagick policy is preventing converting PDFs to PNGs and${COLOR_RESET}"
-          echo "${RED}program 'pdftoppm' was not found.${COLOR_RESET}"
-          echo "${RED}Modifying the policy temporaly failed!${COLOR_RESET}"
-          echo "${RED}Be sure to have either poppler(-utils) installed or${COLOR_RESET}"
-          echo "${RED}an ImageMagick policy which allows for PDF conversion!${COLOR_RESET}"
+          log_error "ImageMagick policy is preventing converting PDFs to PNGs and program \
+                    'pdftoppm' was not found. Modifying the policy temporaly failed! Be sure \
+                    to have either poppler(-utils) installed or an ImageMagick policy which \
+                    allows for PDF conversion!"
           exit 1
         fi
       fi
 
       POLICY_MOD=1
       $rootrun sed -i".backup" 's/^.*policy.*coder.*none.*PDF.*//' $POLICY_PATH
-      echo "Modified ${POLICY_PATH}!"
+      log_note "Modified ${POLICY_PATH}!"
     fi
   fi
 }
@@ -320,14 +343,11 @@ check_trackschematic() {
 
   ls $DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "tikz-trackschematic-dev found"
-    fi
+    log_note "tikz-trackschematic-dev found"
     return 0
   fi
   
-  echo "Library 'tikz-trackschematic-dev' not found."
-  echo "Be sure to have tikz-trackschematic-dev installed!"
+  log_error "Library 'tikz-trackschematic-dev' not found. Be sure to have tikz-trackschematic-dev installed!"
   exit 1
 }
 
@@ -339,12 +359,12 @@ check_version_number() {
     echo "$VERSION_STR" | egrep -q "v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?" && break;
     # loop test
     if [ $NOINTERACT = 0 ]; then
-      echo "${RED}Your version '$VERSION_STR' has not the correct format!${COLOR_RESET}"
-      echo $n "Please specify as Semantic Versioning ( e.g. v1.0.0 ): $c"
+      log_error "Your version '$VERSION_STR' has not the correct format!"
+      log_show -n "Please specify as Semantic Versioning ( e.g. v1.0.0 ): "
       read VERSION_STR
     else
-      echo "${RED}Your version '$VERSION_STR' has not the correct format!${COLOR_RESET}"
-      echo "Please use Semantic Versioning with leading 'v'"
+      log_error "Your version '$VERSION_STR' has not the correct format! \
+                Please use Semantic Versioning with leading 'v'"
       exit 1
     fi
   done
@@ -357,14 +377,12 @@ check_versionhistory() {
   STATUS=0
   grep -qs "vhEntry{$VERSION_NUM" doc/versionhistory.tex || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "Version $VERSION_NUM is present in versionhistory.tex."
-    fi
+    log_note "Version $VERSION_NUM is present in versionhistory.tex."
     return 0
   fi
   
-  echo "Version $VERSION_NUM not found in versionhistory.tex."
-  echo "Be sure to edit versionhistory.tex and specify current version!"
+  log_error "Version $VERSION_NUM not found in versionhistory.tex. \
+            Be sure to edit versionhistory.tex and specify current version!"
   exit 1
 }
 
@@ -373,14 +391,12 @@ check_changelog() {
   STATUS=0
   grep -qs "Version \[$VERSION_NUM\]" CHANGELOG.md || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "Version $VERSION_NUM is present in CHANGELOG.md."
-    fi
+    log_note "Version $VERSION_NUM is present in CHANGELOG.md."
     return 0
   fi
   
-  echo "Version $VERSION_NUM not found in CHANGELOG.md."
-  echo "Be sure to edit CHANGELOG.md and specify current version!"
+  log_error "Version $VERSION_NUM not found in CHANGELOG.md. \
+            Be sure to edit CHANGELOG.md and specify current version!"
   exit 1
 }
 
@@ -394,14 +410,12 @@ check_date() {
   if [ $DATEISO_1 = $DATEISO_2 ]; then
     # DATE=$(date "+%Y-%m-%d")
     DATE="$DATEISO_1" 
-    if [ $VERBOSE = 1 ]; then
-      echo "The date $DATE was extracted from versionhistory.tex and CHANGELOG.md."
-    fi
+    log_note "The date $DATE was extracted from versionhistory.tex and CHANGELOG.md."
     return 0
   fi
   
-  echo "The date in versionhistory.tex and CHANGELOG.md did not match."
-  echo "Be sure to edit versionhistory.tex or CHANGELOG.md and modifiy the date!"
+  log_error "The date in versionhistory.tex and CHANGELOG.md did not match.\
+            Be sure to edit versionhistory.tex or CHANGELOG.md and modifiy the date!"
   exit 1
 }
 
@@ -411,14 +425,12 @@ check_url1() {
   LINE=$(grep "\[$VERSION_NUM\]: https://" CHANGELOG.md)
   echo $LINE | grep -qs "...$VERSION_STR"  || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "Version $VERSION_NUM URL is present in CHANGELOG.md."
-    fi
+    log_note "Version $VERSION_NUM URL is present in CHANGELOG.md."
     return 0
   fi
   
-  echo "Version $VERSION_NUM URL was not found in CHANGELOG.md."
-  echo "Be sure to edit CHANGELOG.md and specify a URL for the current version!"
+  log_error "Version $VERSION_NUM URL was not found in CHANGELOG.md. \
+            Be sure to edit CHANGELOG.md and specify a URL for the current version!"
   exit 1
 }
 
@@ -428,28 +440,26 @@ check_url2() {
   LINE=$(grep "\[Unreleased\]: https://" CHANGELOG.md)
   echo $LINE | grep -qs "/$VERSION_STR..."  || STATUS=1
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "The URL for [Unreleased] was also updated in CHANGELOG.md! Thx!"
-    fi
+    log_note "The URL for [Unreleased] was also updated in CHANGELOG.md! Thx!"
     return 0
   fi
   
-  echo "WARNING: URL for [Unreleased] in CHANGELOG.md does not reflect the current version $VERSION_NUM."
-  echo "WARNING: Be sure to edit CHANGELOG.md and specify current version!"
+  log_show "WARNING: URL for [Unreleased] in CHANGELOG.md does not reflect the current version $VERSION_NUM."
+  log_show "WARNING: Be sure to edit CHANGELOG.md and specify current version!"
 
   if [ $NOINTERACT = 0 ]; then
-    echo "Do you wish to continue without updated URL for [Unreleased]?"
-    echo $n "(y/n) $c"
+    log_show "Do you wish to continue without updated URL for [Unreleased]?"
+    log_show -n "(y/n)"
     while true; do
       read -p "" answer
       case $answer in
         [Yy]* ) break;;
         [Nn]* ) exit 1;;
-        * ) echo "Please answer yes or no.";;
+        * ) log_show "Please answer yes or no.";;
       esac
     done
   else
-    echo "ERROR: Aborting in batch mode!"
+    log_error "Aborting in batch mode!"
     exit 1
   fi
 }
@@ -462,15 +472,14 @@ create_release() {
   # For more information see https://ctan.org/help/upload-pkg.
   ####
   if [ $NOINTERACT = 0 ]; then
-    echo ""
-    echo "Do you wish to create a release for the version $VERSION_NUM?"
-    echo $n "(y/n) $c"
+    log_show "Do you wish to create a release for the version $VERSION_NUM?"
+    log_show -n "(y/n)"
     while true; do
       read -p "" answer
       case $answer in
         [Yy]* ) break;;
         [Nn]* ) exit 1;;
-        * ) echo "Please answer yes or no.";;
+        * ) log_show "Please answer yes or no.";;
       esac
     done
   fi
@@ -478,9 +487,7 @@ create_release() {
   ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
   sed -i".backup" -e"s/%\[VERSIONDATE/\[$DATE $VERSION_STR/g" src/tikz-trackschematic.sty
   sedi "/%%\[SCRIPT\]/d" src/tikz-trackschematic.sty
-  if [ $VERBOSE = 1 ]; then
-    echo "Updated version in src/tikz-trackschematic.sty"
-  fi
+  log_note "Updated version in src/tikz-trackschematic.sty"
 
   ## -- create zip-archive
   # create temporary folder
@@ -505,9 +512,7 @@ create_release() {
   mkdir $TMP/tikz-trackschematic-snippets
   cp -R doc/examples/*  $TMP/tikz-trackschematic-examples/
   cp -R doc/snippets/*  $TMP/tikz-trackschematic-snippets/
-  if [ $VERBOSE = 1 ]; then
-    echo "copied documentation"
-  fi
+  log_note "copied documentation"
 
   # copy src-files
   for SRC in src/*; do
@@ -517,30 +522,23 @@ create_release() {
       cp $SRC $TMP/
     fi
   done
-  if [ $VERBOSE = 1 ]; then
-    echo "copied src-files"
-  fi
+  log_note "copied src-files"
 
   # zip package
-  if [ $VERBOSE = 1 ]; then
-    zip -r $TMP.zip $TMP/*
-    echo "compressed the release in $TMP.zip"
-  else
-    zip -r $TMP.zip $TMP/*  >/dev/null 2>&1
-  fi
+  zip -r $TMP.zip $TMP/*  >/dev/null 2>&1
+  log_note "compressed the release in $TMP.zip"
 }
 
 create_release_notes() {
   if [ $NOINTERACT = 0 ]; then
-    echo ""
-    echo "Do you wish to create a release notes for the version $VERSION_NUM?"
-    echo $n "(y/n) $c"
+    log_show "Do you wish to create a release notes for the version $VERSION_NUM?"
+    log_show -n "(y/n)"
     while true; do
       read -p "" answer
       case $answer in
         [Yy]* ) break;;
         [Nn]* ) exit 1;;
-        * ) echo "Please answer yes or no.";;
+        * ) log_show "Please answer yes or no.";;
       esac
     done
   fi
@@ -568,21 +566,13 @@ run_test_cases() {
   # Start with an empty List:
   FAILED=""
 
-  if [ $VERBOSE = 1 ]; then
-    echo "==========="
-    echo "Comparison of the expected appearance with the freshly created."
-    echo "-----------"
-  fi
-
   for TEST in `ls $TESTDIR/*.tex`; do
     # setup
     FILE=$(basename "$TEST") # remove path
     NAME=${FILE%.*} # remove extension
     ADD_TO_LIST=0
     #
-    if [ $VERBOSE = 1 ]; then
-      echo "$NAME test:"
-    fi
+    log_info "$NAME test:"
     #
     #
     ## TeX build
@@ -594,26 +584,15 @@ run_test_cases() {
     TIME=$(awk "NR==2" .tex/${NAME}.time | cut -d " " -f2)
     # understanding TeX statistics:
     #   -> https://tex.stackexchange.com/questions/26208/components-of-latexs-memory-usage
-    # TOP=$(grep -n "Here is how much of TeX's memory you used:" .tex/${NAME}.log | cut -d: -f1)
-    # BOTTOM=$(($(grep -n "stack positions out of" .tex/${NAME}.log | cut -d: -f1) + 1))
-    # awk "NR>$TOP&&NR<$BOTTOM" .tex/${NAME}.log  > .tex/${NAME}.statistics.log
     MEMORY_USAGE=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
     MEMORY_USAGE=$(($MEMORY_USAGE/1000))
     #
     if [ $EXIT_CODE = 0 ]; then
-      if [ $VERBOSE = 1 ]; then
-        echo $n " - ${GREEN}build successful${COLOR_RESET}: $c"
-        echo $n "in ${TIME}s $c"
-        echo $n "and with $c"
-        echo "${MEMORY_USAGE}k of memory used."
-        # cat .tex/${NAME}.statistics.log
-      fi
+      log_info  " - build successful in ${TIME}s and with ${MEMORY_USAGE}k memory."
     else
       STATUS=1
       ADD_TO_LIST=1
-      if [ $VERBOSE = 1 ]; then
-        echo " - ${RED}build failed${COLOR_RESET}."
-      fi
+      log_error " - build failed."
     fi
     #
     #
@@ -647,15 +626,11 @@ run_test_cases() {
     fi
 
     if [ $EXIT_CODE = 0 ]; then
-      if [ $VERBOSE = 1 ]; then
-        echo " - ${GREEN}comparison successful${COLOR_RESET}."
-      fi
+      log_info  " - comparison successful."
     else
       STATUS=1
       ADD_TO_LIST=1
-      if [ $VERBOSE = 1 ]; then
-        echo " - ${RED}comparison failed${COLOR_RESET}."
-      fi
+      log_error " - comparison failed."
     fi
     ## if a test failed add to list
     if [ $ADD_TO_LIST = 1 ]; then
@@ -669,17 +644,10 @@ run_test_cases() {
   done
 
   if [ $STATUS = 0 ]; then
-    if [ $VERBOSE = 1 ]; then
-      echo "-----------"
-      echo "${GREEN}All tests passed!${COLOR_RESET}"
-    fi
+    log_info "\n=> All tests passed!\n"
   else
-    if [ $VERBOSE = 1 ]; then
-      echo "-----------"
-      echo "${RED}The following tests failed: ${FAILED}!${COLOR_RESET}"
-    else
-      echo "${RED}Some or all tests failed!${COLOR_RESET}"
-    fi
+    log_error "\n=> Some or all tests failed!"
+    log_debug "The following tests failed: ${FAILED}!"
     ERROR_OCCURRED=1
   fi
 
@@ -692,16 +660,14 @@ link_dev_files() {
   DEVDIR="$TEXMFLOCAL/tex/latex/tikz-trackschematic-dev"
   PROJECTDIR=$(pwd -P)
   if [ $NOINTERACT = 0 ]; then
-    echo ""
-    echo "Do you wish to install this package for development to"
-    echo "$DEVDIR?"
-    echo $n "(y/n) $c"
+    log_show "Do you wish to install this package for development to $DEVDIR?"
+    log_show -n "(y/n)"
     while true; do
       read -p "" answer
       case $answer in
         [Yy]* ) break;;
         [Nn]* ) exit 1;;
-        * ) echo "Please answer yes or no.";;
+        * ) log_show "Please answer yes or no.";;
       esac
     done
   fi
@@ -727,14 +693,14 @@ link_dev_files() {
 
     $rootrun ln -sfn $PROJECTDIR/$SRC $DEVDIR/$DST
 
-    if [ $VERBOSE = 1 ]; then
+    if [ $VERBOSITY = 1 ]; then
       echo "linked '$DST'"
     fi
   done
 
   # update TeX Live installation
   TEXlsr=`which mktexlsr`
-  if [ $VERBOSE = 1 ]; then
+  if [ $VERBOSITY -ge 3 ]; then
     $rootrun $TEXlsr
   else
     $rootrun $TEXlsr --quiet
@@ -745,28 +711,25 @@ remove_dev_files() {
   # destination folder inside the TeX Live installation
   cd $DEVDIR # from check_trackschematic
   if [ $NOINTERACT = 0 ]; then
-    echo ""
-    echo "Do you wish to remove the package '$DEVDIR'?"
-    echo $n "(y/n) $c"
+    log_show "Do you wish to remove the package '$DEVDIR'?"
+    log_show -n "(y/n)"
     while true; do
       read -p "" answer
       case $answer in
         [Yy]* ) break;;
         [Nn]* ) exit 1;;
-        * ) echo "Please answer yes or no.";;
+        * ) log_show "Please answer yes or no.";;
       esac
     done
   fi
-  if [ $VERBOSE = 1 ]; then
-    echo "removing $DEVDIR!"
-  fi
+  log_note "removing $DEVDIR!"
   $rootrun rm -f *
   cd ..
   $rootrun rmdir tikz-trackschematic-dev
 
   # update TeX Live installation
   TEXlsr=`which mktexlsr`
-  if [ $VERBOSE = 1 ]; then
+  if [ $VERBOSITY -ge 3 ]; then
     $rootrun $TEXlsr
   else
     $rootrun $TEXlsr --quiet
@@ -799,9 +762,7 @@ cleanup() {
     fi
 
     ##
-    if [ $VERBOSE = 1 ]; then
-      echo "Clean up done!"
-    fi
+    log_note "Clean up done!"
   fi
 }
 
