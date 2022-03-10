@@ -94,7 +94,7 @@ process_arguments() {
           print_usage
           exit 1
         fi
-        if [ ${1:0:1} = "-" ]; then
+        if [ "${1:0:1}" = "-" ]; then
           print_usage
           exit 1
         fi
