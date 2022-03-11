@@ -341,12 +341,13 @@ check_trackschematic() {
 
   ls $DEVDIR/tikz-trackschematic-dev.sty >> /dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
-    log_note "tikz-trackschematic-dev found"
+    log_note "Package tikz-trackschematic-dev found."
     return 0
   fi
   
-  log_error "Library 'tikz-trackschematic-dev' not found. Be sure to have tikz-trackschematic-dev installed!"
-  exit 1
+  log_note "Package 'tikz-trackschematic-dev' not found - using project src/."
+
+  export TEXINPUTS=.:../src/:$TEXINPUTS
 }
 
 ## checks for updated repository
