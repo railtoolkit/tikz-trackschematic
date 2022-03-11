@@ -129,11 +129,11 @@ fi
 
 log() {
   NO_LINE_BREAK=0
-  COLOR=${COLOR_RESET}
-  if [ "$2" = "-n" ]; then
-    NO_LINE_BREAK=1
-  fi
+  case $2 in
+    -n) NO_LINE_BREAK=1;;
+  esac
 
+  COLOR=${COLOR_RESET}
   case $1 in
     1) COLOR=${RED};;
     2) COLOR=${GREEN};;
