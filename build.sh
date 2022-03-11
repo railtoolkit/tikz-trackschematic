@@ -158,6 +158,23 @@ log_info()  { log 2 $@; } # print message in GREEN ; but not when --silent
 log_note()  { log 3 $@; } # print message          ; with --verbose and --debug
 log_debug() { log 4 $@; } # print message in YELLOW; only with --debug
 
+## -- user interaction
+
+user_confirmation () {
+  if [ ! $NOINTERACT = 1 ]; then
+    log_show $@
+    log_show -n "(y/n)"
+    while true; do
+      read -p "" answer
+      case $answer in
+        [Yy]* ) break;;
+        [Nn]* ) exit 1;;
+        * ) log_show "Please answer yes or no.";;
+      esac
+    done
+  fi
+}
+
 ## -- commands
 
 check_path() {
@@ -274,7 +291,7 @@ check_pdftoppm() {
     return 0
   fi
   
-  log_error "Program 'pdftoppm' not found."
+  log_note "Program 'pdftoppm' not found."
   # no # exit 1 ## can still modify ImageMagick policy!
 }
 
@@ -292,20 +309,9 @@ check_imagemagick_policy() {
 
     if [ $PDFTOPPM_CONVERT = 0 ]; then
       ## modify ImageMagick-6/policy.xml
-      if [ $NOINTERACT = 0 ]; then
-        log_show "Be sure to have either poppler(-utils) installed or an ImageMagick \
-                  policy which allows for PDF conversion! Do you wish to temporaly remove \
-                  the policy preventing ImageMagick from converting PDFs?"
-        log_show -n "(y/n)"
-        while true; do
-          read -p "" answer
-          case $answer in
-            [Yy]* ) break;;
-            [Nn]* ) exit 1;;
-            * ) log_show "Please answer yes or no.";;
-          esac
-        done
-      fi
+      user_confirmation "Be sure to have either poppler(-utils) installed or an ImageMagick \
+                         policy which allows for PDF conversion! Do you wish to temporaly remove \
+                         the policy preventing ImageMagick from converting PDFs?"
 
       check_sudo
 
@@ -440,19 +446,10 @@ check_url2() {
   
   log_show "WARNING: URL for [Unreleased] in CHANGELOG.md does not reflect the current version $VERSION_NUM."
   log_show "WARNING: Be sure to edit CHANGELOG.md and specify current version!"
+  
+  user_confirmation "Do you wish to continue without updated URL for [Unreleased]?"
 
-  if [ $NOINTERACT = 0 ]; then
-    log_show "Do you wish to continue without updated URL for [Unreleased]?"
-    log_show -n "(y/n)"
-    while true; do
-      read -p "" answer
-      case $answer in
-        [Yy]* ) break;;
-        [Nn]* ) exit 1;;
-        * ) log_show "Please answer yes or no.";;
-      esac
-    done
-  else
+  if [ $NOINTERACT = 1 ]; then
     log_error "Aborting in batch mode!"
     exit 1
   fi
@@ -465,18 +462,7 @@ create_release() {
   # This function produces a .zip-file in accordance to the requirements for CTAN.
   # For more information see https://ctan.org/help/upload-pkg.
   ####
-  if [ $NOINTERACT = 0 ]; then
-    log_show "Do you wish to create a release for the version $VERSION_NUM?"
-    log_show -n "(y/n)"
-    while true; do
-      read -p "" answer
-      case $answer in
-        [Yy]* ) break;;
-        [Nn]* ) exit 1;;
-        * ) log_show "Please answer yes or no.";;
-      esac
-    done
-  fi
+  user_confirmation "Do you wish to create a release for the version $VERSION_NUM?"
 
   ## create backup-file und update VERSIONDATE in tikz-trackschematic.sty
   sed -i".backup" -e"s/%\[VERSIONDATE/\[$DATE $VERSION_STR/g" src/tikz-trackschematic.sty
@@ -524,18 +510,8 @@ create_release() {
 }
 
 create_release_notes() {
-  if [ $NOINTERACT = 0 ]; then
-    log_show "Do you wish to create a release notes for the version $VERSION_NUM?"
-    log_show -n "(y/n)"
-    while true; do
-      read -p "" answer
-      case $answer in
-        [Yy]* ) break;;
-        [Nn]* ) exit 1;;
-        * ) log_show "Please answer yes or no.";;
-      esac
-    done
-  fi
+  user_confirmation "Do you wish to create a release notes for the version $VERSION_NUM?"
+
   ## -- create release note as excerpt from CHANGELOG.md
   # determine beginning and end in CHANGELOG.md 
   TOP=$(grep -n "Version \[$VERSION_NUM\]" CHANGELOG.md | cut -d: -f1)
@@ -653,18 +629,8 @@ link_dev_files() {
   TEXMFLOCAL=$(kpsewhich --var-value TEXMFLOCAL)
   DEVDIR="$TEXMFLOCAL/tex/latex/tikz-trackschematic-dev"
   PROJECTDIR=$(pwd -P)
-  if [ $NOINTERACT = 0 ]; then
-    log_show "Do you wish to install this package for development to $DEVDIR?"
-    log_show -n "(y/n)"
-    while true; do
-      read -p "" answer
-      case $answer in
-        [Yy]* ) break;;
-        [Nn]* ) exit 1;;
-        * ) log_show "Please answer yes or no.";;
-      esac
-    done
-  fi
+
+  user_confirmation "Do you wish to install this package for development to $DEVDIR?"
 
   # make sure that destination folder exists
   if [ ! -d "$DEVDIR" ]; then
@@ -704,18 +670,8 @@ link_dev_files() {
 remove_dev_files() {
   # destination folder inside the TeX Live installation
   cd $DEVDIR # from check_trackschematic
-  if [ $NOINTERACT = 0 ]; then
-    log_show "Do you wish to remove the package '$DEVDIR'?"
-    log_show -n "(y/n)"
-    while true; do
-      read -p "" answer
-      case $answer in
-        [Yy]* ) break;;
-        [Nn]* ) exit 1;;
-        * ) log_show "Please answer yes or no.";;
-      esac
-    done
-  fi
+  user_confirmation "Do you wish to remove the package '$DEVDIR'?"
+
   log_note "removing $DEVDIR!"
   $rootrun rm -f *
   cd ..
