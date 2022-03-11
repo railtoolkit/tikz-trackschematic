@@ -23,6 +23,7 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 
   * wrong option for labels in vehicles
   * foreground of sidetrack (alias)
+  * PackageWarning Error in development mode
 
 ## Version [0.6.3] - 2022-02-15
 
