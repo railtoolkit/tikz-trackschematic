@@ -133,15 +133,13 @@ log() {
   if [ "$2" = "-n" ]; then
     NO_LINE_BREAK=1
   fi
-  if [ $1 = 1 ]; then
-    COLOR=${RED}
-  fi
-  if [ $1 = 2 ]; then
-    COLOR=${GREEN}
-  fi
-  if [ $1 = 4 ]; then
-    COLOR=${YELLOW}
-  fi
+
+  case $1 in
+    1) COLOR=${RED};;
+    2) COLOR=${GREEN};;
+    4) COLOR=${YELLOW};;
+  esac
+  
   if [ $VERBOSITY -ge $1 ]; then
     shift
     if [ $NO_LINE_BREAK = 0 ]; then
