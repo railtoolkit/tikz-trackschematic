@@ -10,12 +10,12 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 
 ### Added
  
- * interlocking symbols for other than manual interlockings
- * i18n support
+ * unified build script for development
 
 ### Changed
   
-  * transmitters for balises
+  * revised symbol and syntax for balises
+  * the track loop was separated from the balises
   * replaced "\gettikzxy" with "\path let" syntax
   * label placement for derailers
 

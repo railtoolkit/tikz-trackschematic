@@ -11,5 +11,17 @@
 
 \maintrack (A) -- (B);
 
-\balise[backward]               at (T1) label ();
-\balise[backward,position=left] at (T2) label ();
+\balise[
+  forward,
+  along={0,1,3},
+  along switched={2},
+  oppose={0,2},
+] at (T1) label (A);
+\balise[
+  backward,
+  along={0,1,3},
+  along switched={2},
+  oppose={0,2,3},
+  oppose switched={1},
+  index % show index number
+] at (T2) label (B);

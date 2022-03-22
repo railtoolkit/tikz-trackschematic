@@ -3,7 +3,7 @@
 
 \coordinate (A)  at (0,0);
 
-\balise[backward,position=left] at (A) label ();
+\balise[forward,along={0}] at (A) label ();
 
 % anchor
 \anchor at (A);

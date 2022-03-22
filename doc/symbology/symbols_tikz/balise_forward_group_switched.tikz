@@ -3,7 +3,7 @@
 
 \coordinate (A)  at (0,0);
 
-\balise[bidirectional,position=right] at (A) label ();
+\balise[forward,switched] at (A) label ();
 
 % anchor
 \anchor at (A);

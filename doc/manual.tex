@@ -221,6 +221,7 @@
     The default traffic practice for this library ist right-hand traffic.
     You can change it either globally or locally with the key \texttt{traffic practice=left}.
     There is also the alias \texttt{position} for single local entries.
+    
     \begin{minipage}[c]{0.65\textwidth}
       \begin{lstlisting}[gobble=8]
         \documentclass{standalone}
@@ -1025,46 +1026,40 @@
 
     \subsubsection{Transmitters}\label{sec:transmitters}
 
-      \symboldescription{Generic transmitter command}\label{sym:generictransmitter}
-        \begin{lstlisting}[gobble=10]
-          \transmitter[options] at (coord) label (name);
-        \end{lstlisting}
-        values for \texttt{options} (comma seperated):
-        \begin{itemize}[label={}]
-          \item \texttt{type=balise} or \texttt{type=loop} (mandatory)
-          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (optional)
-          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
-          \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
-          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
-        \end{itemize}
-
-
       \symboldescription{Balise}\label{sym:balise}
-        \tsSymbol{transmitter_forward}
+        \tsSymbol{balise_group}
+        \tsSymbol{balise_individual}
         \begin{lstlisting}[gobble=10]
           \balise[options] at (coord) label (name);
         \end{lstlisting}
         values for \texttt{options} (comma seperated):
         \begin{itemize}[label={}]
-          \item \texttt{forward}, \texttt{backward} or \texttt{bidirectional} (optional)
+          \item \texttt{forward}, or \texttt{backward} (mandatory)
           \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+          \item \texttt{switched} (optional)
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
-        This command is equivalent to:
-        \begin{lstlisting}[gobble=10]
-          \transmitter[type=balise,options] at (coord) label (name);
-        \end{lstlisting}
+        The basic state is one in which the individual balises are not shown. The direction of the balises is the same as the direction of action. The direction of the balises is indicated by the orientation of the label. The \texttt{switched} option changes the symbol over the entire length.
+        \begin{itemize}[label={}]
+          \item \texttt{along=\{\textit{comma separated list of integers}\}} (optional)
+          \item \texttt{oppose=\{\textit{comma separated list of integers}\}} (optional)
+          \item \texttt{along switched=\{\textit{comma separated list of integers}\}} (optional)
+          \item \texttt{oppose switched=\{\textit{comma separated list of integers}\}} (optional)
+          \item \texttt{index} (optional)
+        \end{itemize}
+        If individual balises are to be shown, they are indicated via the \texttt{along} or \texttt{along switched} with the direction of the balise and with \texttt{oppose} or \texttt{oppose switched} against the balise. A list with integer values is passed to the parameter. The list starts with 0. For example, three individual balises are drawn with the list \{0,1,3\} and the balise at position 2 is left out. With the option \texttt{index}, the index number can also be displayed. If one of the options \texttt{along}, \texttt{along switched}, \texttt{oppose}, or \texttt{oppose switched} is set, the \texttt{switched} option is ignored.
       
         \mbox{}\\[0.2cm]
         Symbology entry as seen at top:
         \begin{lstlisting}[gobble=10]
-          \tsSymbol{transmitter_forward}% TeX environment
+          \tsSymbol{balise_group}% TeX environment
+          \tsSymbol{balise_individual}% TeX environment
         \end{lstlisting}
 
 
       \symboldescription{Loop}\label{sym:loop}
-        \tsSymbol{loop_transmitter}
+        \tsSymbol{trackloop}
         \begin{lstlisting}[gobble=10]
           \trackloop[options] at (coord) label (name);
         \end{lstlisting}
@@ -1074,15 +1069,11 @@
           \item \texttt{shift label=\{\textit{(label-coord)}\}} (optional, default: (0,0))
           \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
         \end{itemize}
-        This command is equivalent to:
-        \begin{lstlisting}[gobble=10]
-          \transmitter[type=loop,options] at (coord) label (name);
-        \end{lstlisting}
       
         \mbox{}\\[0.2cm]
         Symbology entry as seen at top:
         \begin{lstlisting}[gobble=10]
-          \tsSymbol{loop_transmitter}% TeX environment
+          \tsSymbol{trackloop}% TeX environment
         \end{lstlisting}
 
 
@@ -1590,13 +1581,11 @@
     \hline
       \No & direction control               & \tsSymbol{direction_control}                   & \ref{sec:routes}         \\
     \hline
-      \No & transmitter                     & \tsSymbol{transmitter}                         & \ref{sec:transmitters}   \\
+      \No & balise group                    & \tsSymbol{balise_group}                        & \ref{sec:transmitters}   \\
     \hline
-      \No & transmitter effective forward   & \tsSymbol{transmitter_forward}                 & \ref{sec:transmitters}   \\
+      \No & balise individual               & \tsSymbol{balise_individual}                   & \ref{sec:transmitters}   \\
     \hline
-      \No & transmitter bidirectional       & \tsSymbol{transmitter_bidirectional}           & \ref{sec:transmitters}   \\
-    \hline
-      \No & loop transmitter                & \tsSymbol{loop_transmitter}                    & \ref{sec:transmitters}   \\
+      \No & track loop                      & \tsSymbol{trackloop}                           & \ref{sec:transmitters}   \\
     \hline
       \No & platform                        & \tsSymbol[1.4]{platform}                       & \ref{sec:constructions}  \\
     \hline

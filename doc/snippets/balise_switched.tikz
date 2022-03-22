@@ -4,11 +4,12 @@
 % Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
-\coordinate (A) at (0,0);
-\coordinate (B) at (6,0);
-\coordinate (S) at (3,0);
+\coordinate (A)  at (0,0);
+\coordinate (B)  at (6,0);
+\coordinate (T1) at (2,0);
+\coordinate (T2) at (4,0);
 
 \maintrack (A) -- (B);
 
-\routesignal[forward] at (S) label ();
-\balise[] at (S) label ();
+\balise[forward,switched]  at (T1) label ();
+\balise[backward,switched] at (T2) label ();

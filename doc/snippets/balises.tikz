@@ -1,9 +1,15 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../snippets.tex
+
 % Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
 \coordinate (A)  at (0,0);
+\coordinate (B)  at (6,0);
+\coordinate (T1) at (2,0);
+\coordinate (T2) at (4,0);
 
-\balise[forward,position=left] at (A) label ();
+\maintrack (A) -- (B);
 
-% anchor
-\anchor at (A);
+\balise[forward]  at (T1) label ();
+\balise[backward] at (T2) label ();
