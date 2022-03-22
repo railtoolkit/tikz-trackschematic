@@ -7,7 +7,7 @@
 </defs>
 <g id="surface1">
 <g clip-path="url(#clip1)" clip-rule="nonzero">
-<path style="fill:none;stroke-width:0.79701;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-dasharray:2.98883,2.98883;stroke-miterlimit:10;" d="M -8.50275 8.503562 L 0.00115625 -0.00034375 L -8.50275 -8.50425 L -113.385563 -8.50425 L -113.385563 8.503562 Z M -8.50275 8.503562 " transform="matrix(1,0,0,-1,113.784,8.902)"/>
+<path style="fill:none;stroke-width:0.79701;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-dasharray:2.98883,2.98883;stroke-miterlimit:10;" d="M 0.00115625 -0.00034375 L -8.50275 8.503562 L -113.385563 8.503562 L -113.385563 -8.50425 L -8.50275 -8.50425 Z M 0.00115625 -0.00034375 " transform="matrix(1,0,0,-1,113.784,8.902)"/>
 </g>
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 113.898438 8.902344 C 113.898438 8.839844 113.847656 8.789062 113.785156 8.789062 C 113.722656 8.789062 113.671875 8.839844 113.671875 8.902344 C 113.671875 8.964844 113.722656 9.015625 113.785156 9.015625 C 113.847656 9.015625 113.898438 8.964844 113.898438 8.902344 Z M 113.898438 8.902344 "/>
 </g>

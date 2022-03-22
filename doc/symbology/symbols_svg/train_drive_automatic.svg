@@ -6,9 +6,9 @@
 </clipPath>
 </defs>
 <g id="surface1">
-<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 105.378906 0.496094 L 113.882812 9.003906 L 105.378906 17.507812 L 0.496094 17.507812 L 0.496094 0.496094 Z M 105.378906 0.496094 "/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 113.882812 9.003906 L 105.378906 0.496094 L 0.496094 0.496094 L 0.496094 17.507812 L 105.378906 17.507812 Z M 113.882812 9.003906 "/>
 <g clip-path="url(#clip1)" clip-rule="nonzero">
-<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -8.505094 8.505906 L -0.0011875 -0.00190625 L -8.505094 -8.505812 L -113.387906 -8.505812 L -113.387906 8.505906 Z M -8.505094 8.505906 " transform="matrix(1,0,0,-1,113.884,9.002)"/>
+<path style="fill:none;stroke-width:0.99628;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M -0.0011875 -0.00190625 L -8.505094 8.505906 L -113.387906 8.505906 L -113.387906 -8.505812 L -8.505094 -8.505812 Z M -0.0011875 -0.00190625 " transform="matrix(1,0,0,-1,113.884,9.002)"/>
 </g>
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 109.632812 9.003906 L 105.378906 4.75 L 105.378906 13.253906 Z M 109.632812 9.003906 "/>
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 113.996094 9.003906 C 113.996094 8.9375 113.945312 8.890625 113.882812 8.890625 C 113.820312 8.890625 113.769531 8.9375 113.769531 9.003906 C 113.769531 9.066406 113.820312 9.117188 113.882812 9.117188 C 113.945312 9.117188 113.996094 9.066406 113.996094 9.003906 Z M 113.996094 9.003906 "/>

@@ -39,6 +39,10 @@ install, test or release a package for tikz-trackschematic
 
  -t, --test               Tests the current src/ against the test/.
 
+ -c, --compile-doc        Compile documentation sources.
+
+ -y, --compile-symbology  Compile symbology sources.
+
  -r, --release VERSION    Creates a .zip with the release for given VERSION in
                           Semantic Versioning with leading 'v', e.g: v1.0.0
 
@@ -50,6 +54,8 @@ VERBOSITY=2  # set by cli argument
 NOINTERACT=0 # set by cli argument
 INSTALL=0    # set by cli argument
 TESTING=0    # set by cli argument
+COMPILE=0    # set by cli argument
+SYMBOLOGY=0  # set by cli argument
 RELEASE=0    # set by cli argument
 CLEANUP=1    # set by cli argument
 
@@ -86,6 +92,12 @@ process_arguments() {
         ;;
       -t|--test)
         TESTING=1
+        ;;
+      -c|--compile-doc)
+        COMPILE=1
+        ;;
+      -y|--compile-symbology)
+        SYMBOLOGY=1
         ;;
       -r|--release)
         RELEASE=1
@@ -253,6 +265,19 @@ check_texlive() {
   exit 1
 }
 
+check_latexmk() {
+  # check for latexmk
+  STATUS=0
+  command -v latexmk >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "latexmk found"
+    return 0
+  fi
+  
+  log_error "Program 'latexmk' not found. Be sure to have texlive or mactex installed!"
+  exit 1
+}
+
 check_pdflatex() {
   # check for pdflatex
   STATUS=0
@@ -291,6 +316,19 @@ check_pdftoppm() {
   
   log_note "Program 'pdftoppm' not found."
   # no # exit 1 ## can still modify ImageMagick policy!
+}
+
+check_pdf2svg() {
+  # check for poppler/pdf2svg
+  STATUS=0
+  command -v pdf2svg >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "pdf2svg found"
+    return 0
+  fi
+  
+  log_note "Program 'pdf2svg' not found."
+  exit 1
 }
 
 check_imagemagick_policy() {
@@ -347,7 +385,7 @@ check_trackschematic() {
   
   log_note "Package 'tikz-trackschematic-dev' not found - using project src/."
 
-  export TEXINPUTS=.:../src/:$TEXINPUTS
+  export TEXINPUTS=.:$(pwd)/src/:$TEXINPUTS
 }
 
 ## checks for updated repository
@@ -522,6 +560,152 @@ create_release_notes() {
   # extract the excerpt
   awk "NR>$TOP&&NR<$BOTTOM" CHANGELOG.md > release-note-$VERSION_STR.md
   sedi "s/###/##/g" release-note-$VERSION_STR.md
+}
+
+run_compile() {
+  ## compile order
+  # 1. manual, symbology-table, snippets
+  # 2. examples
+  # 3. symbology
+  cd doc/
+  mkdir -p .tex
+  log_debug "entered documentation dir"
+
+  ## 1. main documentation
+  set -- manual symbology-table snippets
+  for NAME in "$@"; do
+    log_info -n "compiling $NAME:"
+    #
+    ## TeX build
+    EXIT_CODE=0
+    /usr/bin/time -p -o .tex/${NAME}.time \
+      latexmk -pdf -f -g -emulate-aux-dir -auxdir=.tex -outdir=.tex $NAME.tex >> /dev/null 2>&1 || EXIT_CODE=1
+    #
+    TIME=$(awk "NR==2" .tex/${NAME}.time | cut -d " " -f2)
+    # understanding TeX statistics:
+    #   -> https://tex.stackexchange.com/questions/26208/components-of-latexs-memory-usage
+    MEMORY_USAGE=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
+    MEMORY_USAGE=$(($MEMORY_USAGE/1000))
+    #
+    ## compiling snipptes.tex may run out of memory!
+    ## to increase available memory find local texmf.cnf:
+    # kpsewhich -a texmf.cnf
+    # returns /usr/local/texlive/2021/texmf.cnf
+    ## append in /usr/local/texlive/2021/texmf.cnf
+    # % increase available memory
+    # main_memory = 12000000
+    # extra_mem_bot = 12000000
+    # font_mem_size = 12000000
+    # pool_size = 12000000
+    # buf_size = 12000000
+    ## run
+    # sudo mktexlsr
+    #
+    if [ $EXIT_CODE = 0 ]; then
+      log_info  " - build successful in ${TIME}s and with ${MEMORY_USAGE}k memory."
+      #
+      mv .tex/$NAME.pdf $NAME.pdf
+      log_debug "copied $NAME to doc/"
+    else
+      ERROR_OCCURRED=1
+      log_error " - build failed."
+    fi
+  done
+
+  ## 2. examples
+  cd examples/
+  mkdir -p .tex
+  EXAMPLEDIR="../examples"
+  for EXAMPLE in `ls $EXAMPLEDIR/*.tex`; do
+    FILE=$(basename "$EXAMPLE") # remove path
+    NAME=${FILE%.*} # remove extension
+    #
+    log_info -n "compiling $FILE:"
+    #
+    ## TeX build
+    EXIT_CODE=0
+    /usr/bin/time -p -o .tex/${NAME}.time \
+      latexmk -pdf -f -g -emulate-aux-dir -auxdir=.tex -outdir=.tex $NAME.tex >> /dev/null 2>&1 || EXIT_CODE=1
+    #
+    TIME=$(awk "NR==2" .tex/${NAME}.time | cut -d " " -f2)
+    # understanding TeX statistics:
+    #   -> https://tex.stackexchange.com/questions/26208/components-of-latexs-memory-usage
+    MEMORY_USAGE=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
+    MEMORY_USAGE=$(($MEMORY_USAGE/1000))
+    #
+    if [ $EXIT_CODE = 0 ]; then
+      log_info  " - build successful in ${TIME}s and with ${MEMORY_USAGE}k memory."
+      #
+      mv .tex/$NAME.pdf $NAME.pdf
+      log_debug "copied $NAME to doc/examples/"
+      #
+      if [ $PDFTOPPM_CONVERT = 0 ]; then
+        # 'compare' will convert the pdf to png
+        # -> this reasonably fast!
+        convert -density 300 ${NAME}.pdf ${NAME}.png >> /dev/null 2>&1
+      else
+        # use 'pdftoppm' convert the pdf to png
+        # -> this is slower!
+        pdftoppm -png -r 300 -singlefile ${NAME}.pdf ${NAME}.png
+      fi
+      log_debug "converted $NAME.pdf to PNG"
+    else
+      ERROR_OCCURRED=1
+      log_error " - build failed."
+    fi
+  done
+  cd ..
+
+  ## 3. symbology
+
+  cd ..
+}
+
+run_symbology() {
+  cd doc/symbology/
+  mkdir -p .tex
+
+  for FILE in symbols_tikz/*.tikz; do
+    SYMBOL=$(basename $FILE .tikz)
+    log_note "converting: $SYMBOL"
+
+    ## -- header tex file 
+    echo '\\documentclass[tikz,border=0]{standalone}' > tmp.tex
+    echo '\\usepackage[dev]{tikz-trackschematic}' >> tmp.tex
+    echo '\\begin{document}' >> tmp.tex
+    echo '\\begin{tikzpicture}[font=\\sffamily]' >> tmp.tex
+
+    ## -- input symbol
+    echo '\\input{'$FILE'}' >> tmp.tex
+
+    ## -- footer tex file
+    echo '\\end{tikzpicture}' >> tmp.tex
+    echo '\\end{document}' >> tmp.tex
+
+    # echo "---------------"
+    # cat tmp.tex
+    # echo "---------------"
+
+    ## -- compile tmp.tex
+    # pdflatex -output-directory=.tex tmp.tex
+    pdflatex -output-directory=.tex -interaction=batchmode tmp.tex 2>&1 > /dev/null
+
+    ## -- copy and convert symbols
+    pdf2svg .tex/tmp.pdf symbols_svg/$SYMBOL.svg
+    if [ $PDFTOPPM_CONVERT = 0 ]; then
+      # 'compare' will convert the pdf to png
+      # -> this reasonably fast!
+      convert -density 600 .tex/tmp.pdf symbols_png/$SYMBOL.png >> /dev/null 2>&1
+    else
+      # use 'pdftoppm' convert the pdf to png
+      # -> this is slower!
+      pdftoppm -png -r 600 -singlefile .tex/tmp.pdf symbols_png/$SYMBOL.png
+    fi
+    #
+    mv .tex/tmp.pdf symbols_pdf/$SYMBOL.pdf
+  done
+
+  cd ../..
 }
 
 run_test_cases() {
@@ -704,6 +888,20 @@ cleanup() {
       $rootrun mv ${POLICY_PATH}.backup $POLICY_PATH
     fi
 
+    ## from run_compile
+    if [ $COMPILE = 1 ]; then
+      # remove TMP-folder
+      rm -rf doc/examples/.tex
+      rm -rf doc/.tex
+    fi
+
+    ## from run_symbology
+    if [ $SYMBOLOGY = 1 ]; then
+      # remove TMP-folder
+      rm -rf doc/symbology/.tex/
+      rm doc/symbology/tmp.tex
+    fi
+
     ## from run_test_cases
     if [ $TESTING = 1 ]; then
       # remove TMP-folder
@@ -749,6 +947,29 @@ if [ $TESTING = 1 ]; then
 
   ##
   run_test_cases
+fi
+
+if [ $COMPILE = 1 ]; then
+  ##
+  check_latexmk
+  check_trackschematic
+  check_imagemagick
+  check_imagemagick_policy
+
+  ##
+  run_compile
+fi
+
+if [ $SYMBOLOGY = 1 ]; then
+  ##
+  check_pdflatex
+  check_trackschematic
+  check_imagemagick
+  check_imagemagick_policy
+  check_pdf2svg
+
+  ##
+  run_symbology
 fi
 
 if [ $RELEASE = 1 ]; then

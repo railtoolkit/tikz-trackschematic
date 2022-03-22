@@ -3,7 +3,7 @@
 
 \coordinate (A) at (0,0);
 
-\derailer[forward,branch=left] at (Y) label ();
+\derailer[forward,branch=left] at (A) label ();
 
 % anchor
 \anchor at (A);

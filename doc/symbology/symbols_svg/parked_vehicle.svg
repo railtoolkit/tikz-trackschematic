@@ -6,10 +6,10 @@
 </clipPath>
 </defs>
 <g id="surface1">
-<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 114.394531 1.007812 L 114.394531 18.015625 L 1.007812 18.015625 L 1.007812 1.007812 Z M 114.394531 1.007812 "/>
-<path style="fill:none;stroke-width:2.01509;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 56.694531 8.503187 L 56.694531 -8.504625 L -56.692188 -8.504625 L -56.692188 8.503187 Z M 56.694531 8.503187 " transform="matrix(1,0,0,-1,57.7,9.511)"/>
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 114.394531 9.511719 L 114.394531 1.007812 L 1.007812 1.007812 L 1.007812 18.015625 L 114.394531 18.015625 Z M 114.394531 9.511719 "/>
+<path style="fill:none;stroke-width:2.01509;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 56.694531 -0.00071875 L 56.694531 8.503187 L -56.692188 8.503187 L -56.692188 -8.504625 L 56.694531 -8.504625 Z M 56.694531 -0.00071875 " transform="matrix(1,0,0,-1,57.7,9.511)"/>
 <g clip-path="url(#clip1)" clip-rule="nonzero">
-<path style="fill:none;stroke-width:1.41731;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(100%,100%,100%);stroke-opacity:1;stroke-miterlimit:10;" d="M 56.694531 8.503187 L 56.694531 -8.504625 L -56.692188 -8.504625 L -56.692188 8.503187 Z M 56.694531 8.503187 " transform="matrix(1,0,0,-1,57.7,9.511)"/>
+<path style="fill:none;stroke-width:1.41731;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(100%,100%,100%);stroke-opacity:1;stroke-miterlimit:10;" d="M 56.694531 -0.00071875 L 56.694531 8.503187 L -56.692188 8.503187 L -56.692188 -8.504625 L 56.694531 -8.504625 Z M 56.694531 -0.00071875 " transform="matrix(1,0,0,-1,57.7,9.511)"/>
 </g>
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(92.549133%,0%,54.899597%);fill-opacity:1;" d="M 57.8125 9.511719 C 57.8125 9.449219 57.761719 9.398438 57.699219 9.398438 C 57.636719 9.398438 57.585938 9.449219 57.585938 9.511719 C 57.585938 9.574219 57.636719 9.625 57.699219 9.625 C 57.761719 9.625 57.8125 9.574219 57.8125 9.511719 Z M 57.8125 9.511719 "/>
 </g>
