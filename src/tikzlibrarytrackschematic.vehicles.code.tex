@@ -375,11 +375,9 @@
     \iftoggle{is_parked}{}{% vehicle NOT parked
       \ifdefstring{\operationmode}{manual}{%
         \path[draw=none, fill=\foreground] ($\facefactor*(-0.4,0)$) circle (0.15);% dot
-        \coordinate (ts-v-l) at ($(ts-v-l) + \facefactor*(-0.25,0)$);%
       }{
         \ifdefstring{\operationmode}{automatic}{%
           \path[draw=none, fill=\foreground] ($\facefactor*(-0.15,0)$) -- ++($\facefactor*(-0.15,0) +(0,0.15)$) -- ++(0,-0.3) -- cycle;% triangle
-          \coordinate (ts-v-l) at ($(ts-v-l) + \facefactor*(-0.15,0)$);%
         }{%
           \ifdefstring{\operationmode}{undefined}{}{%
             \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/operation}{“manual“, “automatic“ OR “undefined“ as key required}}%
@@ -397,6 +395,12 @@
     }%
     \iftoggle{train_is_a_ghost}{% ghost train
       \coordinate (ts-v-l) at ($(ts-v-l) + (0,0.16)$);%
+    }{}%
+    \ifdefstring{\operationmode}{manual}{%
+      \coordinate (ts-v-l) at ($(ts-v-l) + \facefactor*(-0.25,0)$);%
+    }{}%
+    \ifdefstring{\operationmode}{automatic}{%
+      \coordinate (ts-v-l) at ($(ts-v-l) + \facefactor*(-0.15,0)$);%
     }{}%
     \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
       \path let \p1=\labelcoord in coordinate (ts-v-l) at ($(ts-v-l)+(\x1,\y1)$);%
