@@ -562,7 +562,7 @@ create_release_notes() {
   sedi "s/###/##/g" release-note-$VERSION_STR.md
 }
 
-run_compile() {
+run_compile_documentation() {
   ## compile order
   # 1. manual, symbology-table, snippets
   # 2. examples
@@ -661,7 +661,7 @@ run_compile() {
   cd ..
 }
 
-run_symbology() {
+run_compile_symbology() {
   cd doc/symbology/
   mkdir -p .tex
 
@@ -957,7 +957,7 @@ if [ $COMPILE = 1 ]; then
   check_imagemagick_policy
 
   ##
-  run_compile
+  run_compile_documentation
 fi
 
 if [ $SYMBOLOGY = 1 ]; then
@@ -969,7 +969,7 @@ if [ $SYMBOLOGY = 1 ]; then
   check_pdf2svg
 
   ##
-  run_symbology
+  run_compile_symbology
 fi
 
 if [ $RELEASE = 1 ]; then
