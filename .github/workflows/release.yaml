@@ -26,6 +26,9 @@ jobs:
           # Optionally strip `v` prefix
           strip_v: false
 
+      - name: "update tikz-trackschematic documentation before release"
+        run: ./build.sh --non-interactive --compile-doc
+
       - name: "create tikz-trackschematic package"
         run: ./build.sh --non-interactive --release ${{ steps.tag.outputs.tag }}
       
