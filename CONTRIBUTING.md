@@ -5,6 +5,13 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+# Enhancing and developing the tikz-trackschematic library
+
+1. The tikz-trackschematic should be regularly installed via TeX Live to modify the library. The distributed package comes with a development switch.
+2. Run the build script with `sudo ./build.sh --install-dev`. This will soft link the local files out of src folder into your TeX Live installation.
+3. The TeX command `\usepackage[dev]{tikz-trackschematic}` will load the linked src folder instead of the distributed package from TeX Live.
+4. After implementing your modification run `./build.sh --test` to check for any breaking changes.
+
 # Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
