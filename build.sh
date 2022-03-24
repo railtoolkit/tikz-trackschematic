@@ -325,15 +325,25 @@ check_pdftoppm() {
 }
 
 check_pdf2svg() {
-  # check for poppler/pdf2svg
+  # check for pdf2svg
   STATUS=0
   command -v pdf2svg >/dev/null 2>&1 || STATUS=1
   if [ $STATUS = 0 ]; then
     log_note "pdf2svg found"
+    svg_convert="pdf2svg"
+    return 0
+  fi
+
+  # check for poppler/pdftocairo
+  STATUS=0
+  command -v pdftocairo >/dev/null 2>&1 || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "pdftocairo found"
+    svg_convert="pdftocairo -svg"
     return 0
   fi
   
-  log_note "Program 'pdf2svg' not found."
+  log_note "Program 'pdf2svg' or 'pdftocairo' not found."
   exit 1
 }
 
@@ -683,7 +693,10 @@ run_compile_symbology() {
     pdflatex -output-directory=.tex -interaction=batchmode tmp.tex 2>&1 > /dev/null
 
     ## -- copy and convert symbols
-    pdf2svg .tex/tmp.pdf symbols_svg/$SYMBOL.svg
+    ## SVG
+    $svg_convert .tex/tmp.pdf symbols_svg/$SYMBOL.svg
+    #
+    ## PNG
     if [ $PDFTOPPM_CONVERT = 0 ]; then
       # 'compare' will convert the pdf to png
       # -> this reasonably fast!
