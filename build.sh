@@ -37,6 +37,8 @@ install, test or release a package for tikz-trackschematic
  -u, --uninstall-dev      Deinstall dev-package from local TeX Live environment.
                           The -u option overrides any previous -i option.
 
+ -x, --memory-increase    Increase available TeX memory.
+
  -t, --test               Tests the current src/ against the test/.
 
  -c, --compile-doc        Compile documentation sources.
@@ -53,6 +55,7 @@ EOF
 VERBOSITY=2  # set by cli argument
 NOINTERACT=0 # set by cli argument
 INSTALL=0    # set by cli argument
+TEXMEMORY=0  # set by cli argument
 TESTING=0    # set by cli argument
 COMPILE=0    # set by cli argument
 SYMBOLOGY=0  # set by cli argument
@@ -89,6 +92,9 @@ process_arguments() {
         ;;
       -u|--uninstall-dev)
         INSTALL=2
+        ;;
+      -x|--memory-increase)
+        TEXMEMORY=1
         ;;
       -t|--test)
         TESTING=1
@@ -587,20 +593,6 @@ run_compile_documentation() {
     MEMORY_USAGE=$(grep "words of memory out of" .tex/${NAME}.log | cut -d " " -f2)
     MEMORY_USAGE=$(($MEMORY_USAGE/1000))
     #
-    ## compiling snipptes.tex may run out of memory!
-    ## to increase available memory find local texmf.cnf:
-    # kpsewhich -a texmf.cnf
-    # returns /usr/local/texlive/2021/texmf.cnf
-    ## append in /usr/local/texlive/2021/texmf.cnf
-    # % increase available memory
-    # main_memory = 12000000
-    # extra_mem_bot = 12000000
-    # font_mem_size = 12000000
-    # pool_size = 12000000
-    # buf_size = 12000000
-    ## run
-    # sudo mktexlsr
-    #
     if [ $EXIT_CODE = 0 ]; then
       log_info  " - build successful in ${TIME}s and with ${MEMORY_USAGE}k memory."
       #
@@ -869,6 +861,37 @@ remove_dev_files() {
   fi
 }
 
+change_tex_memory() {
+  ## compiling snipptes.tex may run out of memory!
+  ## to increase available memory find local texmf.cnf:
+  TEXMF_PATH=$(kpsewhich -a texmf.cnf | awk "NR==1") # default .../texlive/YYYY/texmf.cnf
+  log_note "Found local texmf.cnf at $TEXMF_PATH"
+  ##
+  ## check for already made changes
+  STATUS=0
+  grep -qs '%% \[tikz-trackschematic\] increase available memory' $TEXMF_PATH || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "$TEXMF_PATH has already been modified!"
+    return 0
+  fi
+  ##
+  user_confirmation "Do you wish to increase TeX memory by modifying the file $TEXMF_PATH?"
+  ## increase available memory
+  echo '%% [tikz-trackschematic] increase available memory' | $rootrun tee -a $TEXMF_PATH >> /dev/null 2>&1
+  echo 'main_memory = 12000000' | $rootrun tee -a $TEXMF_PATH >> /dev/null 2>&1
+  echo 'extra_mem_bot = 12000000' | $rootrun tee -a $TEXMF_PATH >> /dev/null 2>&1
+  echo 'font_mem_size = 12000000' | $rootrun tee -a $TEXMF_PATH >> /dev/null 2>&1
+  echo 'pool_size = 12000000' | $rootrun tee -a $TEXMF_PATH >> /dev/null 2>&1
+  echo 'buf_size = 12000000' | $rootrun tee -a $TEXMF_PATH >> /dev/null 2>&1
+  ## update TeX Live installation
+  TEXlsr=`which mktexlsr`
+  if [ $VERBOSITY -ge 3 ]; then
+    $rootrun $TEXlsr
+  else
+    $rootrun $TEXlsr --quiet
+  fi
+}
+
 cleanup() {
   ## -- cleanup
   ## from create_release
@@ -936,6 +959,15 @@ if [ $INSTALL = 2 ]; then
 
   ##
   remove_dev_files
+fi
+
+if [ $TEXMEMORY = 1 ]; then
+  ##
+  check_texlive
+  check_sudo
+
+  ##
+  change_tex_memory
 fi
 
 if [ $TESTING = 1 ]; then

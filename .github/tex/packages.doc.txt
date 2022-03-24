@@ -1,0 +1,53 @@
+## -- engine used to compile (pdflatex)
+latex-bin
+latexmk
+
+## -- direct dependencies
+tikz-trackschematic
+koma-script
+pgf
+xkeyval
+etoolbox
+adjustbox
+booktabs
+xltabular
+tools
+marginnote
+babel-english
+vhistory
+carlisle
+xcolor-solarized
+enumitem
+listings
+siunitx
+amsmath
+hyperref
+bookmark
+preprint
+
+## -- lwarp dependencies
+lwarp
+ifptex
+
+## -- indirect dependencies
+standalone
+epstopdf-pkg
+ltablex
+collectbox
+geometry
+environ
+xpatch
+infwarerr
+catchfile
+ltxcmds
+etexcmds
+letltxmacro
+newunicodechar
+upquote
+kvoptions
+kvsetkeys
+comment
+xstring
+microtype
+psnfss
+collection-fontsrecommended

@@ -14,11 +14,26 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      # 1. checkout the repo
       - name: "checkout"
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
 
-        ## create varibale ${{ steps.tag.outputs.tag }}
+      # 2. install TeX Live
+      - name: "install ghostscript"
+        run: sudo apt-get install -y ghostscript
+        
+      - name: "setup TeX Live (via paolobrasolin)"
+        uses: paolobrasolin/setup-texlive-action@v1
+        with:
+          profile-path:  ${{ github.workspace }}/.github/tex/profile.minimal.txt
+          packages-path: ${{ github.workspace }}/.github/tex/packages.doc.txt
+
+      # 3. (re-)compile the documentation
+      - name: "update tikz-trackschematic documentation before release"
+        run: ./build.sh --non-interactive --memory-increase --compile-doc
+
+      # 4. create package and release notes
+        ## get varibale ${{ steps.tag.outputs.tag }}
       - name: "get tag"
         id: tag
         uses: dawidd6/action-get-tag@v1
@@ -26,12 +41,10 @@ jobs:
           # Optionally strip `v` prefix
           strip_v: false
 
-      - name: "update tikz-trackschematic documentation before release"
-        run: ./build.sh --non-interactive --compile-doc
-
       - name: "create tikz-trackschematic package"
         run: ./build.sh --non-interactive --release ${{ steps.tag.outputs.tag }}
       
+      # 5. publish package as new release on github
       - name: "create release"
         id: create_release
         uses: actions/create-release@v1
@@ -60,3 +73,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           id: ${{ steps.create_release.outputs.id }}
+
+      # 6. upload new release to CTAN
+      ## TODO
