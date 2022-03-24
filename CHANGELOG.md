@@ -9,6 +9,12 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 ## [Unreleased]
 
 ### Added
+
+  * i18n option
+
+## Version [0.7.0] - 2022-04-02
+
+### Added
  
  * unified build script for development
 
@@ -143,7 +149,8 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
   Basic concept of a library with railway topology symbols and some examples.
 
 
-[Unreleased]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.3...master
+[Unreleased]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.7.0...master
+[0.7.0]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6...v0.6.1

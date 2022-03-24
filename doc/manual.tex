@@ -41,12 +41,12 @@
 
 \section{Introduction}\label{sec:intro}
 
-  \subsection[About]{About tikz-trackschematic}
+  \subsection{About tikz-trackschematic}
 
     The Ti\emph{k}Z-\emph{trackschematic} library is a toolbox of symbols geared primarily towards creating track schematic for either research or educational purposes.
     It provides a Ti\emph{k}Z frontend to some of the symbols which maybe needed to describe situations and layouts in railway operation.
     The library is divided into the following sublibraries:
-    \begin{itemize*}[label={}]
+    \begin{itemize}
       \item \texttt{topology},
       \item \texttt{trafficcontrol},
       \item \texttt{vehicles},
@@ -54,7 +54,7 @@
       \item \texttt{symbology},
       \item \texttt{electrics}, and
       \item \texttt{measures}.
-    \end{itemize*}
+    \end{itemize}
 
   \subsection{Acknowledgement}
 
@@ -65,19 +65,19 @@
   \subsection{Requirements}\label{sec:require}
 
     The library uses Ti\emph{k}Z and it is based the following packages:
-    \begin{itemize*}[label={}]
+    \begin{itemize}
       \item \texttt{tikz},
-      \item \texttt{lmodern},
       \item \texttt{xcolor}, and
       \item \texttt{etoolbox}.
-    \end{itemize*}
+    \end{itemize}
+
     Further more it uses the following Ti\emph{k}Z libraries:
-    \begin{itemize*}[label={}]
+    \begin{itemize}
       \item \texttt{calc},
       \item \texttt{intersections},
       \item \texttt{patterns}, and
       \item \texttt{arrows.meta}.
-    \end{itemize*}
+    \end{itemize}
 
 
   \subsection{License}
@@ -87,7 +87,7 @@
 
   \subsection{Alternatives}
 
-    Apart from this library, there is also a \href{https://tu-dresden.de/bu/verkehr/ibv/vst/die-professur/mitarb/ulrich-maschek/signalschablone} with german (Deutsche Bahn) symbols for MS Visio.
+    Apart from this library, there is also the \href{https://tu-dresden.de/bu/verkehr/ibv/vst/die-professur/mitarb/ulrich-maschek/signalschablone}{Signalschablone} with german (Deutsche Bahn) symbols for MS Visio.
 
 
 % \newpage
@@ -98,7 +98,7 @@
     Here is a complete working minimal example which will produce a single PDF file with the figure on the right:\\
     \begin{minipage}[c]{0.51\textwidth}
       \centering
-      \lstinputlisting[firstline=0]{./examples/minimal_working_example.tex}
+      \lstinputlisting{examples/minimal_working_example.tex}
     \end{minipage}
     \hfil
     \begin{minipage}[c]{0.45\textwidth}
@@ -143,7 +143,7 @@
     \begin{minipage}[c]{0.68\textwidth}
     \begin{lstlisting}[gobble=6]
 
-      \train[face=forward ] at (coordinate) label ();
+      \train[face=forward] at (coordinate) label ();
 
     \end{lstlisting}
     \end{minipage}
@@ -183,7 +183,7 @@
     \begin{minipage}[c]{0.68\textwidth}
     \begin{lstlisting}[gobble=6]
 
-      \turnout[forward ,branch=right] at (coordinate) label ();
+      \turnout[forward,branch=right] at (coordinate) label ();
 
     \end{lstlisting}
     \end{minipage}
@@ -194,7 +194,7 @@
     \begin{minipage}[c]{0.68\textwidth}
     \begin{lstlisting}[gobble=6]
 
-      \turnout[backward,branch=left ] at (coordinate) label ();
+      \turnout[backward,branch=left] at (coordinate) label ();
 
     \end{lstlisting}
     \end{minipage}
@@ -1413,7 +1413,7 @@
       \end{lstlisting}
       No \texttt{options} available.\\
       This command is equivalent to:
-      \begin{lstlisting}[gobble=10]
+      \begin{lstlisting}[gobble=8]
         \path[draw=foreground!50!background,dashed,shorten <=0.75cm,shorten >=0.75cm] (coord1) -- (coord2);
       \end{lstlisting}
     
@@ -1450,7 +1450,7 @@
 
     \symboldescription{Track Marking}\label{sym:trackmarking}
       \tsSymbol{track_marking}
-      \begin{lstlisting}[gobble=10]
+      \begin{lstlisting}[gobble=8]
         \trackmarking[color] (coord1) -- (coord2);
       \end{lstlisting}
       \begin{itemize}[label={}]
@@ -1481,149 +1481,149 @@
 \appendix
 \section{Symbology}
 
-  \begin{longtable}{|r|l|c|c|}
-    \hline 
-      No. & Name                            & Symbol                                         & See section              \\
-    \endhead
-    \hline
-      \No & main track                      & \tsSymbol{main_track}                          & \ref{sec:track}          \\
-    \hline
-      \No & secondary track                 & \tsSymbol{secondary_track}                     & \ref{sec:track}          \\
-    \hline
-      \No & track label                     & \tsSymbol{track_label}                         & \ref{sec:track}          \\
-    \hline
-      \No & bufferstop                      & \tsSymbol{bufferstop}                          & \ref{sec:track}          \\
-    \hline
-      \No & friction bufferstop             & \tsSymbol{friction_bufferstop}                 & \ref{sec:track}          \\
-    \hline
-      \No & track closure                   & \tsSymbol{track_closure}                       & \ref{sec:track}          \\
-    \hline
-      \No & turnout                         & \tsSymbol{turnout}                             & \ref{sym:turnouts}       \\
-    \hline
-      \No & \parbox[c]{5cm}{turnout\\with fouling point indicator}
-                                            & \tsSymbol{turnout_fouling}                     & \ref{sym:turnouts}       \\
-    \hline
-      \No & \parbox[c]{5cm}{turnout\\operated manually}
-                                            & \tsSymbol{turnout_manually}                    & \ref{sym:turnouts}       \\
-    \hline
-      \No & \parbox[c]{5cm}{turnout\\with points in right position}
-                                            & \tsSymbol{turnout_points_right}                & \ref{sym:turnouts}       \\
-    \hline
-      \No & \parbox[c]{5cm}{turnout\\with points in left position}
-                                            & \tsSymbol{turnout_points_left}                 & \ref{sym:turnouts}       \\
-    \hline
-      \No & \parbox[c]{5cm}{turnout\\with moving points}
-                                            & \tsSymbol{turnout_points_moving}               & \ref{sym:turnouts}       \\
-    \hline
-      \No & diamond crossing                & \tsSymbol{diamond_crossing}                    & \ref{sym:diamondcrossing}\\
-    \hline
-      \No & double-slip turnout             & \tsSymbol{slip_turnout}                        & \ref{sym:slipturnout}    \\
-    \hline
-      \No & derailer                        & \tsSymbol{derailer}                            & \ref{sym:derailer}       \\
-    \hline
-      \No & parked vehicles                 & \tsSymbol{parked_vehicles}                     & \ref{sym:parkedvehicles} \\
-    \hline
-      \No & train in shunting mode          & \tsSymbol{train_shunt_mode}                    & \ref{sym:trainshunting}  \\
-    \hline
-      \No & train shunting                  & \tsSymbol{train_shunting}                      & \ref{sym:trainshunting}  \\
-    \hline
-      \No & train                           & \tsSymbol{train}                               & \ref{sym:trains}         \\
-    \hline
-      \No & train moving slow               & \tsSymbol{train_moving_slow}                   & \ref{sym:trains}         \\
-    \hline
-      \No & train moving                    & \tsSymbol{train_moving}                        & \ref{sym:trains}         \\
-    \hline
-      \No & train moving fast               & \tsSymbol{train_moving_fast}                   & \ref{sym:trains}         \\
-    \hline
-      \No & train ghost                     & \tsSymbol{train_ghost}                         & \ref{sym:trains}         \\
-    \hline
-      \No & train operated automatically    & \tsSymbol{train_drive_automatic}               & \ref{sym:trains}         \\
-    \hline
-      \No & train operated by human         & \tsSymbol{train_drive_human}                   & \ref{sym:trains}         \\
-    \hline
-      \No & distant signal                  & \tsSymbol[1.4]{distant_signal}                 & \ref{sym:signals}        \\
-    \hline
-      \No & \parbox[c]{4cm}{distant signal\\with speed indicator}
-                                            & \tsSymbol[1.4]{distant_speed_signal}           & \ref{sym:signals}        \\
-    \hline
-      \No & speed signal                    & \tsSymbol[1.4]{speed_signal}                   & \ref{sym:signals}        \\
-    \hline
-      \No & block signal                    & \tsSymbol[1.4]{block_signal}                   & \ref{sym:signals}        \\
-    \hline
-      \No & route signal                    & \tsSymbol[1.4]{route_signal}                   & \ref{sym:signals}        \\
-    \hline
-      \No & \parbox[c]{5cm}{combined signal (distant, block and route signal)}
-                                            & \tsSymbol[1.4]{combined_signal}                & \ref{sym:signals}        \\
-    \hline
-      \No & shunt signal                    & \tsSymbol[1.4]{shunt_signal}                   & \ref{sym:signals}        \\
-    \hline
-      \No & shunt signal locked             & \tsSymbol[1.4]{locked_shunt_signal}            & \ref{sym:signals}        \\
-    \hline
-      \No & shunt limit                     & \tsSymbol[1.4]{shunt_limit}                    & \ref{sym:signals}        \\
-    \hline
-      \No & train berth sign                & \tsSymbol[1.4]{train_berth_sign}               & \ref{sym:signals}        \\
-    \hline
-      \No & view point                      & \tsSymbol[1.4]{view_point}                     & \ref{sec:locations}      \\
-    \hline
-      \No & braking point                   & \tsSymbol[1.4]{braking_point}                  & \ref{sec:locations}      \\
-    \hline
-      \No & end of movement authority       & \tsSymbol[1.4]{end_of_authority}               & \ref{sec:locations}      \\
-    \hline
-      \No & danger point                    & \tsSymbol[1.4]{danger_point}                   & \ref{sec:locations}      \\
-    \hline
-      \No & clearing point                  & \tsSymbol{clearing_point}                      & \ref{sec:clearingpoints} \\
-    \hline
-      \No & block clearing point            & \tsSymbol{block_clearing_point}                & \ref{sec:clearingpoints} \\
-    \hline
-      \No & route clearing point            & \tsSymbol{route_clearing_point}                & \ref{sec:clearingpoints} \\
-    \hline
-      \No & route                           & \tsSymbol{route}                               & \ref{sec:routes}         \\
-    \hline
-      \No & direction control               & \tsSymbol{direction_control}                   & \ref{sec:routes}         \\
-    \hline
-      \No & balise group                    & \tsSymbol{balise_group}                        & \ref{sec:transmitters}   \\
-    \hline
-      \No & balise individual               & \tsSymbol{balise_individual}                   & \ref{sec:transmitters}   \\
-    \hline
-      \No & track loop                      & \tsSymbol{trackloop}                           & \ref{sec:transmitters}   \\
-    \hline
-      \No & platform                        & \tsSymbol[1.4]{platform}                       & \ref{sec:constructions}  \\
-    \hline
-      \No & level crossing                  & \tsSymbol[2.0]{level_crossing}                 & \ref{sec:constructions}  \\
-    \hline
-      \No & bridge                          & \tsSymbol[2.0]{bridge}                         & \ref{sec:constructions}  \\
-    \hline
-      \No & hump                            & \tsSymbol[1.4]{hump}                           & \ref{sec:constructions}  \\
-    \hline
-      \No & interlocking                    & \tsSymbol{interlocking}                        & \ref{sec:constructions}  \\
-    \hline
-      \No & pylons                          & \tsSymbol[1.4]{pylon}                          & \ref{sec:constructions}  \\
-    \hline
-      \No & distant power off               & \tsSymbol[1.4]{distant_power_off}              & \ref{sec:electrics}      \\
-    \hline
-      \No & power off                       & \tsSymbol[1.4]{power_off}                      & \ref{sec:electrics}      \\
-    \hline
-      \No & power on                        & \tsSymbol[1.4]{power_on}                       & \ref{sec:electrics}      \\
-    \hline
-      \No & distant pantograph down         & \tsSymbol[1.4]{distant_pantograph_down}        & \ref{sec:electrics}      \\
-    \hline
-      \No & pantograph down                 & \tsSymbol[1.4]{pantograph_down}                & \ref{sec:electrics}      \\
-    \hline
-      \No & pantograph up                   & \tsSymbol[1.4]{pantograph_up}                  & \ref{sec:electrics}      \\
-    \hline
-      \No & wire limit                      & \tsSymbol[1.4]{wire_limit}                     & \ref{sec:electrics}      \\
-    \hline
-      \No & track distance (in \si{\metre}) & \tsSymbol[2.0]{track_distance}                 & \ref{sec:measures}       \\
-    \hline
-      \No & train berth shape               & \tsSymbol{train_berth}                         & \ref{sec:measures}       \\
-    \hline
-      \No & Messure line                    & \tsSymbol{measure_line}                        & \ref{sec:measures}       \\
-    \hline
-      \No & hectometer                      & \tsSymbol{hectometer}                          & \ref{sec:measures}       \\
-    \hline
-      \No & track marking                   & \tsSymbol{track_marking}                       & \ref{sec:measures}       \\
-    \hline
-  \end{longtable}
+%   \begin{longtable}{|r|l|c|c|}
+%     \hline 
+%       No. & Name                            & Symbol                                         & See section              \\
+%     \endhead
+%     \hline
+%       \No & main track                      & \tsSymbol{main_track}                          & \ref{sec:track}          \\
+%     \hline
+%       \No & secondary track                 & \tsSymbol{secondary_track}                     & \ref{sec:track}          \\
+%     \hline
+%       \No & track label                     & \tsSymbol{track_label}                         & \ref{sec:track}          \\
+%     \hline
+%       \No & bufferstop                      & \tsSymbol{bufferstop}                          & \ref{sec:track}          \\
+%     \hline
+%       \No & friction bufferstop             & \tsSymbol{friction_bufferstop}                 & \ref{sec:track}          \\
+%     \hline
+%       \No & track closure                   & \tsSymbol{track_closure}                       & \ref{sec:track}          \\
+%     \hline
+%       \No & turnout                         & \tsSymbol{turnout}                             & \ref{sym:turnouts}       \\
+%     \hline
+%       \No & \parbox[c]{5cm}{turnout\\with fouling point indicator}
+%                                             & \tsSymbol{turnout_fouling}                     & \ref{sym:turnouts}       \\
+%     \hline
+%       \No & \parbox[c]{5cm}{turnout\\operated manually}
+%                                             & \tsSymbol{turnout_manually}                    & \ref{sym:turnouts}       \\
+%     \hline
+%       \No & \parbox[c]{5cm}{turnout\\with points in right position}
+%                                             & \tsSymbol{turnout_points_right}                & \ref{sym:turnouts}       \\
+%     \hline
+%       \No & \parbox[c]{5cm}{turnout\\with points in left position}
+%                                             & \tsSymbol{turnout_points_left}                 & \ref{sym:turnouts}       \\
+%     \hline
+%       \No & \parbox[c]{5cm}{turnout\\with moving points}
+%                                             & \tsSymbol{turnout_points_moving}               & \ref{sym:turnouts}       \\
+%     \hline
+%       \No & diamond crossing                & \tsSymbol{diamond_crossing}                    & \ref{sym:diamondcrossing}\\
+%     \hline
+%       \No & double-slip turnout             & \tsSymbol{slip_turnout}                        & \ref{sym:slipturnout}    \\
+%     \hline
+%       \No & derailer                        & \tsSymbol{derailer}                            & \ref{sym:derailer}       \\
+%     \hline
+%       \No & parked vehicles                 & \tsSymbol{parked_vehicles}                     & \ref{sym:parkedvehicles} \\
+%     \hline
+%       \No & train in shunting mode          & \tsSymbol{train_shunt_mode}                    & \ref{sym:trainshunting}  \\
+%     \hline
+%       \No & train shunting                  & \tsSymbol{train_shunting}                      & \ref{sym:trainshunting}  \\
+%     \hline
+%       \No & train                           & \tsSymbol{train}                               & \ref{sym:trains}         \\
+%     \hline
+%       \No & train moving slow               & \tsSymbol{train_moving_slow}                   & \ref{sym:trains}         \\
+%     \hline
+%       \No & train moving                    & \tsSymbol{train_moving}                        & \ref{sym:trains}         \\
+%     \hline
+%       \No & train moving fast               & \tsSymbol{train_moving_fast}                   & \ref{sym:trains}         \\
+%     \hline
+%       \No & train ghost                     & \tsSymbol{train_ghost}                         & \ref{sym:trains}         \\
+%     \hline
+%       \No & train operated automatically    & \tsSymbol{train_drive_automatic}               & \ref{sym:trains}         \\
+%     \hline
+%       \No & train operated by human         & \tsSymbol{train_drive_human}                   & \ref{sym:trains}         \\
+%     \hline
+%       \No & distant signal                  & \tsSymbol[1.4]{distant_signal}                 & \ref{sym:signals}        \\
+%     \hline
+%       \No & \parbox[c]{4cm}{distant signal\\with speed indicator}
+%                                             & \tsSymbol[1.4]{distant_speed_signal}           & \ref{sym:signals}        \\
+%     \hline
+%       \No & speed signal                    & \tsSymbol[1.4]{speed_signal}                   & \ref{sym:signals}        \\
+%     \hline
+%       \No & block signal                    & \tsSymbol[1.4]{block_signal}                   & \ref{sym:signals}        \\
+%     \hline
+%       \No & route signal                    & \tsSymbol[1.4]{route_signal}                   & \ref{sym:signals}        \\
+%     \hline
+%       \No & \parbox[c]{5cm}{combined signal (distant, block and route signal)}
+%                                             & \tsSymbol[1.4]{combined_signal}                & \ref{sym:signals}        \\
+%     \hline
+%       \No & shunt signal                    & \tsSymbol[1.4]{shunt_signal}                   & \ref{sym:signals}        \\
+%     \hline
+%       \No & shunt signal locked             & \tsSymbol[1.4]{locked_shunt_signal}            & \ref{sym:signals}        \\
+%     \hline
+%       \No & shunt limit                     & \tsSymbol[1.4]{shunt_limit}                    & \ref{sym:signals}        \\
+%     \hline
+%       \No & train berth sign                & \tsSymbol[1.4]{train_berth_sign}               & \ref{sym:signals}        \\
+%     \hline
+%       \No & view point                      & \tsSymbol[1.4]{view_point}                     & \ref{sec:locations}      \\
+%     \hline
+%       \No & braking point                   & \tsSymbol[1.4]{braking_point}                  & \ref{sec:locations}      \\
+%     \hline
+%       \No & end of movement authority       & \tsSymbol[1.4]{end_of_authority}               & \ref{sec:locations}      \\
+%     \hline
+%       \No & danger point                    & \tsSymbol[1.4]{danger_point}                   & \ref{sec:locations}      \\
+%     \hline
+%       \No & clearing point                  & \tsSymbol{clearing_point}                      & \ref{sec:clearingpoints} \\
+%     \hline
+%       \No & block clearing point            & \tsSymbol{block_clearing_point}                & \ref{sec:clearingpoints} \\
+%     \hline
+%       \No & route clearing point            & \tsSymbol{route_clearing_point}                & \ref{sec:clearingpoints} \\
+%     \hline
+%       \No & route                           & \tsSymbol{route}                               & \ref{sec:routes}         \\
+%     \hline
+%       \No & direction control               & \tsSymbol{direction_control}                   & \ref{sec:routes}         \\
+%     \hline
+%       \No & balise group                    & \tsSymbol{balise_group}                        & \ref{sec:transmitters}   \\
+%     \hline
+%       \No & balise individual               & \tsSymbol{balise_individual}                   & \ref{sec:transmitters}   \\
+%     \hline
+%       \No & track loop                      & \tsSymbol{trackloop}                           & \ref{sec:transmitters}   \\
+%     \hline
+%       \No & platform                        & \tsSymbol[1.4]{platform}                       & \ref{sec:constructions}  \\
+%     \hline
+%       \No & level crossing                  & \tsSymbol[2.0]{level_crossing}                 & \ref{sec:constructions}  \\
+%     \hline
+%       \No & bridge                          & \tsSymbol[2.0]{bridge}                         & \ref{sec:constructions}  \\
+%     \hline
+%       \No & hump                            & \tsSymbol[1.4]{hump}                           & \ref{sec:constructions}  \\
+%     \hline
+%       \No & interlocking                    & \tsSymbol{interlocking}                        & \ref{sec:constructions}  \\
+%     \hline
+%       \No & pylons                          & \tsSymbol[1.4]{pylon}                          & \ref{sec:constructions}  \\
+%     \hline
+%       \No & distant power off               & \tsSymbol[1.4]{distant_power_off}              & \ref{sec:electrics}      \\
+%     \hline
+%       \No & power off                       & \tsSymbol[1.4]{power_off}                      & \ref{sec:electrics}      \\
+%     \hline
+%       \No & power on                        & \tsSymbol[1.4]{power_on}                       & \ref{sec:electrics}      \\
+%     \hline
+%       \No & distant pantograph down         & \tsSymbol[1.4]{distant_pantograph_down}        & \ref{sec:electrics}      \\
+%     \hline
+%       \No & pantograph down                 & \tsSymbol[1.4]{pantograph_down}                & \ref{sec:electrics}      \\
+%     \hline
+%       \No & pantograph up                   & \tsSymbol[1.4]{pantograph_up}                  & \ref{sec:electrics}      \\
+%     \hline
+%       \No & wire limit                      & \tsSymbol[1.4]{wire_limit}                     & \ref{sec:electrics}      \\
+%     \hline
+%       \No & track distance (in \si{\metre}) & \tsSymbol[2.0]{track_distance}                 & \ref{sec:measures}       \\
+%     \hline
+%       \No & train berth shape               & \tsSymbol{train_berth}                         & \ref{sec:measures}       \\
+%     \hline
+%       \No & Messure line                    & \tsSymbol{measure_line}                        & \ref{sec:measures}       \\
+%     \hline
+%       \No & hectometer                      & \tsSymbol{hectometer}                          & \ref{sec:measures}       \\
+%     \hline
+%       \No & track marking                   & \tsSymbol{track_marking}                       & \ref{sec:measures}       \\
+%     \hline
+%   \end{longtable}
 
 \clearpage
 \input{versionhistory.tex}
