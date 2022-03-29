@@ -1,6 +1,7 @@
 ## -- engine used to compile (pdflatex)
 latex-bin
 latexmk
+ctan-o-mat
 
 ## -- direct dependencies
 tikz-trackschematic

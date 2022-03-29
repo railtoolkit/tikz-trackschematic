@@ -568,14 +568,27 @@ create_release_notes() {
   ## -- create release note as excerpt from CHANGELOG.md
   # determine beginning and end in CHANGELOG.md 
   TOP=$(grep -n "Version \[$VERSION_NUM\]" CHANGELOG.md | cut -d: -f1)
-  awk "NR>$TOP" CHANGELOG.md > release-note-tmp.md
-  BOTTOM=$(grep -n -m 1 "## Version" release-note-tmp.md | cut -d: -f1)
+  awk "NR>$TOP" CHANGELOG.md > release-note.tmp.md
+  BOTTOM=$(grep -n -m 1 "## Version" release-note.tmp.md | cut -d: -f1)
   BOTTOM=$(( $TOP + $BOTTOM ))
   BOTTOM=$(( $BOTTOM - 2 ))
   TOP=$(( $TOP + 1 ))
   # extract the excerpt
   awk "NR>$TOP&&NR<$BOTTOM" CHANGELOG.md > release-note-$VERSION_STR.md
   sedi "s/###/##/g" release-note-$VERSION_STR.md
+}
+
+create_ctan_configuration() {
+  # modify the file .github/tex/tikz-trackschematic.pkg for ctan-o-mat
+  # 1. replace \version{}%%[SCRIPT]
+  sed -i".backup" -e"s/version{}%%\[SCRIPT\]/version{$DATE $VERSION_STR}/g" .github/tex/tikz-trackschematic.pkg
+
+  # 2. replace \file{}%%[SCRIPT]
+  sedi "s/file{}%%\[SCRIPT\]/file{tikz-trackschematic-$VERSION_STR.zip}/g" .github/tex/tikz-trackschematic.pkg
+
+  # 3. replace %RELEASE-NOTES%%[SCRIPT]
+  awk '/%RELEASE-NOTES%%\[SCRIPT\]/{system("cat release-note-*.md");next}1' .github/tex/tikz-trackschematic.pkg > .github/tex/tikz-trackschematic.tmp.pkg
+  mv .github/tex/tikz-trackschematic.tmp.pkg .github/tex/tikz-trackschematic.pkg
 }
 
 run_compile_documentation() {
@@ -909,13 +922,11 @@ cleanup() {
   ## -- cleanup
   ## from create_release
   if [ $CLEANUP = 1 ]; then
-    if [ $RELEASE = 1 ]; then
+
+    ## from run_test_cases
+    if [ $TESTING = 1 ]; then
       # remove TMP-folder
-      rm -rf $TMP
-      # undo changes to tikz-trackschematic.sty by sed
-      mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
-      # remove TMP-release-note
-      rm release-note-tmp.md
+      rm -rf test/.tex
     fi
 
     ## from check_imagemagick_policy
@@ -938,10 +949,16 @@ cleanup() {
       rm doc/symbology/tmp.tex
     fi
 
-    ## from run_test_cases
-    if [ $TESTING = 1 ]; then
+    ## from create_release(_notes)
+    if [ $RELEASE = 1 ]; then
       # remove TMP-folder
-      rm -rf test/.tex
+      rm -rf $TMP
+      # undo changes to tikz-trackschematic.sty by sed
+      mv src/tikz-trackschematic.sty.backup src/tikz-trackschematic.sty
+      # remove TMP-release-note
+      rm release-note.tmp.md
+      # # undo changes to .github/tex/tikz-trackschematic.pkg by sed
+      # mv .github/tex/tikz-trackschematic.pkg.backup .github/tex/tikz-trackschematic.pkg
     fi
 
     ##
@@ -1034,6 +1051,7 @@ if [ $RELEASE = 1 ]; then
   ##
   create_release
   create_release_notes
+  create_ctan_configuration
 fi
 
 ##

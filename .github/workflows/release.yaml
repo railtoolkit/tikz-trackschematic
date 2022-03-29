@@ -75,4 +75,5 @@ jobs:
           id: ${{ steps.create_release.outputs.id }}
 
       # 6. upload new release to CTAN
-      ## TODO
+      - name: CTAN submit
+        run: ctan-o-mat --verbose --submit .github/tex/tikz-trackschematic.pkg
