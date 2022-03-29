@@ -108,7 +108,7 @@ process_arguments() {
       -r|--release)
         RELEASE=1
         shift
-        if [ -z "$1" ] || [ "${1:0:1}" = "-" ]; then
+        if [ -z "$1" ] || [ "`echo $1 | cut -c1-1`" = "-" ]; then
           print_usage
           exit 1
         fi
