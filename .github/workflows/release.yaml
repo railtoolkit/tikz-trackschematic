@@ -11,7 +11,8 @@ on:
 
 ## A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  release:
+  create_package:
+    name: "create a TeX Live package for tikz-trackschematic"
     runs-on: ubuntu-latest
     steps:
       # 1. checkout the repo
@@ -32,8 +33,7 @@ jobs:
       - name: "update tikz-trackschematic documentation before release"
         run: ./build.sh --non-interactive --memory-increase --compile-doc
 
-      # 4. create package and release notes
-        ## get varibale ${{ steps.tag.outputs.tag }}
+      # 4. get varibale ${{ steps.tag.outputs.tag }}
       - name: "get tag"
         id: tag
         uses: dawidd6/action-get-tag@v1
@@ -41,10 +41,48 @@ jobs:
           # Optionally strip `v` prefix
           strip_v: false
 
+      # 5. create package and release notes
       - name: "create tikz-trackschematic package"
         run: ./build.sh --non-interactive --release ${{ steps.tag.outputs.tag }}
-      
-      # 5. publish package as new release on github
+
+      # 6. upload artifact to share it with other jobs
+      - uses: actions/upload-artifact@v3
+        with:
+          path: tikz-trackschematic-v0.7.0.zip
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: release-note-v0.7.0.md
+          if-no-files-found: warn # 'error' or 'ignore' are also available, defaults to `warn`
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: .github/tex/tikz-trackschematic.pkg
+          if-no-files-found: warn # 'error' or 'ignore' are also available, defaults to `warn`
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: .github/zenodo/metadata.json
+          if-no-files-found: warn # 'error' or 'ignore' are also available, defaults to `warn`
+
+  publish_github:
+    needs: create_package
+    name: "publish on github"
+    runs-on: ubuntu-latest
+    steps:
+      # 1. get varibale ${{ steps.tag.outputs.tag }}
+      - name: "get tag"
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          # Optionally strip `v` prefix
+          strip_v: false
+
+      # 2. download artifact in folder artifact/
+      - uses: actions/download-artifact@v3
+
+      # 3. publish package as new release on github
       - name: "create release"
         id: create_release
         uses: actions/create-release@v1
@@ -53,7 +91,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body_path: release-note-${{ steps.tag.outputs.tag }}.md
+          body_path: artifact/release-note-${{ steps.tag.outputs.tag }}.md
           draft: false
           prerelease: false
         
@@ -63,7 +101,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
+          asset_path: artifact/tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
           asset_name: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
           asset_content_type: application/zip
 
@@ -74,6 +112,21 @@ jobs:
         with:
           id: ${{ steps.create_release.outputs.id }}
 
-      # 6. upload new release to CTAN
+  publish_CTAN:
+    needs: create_package
+    name: "publish on CTAN"
+    runs-on: ubuntu-latest
+    steps:
+      # 1. download artifact in folder artifact/
+      - uses: actions/download-artifact@v3
+      
+      # 2. install ctan-o-mat
+      - name: "setup TeX Live (via paolobrasolin)"
+        uses: paolobrasolin/setup-texlive-action@v1
+        with:
+          profile-path:  ${{ github.workspace }}/.github/tex/profile.minimal.txt
+          packages-path: ${{ github.workspace }}/.github/tex/packages.upload.txt
+
+      # 3. upload new release to CTAN
       - name: CTAN submit
-        run: ctan-o-mat --verbose --submit .github/tex/tikz-trackschematic.pkg
+        run: ctan-o-mat --verbose --submit artifact/tikz-trackschematic.pkg

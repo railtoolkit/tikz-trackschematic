@@ -1,0 +1,30 @@
+{
+  "title": "TikZ-trackschematic",
+  "version": "%%[SCRIPT]", 
+  "publication_date": "%%[SCRIPT]", 
+  "creators": [
+    {
+      "orcid": "0000-0002-9384-8945", 
+      "affiliation": "TU Braunschweig", 
+      "name": "Scheidt, Martin"
+    }
+  ], 
+  "description": "A TikZ library for creating track diagrams in railways. The TikZ-trackschematic library is a toolbox of symbols geared primarily towards creating track schematic for either research or educational purposes. It provides a TikZ frontend to some of the symbols which maybe needed to describe situations and layouts in railway operation.",
+  "keywords": [
+    "tex", 
+    "tikz", 
+    "railway", 
+    "railroad", 
+    "tracks", 
+    "schematics"
+  ],
+  "license": {
+    "id": "ISC"
+  },
+  "language": "eng",
+  "access_right": "open", 
+  "resource_type": {
+    "type": "software", 
+    "title": "Software"
+  }
+}

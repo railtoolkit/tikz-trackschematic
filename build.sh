@@ -591,6 +591,15 @@ create_ctan_configuration() {
   mv .github/tex/tikz-trackschematic.tmp.pkg .github/tex/tikz-trackschematic.pkg
 }
 
+create_zenodo_metadata() {
+  # modify the file .github/zenodo/metadata.json for zenodo upload
+  # 1. replace "version": "%%[SCRIPT]"
+  sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION_STR\"/g" .github/zenodo/metadata.json
+
+  # 2. replace "publication_date": "%%[SCRIPT]"
+  sedi "s/\"publication_date\": \"%%\[SCRIPT\]\"/\"publication_date\": \"$DATE\"/g" .github/zenodo/metadata.json
+}
+
 run_compile_documentation() {
   ## compile order
   # 1. manual, symbology-table, snippets
@@ -959,6 +968,8 @@ cleanup() {
       rm release-note.tmp.md
       # # undo changes to .github/tex/tikz-trackschematic.pkg by sed
       # mv .github/tex/tikz-trackschematic.pkg.backup .github/tex/tikz-trackschematic.pkg
+      # # undo changes to .github/zenodo/metadata.json by sed
+      # mv .github/zenodo/metadata.json.backup .github/zenodo/metadata.json
     fi
 
     ##
@@ -1052,6 +1063,7 @@ if [ $RELEASE = 1 ]; then
   create_release
   create_release_notes
   create_ctan_configuration
+  create_zenodo_metadata
 fi
 
 ##
