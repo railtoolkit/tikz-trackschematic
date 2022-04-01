@@ -1,5 +1,7 @@
 # TikZ-trackschematic
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5539844.svg)](https://doi.org/10.5281/zenodo.5539844)
+
 ------------
 
 # Installation
