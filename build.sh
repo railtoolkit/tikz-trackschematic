@@ -453,26 +453,52 @@ check_changelog() {
   exit 1
 }
 
+check_citation() {
+  # check if $VERSION is present in CITATION.cff
+  STATUS=0
+  grep -qs "version: $VERSION_STR" CITATION.cff || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "Version $VERSION_STR is present in CITATION.cff."
+    return 0
+  fi
+  
+  log_error "Version $VERSION_STR not found in CITATION.cff. \
+            Be sure to edit CITATION.cff and specify current version!"
+  exit 1
+}
+
 check_date() {
-  ## extract DATE from versionhistory.tex and CHANGELOG.md
+  ## extract DATE from versionhistory.tex, CHANGELOG.md, and CITATION.cff
+  # fallback: DATE=$(date "+%Y-%m-%d")
+  #
+  STATUS=0
+  #
   LINE_1=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
   LINE_2=$(grep "Version \[$VERSION_NUM\]" CHANGELOG.md)
+  LINE_3=$(grep "date-released:" CITATION.cff)
   DATEISO_1=$(echo $LINE_1 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
   DATEISO_2=$(echo $LINE_2 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+  DATEISO_3=$(echo $LINE_3 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
 
-  if [ $DATEISO_1 = $DATEISO_2 ]; then
-    # DATE=$(date "+%Y-%m-%d")
+  if [ $DATEISO_1 != $DATEISO_2 ]; then
+    STATUS=1
+  fi
+  if [ $DATEISO_1 != $DATEISO_3 ]; then
+    STATUS=1
+  fi
+
+  if [ $STATUS = 0 ]; then
     DATE="$DATEISO_1" 
     log_note "The date $DATE was extracted from versionhistory.tex and CHANGELOG.md."
     return 0
   fi
   
-  log_error "The date in versionhistory.tex and CHANGELOG.md did not match.\
-            Be sure to edit versionhistory.tex or CHANGELOG.md and modifiy the date!"
+  log_error "The date in versionhistory.tex, CHANGELOG.md, and CITATION.cff did not match.\
+            Be sure to edit versionhistory.tex, CHANGELOG.md, or CITATION.cff and modifiy the date!"
   exit 1
 }
 
-check_url1() {
+check_changelog_url1() {
   ## extract urls from CHANGELOG.md
   STATUS=0
   LINE=$(grep "\[$VERSION_NUM\]: https://" CHANGELOG.md)
@@ -487,7 +513,7 @@ check_url1() {
   exit 1
 }
 
-check_url2() {
+check_changelog_url2() {
   ## extract urls from CHANGELOG.md
   STATUS=0
   LINE=$(grep "\[Unreleased\]: https://" CHANGELOG.md)
@@ -1049,11 +1075,12 @@ if [ $RELEASE = 1 ]; then
   ## check if version ist in the correct format
   check_version_number
 
-  ## check if $VERSION is present in CHANGELOG.md and versionhistory.tex
+  ## check if $VERSION is present in CHANGELOG.md, versionhistory.tex, and CITATION.cff
   check_versionhistory
   check_changelog
-  check_url1
-  check_url2
+  check_changelog_url1
+  check_changelog_url2
+  check_citation
   check_date
 
   ## check for installed software
