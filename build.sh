@@ -623,7 +623,7 @@ create_zenodo_metadata() {
   sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION_STR\"/g" .github/zenodo/metadata.json
 
   # 2. replace "publication_date": "%%[SCRIPT]"
-  sedi "s/\"publication_date\": \"%%\[SCRIPT\]\"/\"publication_date\": \"$DATE\"/g" .github/zenodo/metadata.json
+  # sedi "s/\"publication_date\": \"%%\[SCRIPT\]\"/\"publication_date\": \"$DATE\"/g" .github/zenodo/metadata.json
 }
 
 run_compile_documentation() {
