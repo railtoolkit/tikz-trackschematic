@@ -11,65 +11,116 @@ on:
 jobs:
   create_package:
     name: "create a TeX Live package"
+    outputs:
+      version: ${{ steps.tag.outputs.tag }}
     runs-on: ubuntu-latest
     steps:
+      # set varibale ${{ steps.tag.outputs.tag }}
+      - name: "get tag"
+        id: tag
+        run: echo "::set-output name=tag::v0.7.0"
+
       # checkout the repo
       - name: "checkout"
         uses: actions/checkout@v2
 
       # create package and release notes
       - name: "create tikz-trackschematic package"
-        run: ./build.sh --non-interactive --release v0.7.0
+        run: ./build.sh --non-interactive --release ${{ steps.tag.outputs.tag }}
 
       # upload artifact to share it with other jobs
       - uses: actions/upload-artifact@v3
         with:
-          path: tikz-trackschematic-v0.7.0.zip
+          path: |
+            tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
+            release-note-${{ steps.tag.outputs.tag }}.md
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-
-      - uses: actions/upload-artifact@v3
-        with:
-          path: release-note-v0.7.0.md
-          if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn`
-
       - uses: actions/upload-artifact@v3
         with:
           path: .github/tex/tikz-trackschematic.pkg
-          if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn`
-
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       - uses: actions/upload-artifact@v3
         with:
           path: .github/zenodo/metadata.json
-          if-no-files-found: warn # 'warn' or 'ignore' are also available, defaults to `warn`
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+  # publish_zenodo:
+  #   needs: create_package
+  #   name: "publish on zenodo sandbox"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # checkout the repo
+  #     - name: "checkout"
+  #       uses: actions/checkout@v2
+
+  #     # download artifact in folder artifact/
+  #     - uses: actions/download-artifact@v3
+  #     - run: |
+  #         mv ./artifact/tikz-trackschematic-*.zip ./
+  #         mv ./artifact/metadata.json ./
+
+  #     - name: "uploading to zenodo sandbox"
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         # ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
+  #         ZENODO_SANDBOX_ACCESS_TOKEN: ${{ secrets.ZENODO_SANDBOX_ACCESS_TOKEN }}
+  #       uses: zenodraft/action@0.10.0
+  #       with:
+  #         # collection: 5539844
+  #         collection: 1047380
+  #         filenames: tikz-trackschematic-v0.7.0.zip
+  #         upsert-doi: true
+  #         upsert-location: identifiers[1]
+  #         metadata: metadata.json
+  #         publish: true
+  #         sandbox: true
+  #         verbose: true
 
   publish_zenodo:
     needs: create_package
     name: "publish on zenodo sandbox"
+    outputs:
+      doi: ${{ steps.zenodraft.outputs.doi }}
     runs-on: ubuntu-latest
     steps:
-      # checkout the repo
-      - name: "checkout"
-        uses: actions/checkout@v2
-
       # download artifact in folder artifact/
       - uses: actions/download-artifact@v3
       - run: |
-          mv ./artifact/tikz-trackschematic-*.zip ./
-          mv ./artifact/metadata.json ./
+          mv ./artifact/tikz-trackschematic-${{needs.create_package.outputs.version}}.zip ./
+
+      - name: "install zenodraft"
+        run: npm install -g zenodraft
 
       - name: "uploading to zenodo sandbox"
+        id: zenodraft
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
           ZENODO_SANDBOX_ACCESS_TOKEN: ${{ secrets.ZENODO_SANDBOX_ACCESS_TOKEN }}
-        uses: zenodraft/action@0.10.0
+          COLLECTION: 1047380
+        run: |
+          ID=$(zenodraft --sandbox deposition create in-existing-collection $COLLECTION)
+          zenodraft --sandbox file add $ID tikz-trackschematic-*.zip
+          zenodraft --sandbox metadata update $ID artifact/metadata.json
+          zenodraft --sandbox deposition publish $ID
+          echo "::set-output name=doi::$(zenodraft --sandbox deposition show prereserved $ID)"
+
+  update_citation:
+    needs: publish_zenodo
+    name: "updates CITATION.cff"
+    runs-on: ubuntu-latest
+    steps:
+      # 1. checkout the repo for zenodraft/action@0.10.0 to work
+      - name: "checkout"
+        uses: actions/checkout@v2
+      
+      - run: ./build.sh --update-cite ${{needs.publish_zenodo.outputs.doi}}
+      
+      - name: push
+        uses: github-actions-x/commit@v2.8
         with:
-          # collection: 5539844
-          collection: 1047380
-          filenames: tikz-trackschematic-v0.7.0.zip
-          upsert-doi: true
-          upsert-location: identifiers[1]
-          metadata: metadata.json
-          publish: true
-          sandbox: true
-          verbose: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'github-action'
+          force-add: 'true'
+          files: CITATION.cff
+          commit-message: 'updated DOI (via github action)'
+          name: Martin Scheidt
+          email: m.scheidt@tu-bs.de

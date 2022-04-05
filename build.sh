@@ -48,6 +48,8 @@ install, test or release a package for tikz-trackschematic
  -r, --release VERSION    Creates a .zip with the release for given VERSION in
                           Semantic Versioning with leading 'v', e.g: v1.0.0
 
+ -z, --update-cite DOI    Updates the CITATION.cff with the current version in
+                          CHANGELOG.md and a given DOI
 EOF
 }
 
@@ -60,6 +62,7 @@ TESTING=0    # set by cli argument
 COMPILE=0    # set by cli argument
 SYMBOLOGY=0  # set by cli argument
 RELEASE=0    # set by cli argument
+CITATION=0   # set by cli argument
 CLEANUP=1    # set by cli argument
 
 process_arguments() {
@@ -113,6 +116,15 @@ process_arguments() {
           exit 1
         fi
         VERSION_STR=$1
+        ;;
+      -z|--update-cite)
+        CITATION=1
+        shift
+        if [ -z "$1" ] || [ "`echo $1 | cut -c1-1`" = "-" ]; then
+          print_usage
+          exit 1
+        fi
+        DOI=$1
         ;;
       *)
         print_usage
@@ -453,20 +465,6 @@ check_changelog() {
   exit 1
 }
 
-check_citation() {
-  # check if $VERSION is present in CITATION.cff
-  STATUS=0
-  grep -qs "version: $VERSION_STR" CITATION.cff || STATUS=1
-  if [ $STATUS = 0 ]; then
-    log_note "Version $VERSION_STR is present in CITATION.cff."
-    return 0
-  fi
-  
-  log_error "Version $VERSION_STR not found in CITATION.cff. \
-            Be sure to edit CITATION.cff and specify current version!"
-  exit 1
-}
-
 check_date() {
   ## extract DATE from versionhistory.tex, CHANGELOG.md, and CITATION.cff
   # fallback: DATE=$(date "+%Y-%m-%d")
@@ -475,17 +473,17 @@ check_date() {
   #
   LINE_1=$(grep "vhEntry{$VERSION_NUM" doc/versionhistory.tex)
   LINE_2=$(grep "Version \[$VERSION_NUM\]" CHANGELOG.md)
-  LINE_3=$(grep "date-released:" CITATION.cff)
+  # LINE_3=$(grep "date-released:" CITATION.cff)
   DATEISO_1=$(echo $LINE_1 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
   DATEISO_2=$(echo $LINE_2 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
-  DATEISO_3=$(echo $LINE_3 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+  # DATEISO_3=$(echo $LINE_3 | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
 
   if [ $DATEISO_1 != $DATEISO_2 ]; then
     STATUS=1
   fi
-  if [ $DATEISO_1 != $DATEISO_3 ]; then
-    STATUS=1
-  fi
+  # if [ $DATEISO_1 != $DATEISO_3 ]; then
+  #   STATUS=1
+  # fi
 
   if [ $STATUS = 0 ]; then
     DATE="$DATEISO_1" 
@@ -623,7 +621,7 @@ create_zenodo_metadata() {
   sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION_STR\"/g" .github/zenodo/metadata.json
 
   # 2. replace "publication_date": "%%[SCRIPT]"
-  # sedi "s/\"publication_date\": \"%%\[SCRIPT\]\"/\"publication_date\": \"$DATE\"/g" .github/zenodo/metadata.json
+  sedi "s/\"publication_date\": \"%%\[SCRIPT\]\"/\"publication_date\": \"$DATE\"/g" .github/zenodo/metadata.json
 }
 
 run_compile_documentation() {
@@ -953,6 +951,33 @@ change_tex_memory() {
   fi
 }
 
+update_citation() {
+  ## use CHANGELOG.md as source for $VERSION and $DATE
+  CHANGELOG_LINE=$(grep "Version \[" CHANGELOG.md | awk "NR==1")
+  VERSION=$(echo $CHANGELOG_LINE | egrep -o '(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)?')
+  DATE=$(echo $CHANGELOG_LINE | egrep -o '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+
+  ## check for already made changes
+  STATUS=0
+  grep -qs "version: v$VERSION" CITATION.cff || STATUS=1
+  if [ $STATUS = 0 ]; then
+    log_note "CITATION.cff is already up to date!"
+    return 0
+  fi
+
+  ## find lines in CITATION.cff
+  VERSION_LINE=$(grep -n 'version: v' CITATION.cff | cut -d: -f1)
+  DATE_LINE=$(grep -n 'date-released:' CITATION.cff | cut -d: -f1)
+  # select the second DOI
+  DOI_LINE=$(grep -n 'type: doi' CITATION.cff | cut -d: -f1 | awk "NR==2")
+  DOI_LINE=$(( $DOI_LINE + 1 ))
+
+  ## update CITATION.cff
+  sedi "${VERSION_LINE}s|.*|version: v${VERSION}|" CITATION.cff
+  sedi "${DATE_LINE}s|.*|date-released: ${DATE}|" CITATION.cff
+  sedi "${DOI_LINE}s|.*|    value: ${DOI}|" CITATION.cff
+}
+
 cleanup() {
   ## -- cleanup
   ## from create_release
@@ -1080,7 +1105,6 @@ if [ $RELEASE = 1 ]; then
   check_changelog
   check_changelog_url1
   check_changelog_url2
-  check_citation
   check_date
 
   ## check for installed software
@@ -1091,6 +1115,11 @@ if [ $RELEASE = 1 ]; then
   create_release_notes
   create_ctan_configuration
   create_zenodo_metadata
+fi
+
+if [ $CITATION = 1 ]; then
+  ##
+  update_citation
 fi
 
 ##

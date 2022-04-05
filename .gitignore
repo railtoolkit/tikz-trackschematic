@@ -277,5 +277,6 @@ Temporary Items
 .apdisk
 
 # Archives for upload
+artifact
 tikz-trackschematic-*.zip
 release-note-*.md

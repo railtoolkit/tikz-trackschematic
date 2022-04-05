@@ -1,6 +1,7 @@
 {
   "title": "TikZ-trackschematic",
-  "version": "%%[SCRIPT]", 
+  "version": "%%[SCRIPT]",
+  "publication_date": "%%[SCRIPT]",
   "creators": [
     {
       "orcid": "0000-0002-9384-8945", 

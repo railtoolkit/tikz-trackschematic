@@ -13,13 +13,23 @@ on:
 jobs:
   create_package:
     name: "create a TeX Live package for tikz-trackschematic"
+    outputs:
+      version: ${{ steps.tag.outputs.tag }}
     runs-on: ubuntu-latest
     steps:
-      # 1. checkout the repo
+      # 1. get varibale tag and put it in ${{ steps.tag.outputs.tag }}
+      - name: "get tag"
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          # Optionally strip `v` prefix
+          strip_v: false
+
+      # 2. checkout the repo
       - name: "checkout"
         uses: actions/checkout@v2
 
-      # 2. install TeX Live
+      # 3. install TeX Live
       - name: "install ghostscript"
         run: sudo apt-get install -y ghostscript
         
@@ -29,17 +39,9 @@ jobs:
           profile-path:  ${{ github.workspace }}/.github/tex/profile.minimal.txt
           packages-path: ${{ github.workspace }}/.github/tex/packages.doc.txt
 
-      # 3. (re-)compile the documentation
+      # 4. (re-)compile the documentation
       - name: "update tikz-trackschematic documentation before release"
         run: ./build.sh --non-interactive --memory-increase --compile-doc
-
-      # 4. get varibale ${{ steps.tag.outputs.tag }}
-      - name: "get tag"
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-        with:
-          # Optionally strip `v` prefix
-          strip_v: false
 
       # 5. create package and release notes
       - name: "create tikz-trackschematic package"
@@ -48,23 +50,18 @@ jobs:
       # 6. upload artifact to share it with other jobs
       - uses: actions/upload-artifact@v3
         with:
-          path: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
+          path: |
+            tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
+            release-note-${{ steps.tag.outputs.tag }}.md
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-
-      - uses: actions/upload-artifact@v3
-        with:
-          path: release-note-${{ steps.tag.outputs.tag }}.md
-          if-no-files-found: warn # 'error' or 'ignore' are also available, defaults to `warn`
-
       - uses: actions/upload-artifact@v3
         with:
           path: .github/tex/tikz-trackschematic.pkg
-          if-no-files-found: warn # 'error' or 'ignore' are also available, defaults to `warn`
-
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       - uses: actions/upload-artifact@v3
         with:
           path: .github/zenodo/metadata.json
-          if-no-files-found: warn # 'error' or 'ignore' are also available, defaults to `warn`
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
   publish_github:
     needs: create_package
@@ -74,15 +71,7 @@ jobs:
       # 1. download artifact in folder artifact/
       - uses: actions/download-artifact@v3
 
-      # 2. get varibale ${{ steps.tag.outputs.tag }}
-      - name: "get tag"
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-        with:
-          # Optionally strip `v` prefix
-          strip_v: false
-
-      # 3. publish package as new release on github
+      # 2. creating a new release
       - name: "create release"
         id: create_release
         uses: actions/create-release@v1
@@ -91,20 +80,22 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body_path: artifact/release-note-${{ steps.tag.outputs.tag }}.md
+          body_path: artifact/release-note-${{needs.create_package.outputs.version}}.md
           draft: false
           prerelease: false
-        
+
+      # 3. upload package to new release
       - name: "upload release asset"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifact/tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
-          asset_name: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
+          asset_path: artifact/tikz-trackschematic-${{needs.create_package.outputs.version}}.zip
+          asset_name: tikz-trackschematic-${{needs.create_package.outputs.version}}.zip
           asset_content_type: application/zip
 
+      # 4. publish release on github
       - name: "publish release"
         uses: StuYarrow/publish-release@v1
         env:
@@ -117,11 +108,10 @@ jobs:
     name: "publish on CTAN"
     runs-on: ubuntu-latest
     steps:
-      # 1. download artifact in folder artifact/
+      # 1. download artifact in folder artifact/ and move it one level up
       - uses: actions/download-artifact@v3
       - run: |
           mv ./artifact/tikz-trackschematic-*.zip ./
-          mv ./artifact/tikz-trackschematic.pkg ./
       
       # 2. install ctan-o-mat
       - name: "setup TeX Live (via paolobrasolin)"
@@ -132,43 +122,54 @@ jobs:
 
       # 3. upload new release to CTAN
       - name: CTAN submit
-        run: ctan-o-mat --verbose --submit tikz-trackschematic.pkg
+        run: ctan-o-mat --verbose --submit artifact/tikz-trackschematic.pkg
 
   publish_zenodo:
     needs: create_package
-    name: "publish on zenodo sandbox"
+    name: "publish on zenodo"
+    outputs:
+      doi: ${{ steps.zenodraft.outputs.doi }}
     runs-on: ubuntu-latest
     steps:
-      # 1. get varibale ${{ steps.tag.outputs.tag }}
-      - name: "get tag"
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-        with:
-          # Optionally strip `v` prefix
-          strip_v: false
-
-      # 2. checkout the repo for zenodraft/action@0.10.0 to work
-      - name: "checkout"
-        uses: actions/checkout@v2
-
-      # 3. download artifact in folder artifact/ and move it one level up
+      # 1. download artifact in folder artifact/ and move it one level up
       - uses: actions/download-artifact@v3
       - run: |
           mv ./artifact/tikz-trackschematic-*.zip ./
-          mv ./artifact/metadata.json ./
 
-      # 4. upload to zenodo
-      - name: "uploading to zenodo sandbox"
+      # 2. install zenodraft
+      - name: "install zenodraft"
+        run: npm install -g zenodraft
+
+      # 3. upload new release to zenodo
+      - name: "uploading to zenodo"
+        id: zenodraft
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
-        uses: zenodraft/action@0.10.0
+          COLLECTION: 5539844
+        run: |
+          ID=$(zenodraft deposition create in-existing-collection $COLLECTION)
+          zenodraft file add $ID tikz-trackschematic-*.zip
+          zenodraft metadata update $ID artifact/metadata.json
+          zenodraft deposition publish $ID
+          echo "::set-output name=doi::$(zenodraft deposition show prereserved $ID)"
+
+  update_citation:
+    needs: publish_zenodo
+    name: "updates CITATION.cff"
+    runs-on: ubuntu-latest
+    steps:
+      # 1. checkout the repo for zenodraft/action@0.10.0 to work
+      - name: "checkout"
+        uses: actions/checkout@v2
+      
+      - run: ./build.sh --update-cite ${{needs.publish_zenodo.outputs.doi}}
+      
+      - name: push
+        uses: github-actions-x/commit@v2.8
         with:
-          collection: 5539844
-          filenames: tikz-trackschematic-${{ steps.tag.outputs.tag }}.zip
-          upsert-doi: true
-          upsert-location: identifiers[1]
-          metadata: metadata.json
-          publish: true
-          sandbox: false
-          verbose: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'master'
+          force-add: 'true'
+          files: CITATION.cff
+          commit-message: 'updated DOI (via github action)'
+          rebase: 'true' # pull and rebase before commit
