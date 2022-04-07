@@ -134,7 +134,7 @@ jobs:
       # 1. download artifact in folder artifact/ and move it one level up
       - uses: actions/download-artifact@v3
       - run: |
-          mv ./artifact/tikz-trackschematic-*.zip ./
+          mv ./artifact/tikz-trackschematic-${{needs.create_package.outputs.version}}.zip ./
 
       # 2. install zenodraft
       - name: "install zenodraft"
@@ -154,8 +154,8 @@ jobs:
           echo "::set-output name=doi::$(zenodraft deposition show prereserved $ID)"
 
   update_citation:
-    needs: publish_zenodo
-    name: "updates CITATION.cff"
+    needs: [create_package, publish_zenodo]
+    name: "updating CITATION.cff"
     runs-on: ubuntu-latest
     steps:
       # 1. checkout the repo
@@ -173,6 +173,6 @@ jobs:
           push-branch: 'master'
           force-add: 'true'
           files: CITATION.cff
-          commit-message: 'updated DOI (via github action)'
+          commit-message: 'DOI updated to ${{needs.create_package.outputs.version}} (via github action)'
           name: Martin Scheidt
           email: m.scheidt@tu-bs.de
