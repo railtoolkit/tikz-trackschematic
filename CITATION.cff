@@ -24,7 +24,7 @@ repository: 'https://github.com/railtoolkit/tikz-trackschematic'
 repository-code: 'https://repository.ivev.bau.tu-bs.de/martin/tikz-trackschematic'
 repository-artifact: 'https://ctan.org/pkg/tikz-trackschematic'
 abstract: >-
-  A TikZ library for creating track diagrams inz
+  A TikZ library for creating track diagrams in
   railways. The tikz-trackschematic library is a
   toolbox of symbols geared primarily towards
   creating track schematic for either research or
