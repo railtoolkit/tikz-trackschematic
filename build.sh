@@ -593,7 +593,7 @@ create_release_notes() {
   # determine beginning and end in CHANGELOG.md 
   TOP=$(grep -n "Version \[$VERSION_NUM\]" CHANGELOG.md | cut -d: -f1)
   awk "NR>$TOP" CHANGELOG.md > release-note.tmp.md
-  BOTTOM=$(grep -n -m 1 "## Version" release-note.tmp.md | cut -d: -f1)
+  BOTTOM=$(grep -n -m 1 "## Version\|[Unreleased]:" release-note.tmp.md | cut -d: -f1)
   BOTTOM=$(( $TOP + $BOTTOM ))
   BOTTOM=$(( $BOTTOM - 2 ))
   TOP=$(( $TOP + 1 ))
