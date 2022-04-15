@@ -618,7 +618,7 @@ create_ctan_configuration() {
 create_zenodo_metadata() {
   # modify the file .github/zenodo/metadata.json for zenodo upload
   # 1. replace "version": "%%[SCRIPT]"
-  sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION_STR\"/g" .github/zenodo/metadata.json
+  sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION_NUM\"/g" .github/zenodo/metadata.json
 
   # 2. replace "publication_date": "%%[SCRIPT]"
   sedi "s/\"publication_date\": \"%%\[SCRIPT\]\"/\"publication_date\": \"$DATE\"/g" .github/zenodo/metadata.json
