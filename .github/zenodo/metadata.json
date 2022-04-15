@@ -23,5 +23,10 @@
   },
   "language": "eng",
   "access_right": "open", 
-  "upload_type": "software"
+  "upload_type": "software",
+  "communities": [
+    {
+      "identifier": "railtoolkit"
+    }
+  ]
 }
