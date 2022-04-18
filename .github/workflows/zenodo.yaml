@@ -22,7 +22,7 @@ jobs:
 
       # checkout the repo
       - name: "checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # create package and release notes
       - name: "create tikz-trackschematic package"
@@ -51,7 +51,7 @@ jobs:
   #   steps:
   #     # checkout the repo
   #     - name: "checkout"
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
 
   #     # download artifact in folder artifact/
   #     - uses: actions/download-artifact@v3
@@ -110,7 +110,7 @@ jobs:
     steps:
       # 1. checkout the repo for zenodraft/action@0.10.0 to work
       - name: "checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - run: ./build.sh --update-cite ${{needs.publish_zenodo.outputs.doi}}
       

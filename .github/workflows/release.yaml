@@ -27,7 +27,7 @@ jobs:
 
       # 2. checkout the repo
       - name: "checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # 3. install TeX Live
       - name: "install ghostscript"
@@ -160,22 +160,19 @@ jobs:
     steps:
       # 1. checkout the repo
       - name: "checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       # 2. update CITATION.cff
       - run: ./build.sh --update-cite ${{needs.publish_zenodo.outputs.doi}}
       
       # 3. push the change back to master
       - name: push
-        uses: github-actions-x/commit@v2.8
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          push-branch: 'master'
-          force-add: 'true'
-          files: CITATION.cff
-          commit-message: 'DOI updated to ${{needs.create_package.outputs.version}} (via github action)'
-          name: Martin Scheidt
-          email: m.scheidt@tu-bs.de
+        run: |
+          git config user.name railtoolkit
+          git config user.email railtoolkit@ownx.net
+          git add CITATION.cff
+          git commit -m "DOI updated to ${{needs.create_package.outputs.version}} (via github action)"
+          git push
 
   publish_twitter:
     needs: [create_package, publish_zenodo]

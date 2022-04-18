@@ -18,7 +18,7 @@ jobs:
     steps:
       # checkout the repo
       - name: "checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # create package and release notes
       - name: "create tikz-trackschematic package"
@@ -55,7 +55,7 @@ jobs:
     steps:
       - name: "checkout"
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # download artifact in folder artifact/
       - uses: actions/download-artifact@v3
@@ -108,7 +108,7 @@ jobs:
         ## opening a debug console
       - name: Setup upterm session
         env:
-          # ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
+          ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
           ZENODO_SANDBOX_ACCESS_TOKEN: ${{ secrets.ZENODO_SANDBOX_ACCESS_TOKEN }}
         uses: lhotari/action-upterm@v1
         with:
