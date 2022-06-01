@@ -23,14 +23,6 @@
 \pgfkeys{%
   /tikz/trackschematic/.is family,%
   /tikz/trackschematic/.cd,%
-  %% color foreground
-  foreground/.store in=\foreground,%
-  foreground=black,% DEFAULT
-  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
-  %% color background
-  background/.store in=\background,%
-  background=white,% DEFAULT
-  /tikz/background/.forward to=/tikz/trackschematic/background,%
   %% face
   face/.value required,% forward OR backward
   face/.store in=\face,%
@@ -274,12 +266,12 @@
     %% 2. vehicle style
     \iftoggle{in_train_mode}{% train mode
       \iftoggle{train_is_a_ghost}{% ghost train
-        \tikzset{every path/.style={draw=\foreground, line width=0.8pt, dashed}};%
+        \tikzset{every path/.style={draw=foreground, line width=0.8pt, dashed}};%
       }{% normal train
-        \tikzset{every path/.style={draw=\foreground, line width=1pt, fill=\background}};%
+        \tikzset{every path/.style={draw=foreground, line width=1pt, fill=background}};%
       }%
     }{% shunting mode
-      \tikzset{every path/.style={draw=\foreground, double, double distance=0.5mm, line width=0.3pt, fill=\background}};%
+      \tikzset{every path/.style={draw=foreground, double, double distance=0.5mm, line width=0.3pt, fill=background}};%
     }%
     %%
     %%%%%%%%%%%%%%%%%%%%
@@ -287,11 +279,11 @@
     %% (order before vehicle shape due to background fill!)
     \iftoggle{is_shunting}{% arrow for shunting
       \iftoggle{in_shunting_mode}{% shunting mode
-        \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
+        \fill[draw=none,fill=background] ($\facefactor*(-0.3, 0.3)$) --%
                                           ($\facefactor*(-0.1, 0.3)$) --%
                                           ($\facefactor*( 0.2, 0  )$) --%
                                           ($\facefactor*(-0.1,-0.3)$) --%
-                                          ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                          ($\facefactor*(-0.3,-0.3)$) -- cycle;% background fill
         \path[line cap=rect,fill=none] ($\facefactor*(-0.1, 0.3)$) --%
                                        ($\facefactor*( 0.2, 0  )$) --%
                                        ($\facefactor*(-0.1,-0.3)$);% arrow shape
@@ -302,11 +294,11 @@
     \ifdefstring{\trainrun}{none}{}{% DEFAULT no arrow for train
       \iftoggle{in_train_mode}{% train mode
         \ifdefstring{\trainrun}{slow}{%
-          \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
+          \fill[draw=none,fill=background] ($\facefactor*(-0.3, 0.3)$) --%
                                             ($\facefactor*(-0.1, 0.3)$) --%
                                             ($\facefactor*( 0.2, 0  )$) --%
                                             ($\facefactor*(-0.1,-0.3)$) --%
-                                            ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                            ($\facefactor*(-0.3,-0.3)$) -- cycle;% background fill
           \path[fill=none] ($\facefactor*(-0.15, 0.3)$) --%
                            ($\facefactor*(-0.1 , 0.3)$) --%
                            ($\facefactor*( 0.2 , 0  )$) --%
@@ -314,11 +306,11 @@
                            ($\facefactor*(-0.15,-0.3)$);% arrow shape
         }{%
           \ifdefstring{\trainrun}{normal}{%
-            \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
+            \fill[draw=none,fill=background] ($\facefactor*(-0.3, 0.3)$) --%
                                               ($\facefactor*( 0.1, 0.3)$) --%
                                               ($\facefactor*( 0.4, 0  )$) --%
                                               ($\facefactor*( 0.1,-0.3)$) --%
-                                              ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                              ($\facefactor*(-0.3,-0.3)$) -- cycle;% background fill
             \path[fill=none] ($\facefactor*(-0.15, 0.3)$) --%
                              ($\facefactor*(-0.1 , 0.3)$) --%
                              ($\facefactor*( 0.2 , 0  )$) --%
@@ -332,11 +324,11 @@
             %
           }{%
             \ifdefstring{\trainrun}{fast}{%
-              \fill[draw=none,fill=\background] ($\facefactor*(-0.3, 0.3)$) --%
+              \fill[draw=none,fill=background] ($\facefactor*(-0.3, 0.3)$) --%
                                                 ($\facefactor*( 0.3, 0.3)$) --%
                                                 ($\facefactor*( 0.6, 0  )$) --%
                                                 ($\facefactor*( 0.3,-0.3)$) --%
-                                                ($\facefactor*(-0.3,-0.3)$) -- cycle;% \background fill
+                                                ($\facefactor*(-0.3,-0.3)$) -- cycle;% background fill
               \path[fill=none] ($\facefactor*(-0.15, 0.3)$) --%
                                ($\facefactor*(-0.1 , 0.3)$) --%
                                ($\facefactor*( 0.2 , 0  )$) --%
@@ -374,10 +366,10 @@
     %% 5. operation mode
     \iftoggle{is_parked}{}{% vehicle NOT parked
       \ifdefstring{\operationmode}{manual}{%
-        \path[draw=none, fill=\foreground] ($\facefactor*(-0.4,0)$) circle (0.15);% dot
+        \path[draw=none, fill=foreground] ($\facefactor*(-0.4,0)$) circle (0.15);% dot
       }{
         \ifdefstring{\operationmode}{automatic}{%
-          \path[draw=none, fill=\foreground] ($\facefactor*(-0.15,0)$) -- ++($\facefactor*(-0.15,0) +(0,0.15)$) -- ++(0,-0.3) -- cycle;% triangle
+          \path[draw=none, fill=foreground] ($\facefactor*(-0.15,0)$) -- ++($\facefactor*(-0.15,0) +(0,0.15)$) -- ++(0,-0.3) -- cycle;% triangle
         }{%
           \ifdefstring{\operationmode}{undefined}{}{%
             \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/operation}{“manual“, “automatic“ OR “undefined“ as key required}}%
@@ -419,7 +411,7 @@
           }% \ifdefstring{\labelalign}{right}
         }% \ifdefstring{\labelalign}{left}
       }% \ifdefstring{\labelalign}{center}
-      \node[text=\foreground,anchor=\labelanchor,align=\labelalign] at (ts-v-l) {\footnotesize \labelcontent};% label
+      \node[text=foreground,anchor=\labelanchor,align=\labelalign] at (ts-v-l) {\footnotesize \labelcontent};% label
     }%
   }},% END pics/vehicles/.style args={#1/#2/#3}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

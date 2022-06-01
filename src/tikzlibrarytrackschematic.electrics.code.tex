@@ -19,14 +19,6 @@
 \pgfkeys{%
   /tikz/trackschematic/.is family,%
   /tikz/trackschematic/.cd,%
-  %% color foreground
-  foreground/.store in=\foreground,%
-  foreground=black,% DEFAULT
-  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
-  %% color background
-  background/.store in=\background,%
-  background=white,% DEFAULT
-  /tikz/background/.forward to=/tikz/trackschematic/background,%
   %% face
   face/.value required,% forward, backward OR bidirectional
   face/.store in=\face,% forward, backward OR bidirectional
@@ -99,20 +91,20 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.45,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.1,0)$)%
             ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*( 0.45,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*(-0.1,0)$);% symbol
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -171,14 +163,14 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.5,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.1,0)$)%
             ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*( 0.5,0)$) rectangle%
@@ -186,7 +178,7 @@
             ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.3,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*( 0.05,0)$);% symbol
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -245,23 +237,23 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.475,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.11,0)$)%
             ($\trafficfactor*\facefactor*(0,-0.5) + \facefactor*( 0.475,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*(-0.11,0)$);% symbol part1
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.3) + \facefactor*( 0.325,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0,-0.2) + \facefactor*( 0.05,0)$);% symbol part2
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -320,14 +312,14 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.23) + \facefactor*( 0.35,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.2)$) -- ++($\facefactor*(-0.05,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.15)$) -- cycle%
@@ -335,7 +327,7 @@
           ++($\trafficfactor*\facefactor*(0, 0.2)$) -- ++($\facefactor*(0.05,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.15)$) -- cycle;% symbol
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -395,14 +387,14 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.18) + \facefactor*( 0.4 ,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.03) + \facefactor*( 0.03,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.38)$) --%
@@ -410,7 +402,7 @@
           ++($\trafficfactor*\facefactor*(0, 0.03) + \facefactor*(-0.03,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.38)$) -- cycle;% symbol
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -470,14 +462,14 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.4 ) + \facefactor*( 0.62,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.03) + \facefactor*(-0.03,0)$) --%
           ++($\facefactor*(-0.38,0)$) --%
@@ -485,7 +477,7 @@
           ++($\trafficfactor*\facefactor*(0, 0.03) + \facefactor*( 0.03,0)$) --%
           ++($\facefactor*( 0.38,0)$) -- cycle;% symbol
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -545,14 +537,14 @@
     }% end \ifdefstring{\face}
     %
     %% signal pole
-    \path[draw=\foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
+    \path[draw=foreground,line width=1pt] (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.4,0)$);% signal pole
     %% signal marker
-    \path[draw=\foreground,line width=0.1pt,double=\background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
+    \path[draw=foreground,line width=0.1pt,double=background,double distance=0.5pt,fill=\signalcolor,rounded corners=0.1pt]%
             ($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.4,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*(-0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.25) + \facefactor*( 0.25,0)$) -- cycle;% sign
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.25) + \facefactor*( 0.4 ,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*(-0.15,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*( 0.15,0)$) --%
@@ -562,13 +554,13 @@
           ++($\trafficfactor*\facefactor*(0,-0.1 ) + \facefactor*(-0.1 ,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.1 ) + \facefactor*( 0.1 ,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.1 ) + \facefactor*( 0.1 ,0)$) -- cycle;% symbol
-    \path[fill=\background]%
+    \path[fill=background]%
             ($\trafficfactor*\facefactor*(0,-0.35) + \facefactor*( 0.4 ,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*(-0.05,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.05) + \facefactor*( 0.05,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.05) + \facefactor*( 0.05,0)$) -- cycle;% symbol
     %% label
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
       \coordinate (label-coord) at ($\trafficfactor*\facefactor*(0,-0.4)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default

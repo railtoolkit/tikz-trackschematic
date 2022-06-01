@@ -18,14 +18,6 @@
 \pgfkeys{%
   /tikz/trackschematic/.is family,%
   /tikz/trackschematic/.cd,%
-  %% color foreground
-  foreground/.store in=\foreground,%
-  foreground=black,% DEFAULT
-  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
-  %% color background
-  background/.store in=\background,%
-  background=white,% DEFAULT
-  /tikz/background/.forward to=/tikz/trackschematic/background,%
   %% face
   face/.value required,% forward OR backward
   face/.store in=\face,%
@@ -67,11 +59,11 @@
 %
 % commands
 \newcommand\maintrack{}% just for safety
-\def\maintrack{\path[draw=\foreground,MainTrack]}% \maintrack (coord1) -- (coord2);
+\def\maintrack{\path[draw=foreground,MainTrack]}% \maintrack (coord1) -- (coord2);
 \newcommand\secondarytrack{}% just for safety
-\def\secondarytrack{\path[draw=\foreground,SecondaryTrack]}% \secondarytrack (coord1) -- (coord2);
+\def\secondarytrack{\path[draw=foreground,SecondaryTrack]}% \secondarytrack (coord1) -- (coord2);
 \newcommand\sidetrack{}% just for safety
-\def\sidetrack{\path[draw=\foreground,SecondaryTrack]}% alias for \secondarytrack
+\def\sidetrack{\path[draw=foreground,SecondaryTrack]}% alias for \secondarytrack
 %
 %% symbol definition
 \tikzset{%
@@ -109,7 +101,7 @@
     \def\labelcontent{#3}
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={fill=\background,text=\foreground}};%
+      \tikzset{every node/.style={fill=background,text=foreground}};%
       \coordinate (ts-tl-l) at (0,0);%
       \ifdefstring{\labelcoord}{(none)}{% default coord
       }{% initialize if NOT default
@@ -163,12 +155,12 @@
     }% end \ifdefstring{\face}
     %% symbol
     \ifdefstring{\friction}{none}{% none friction
-      \path[draw=\foreground, line width=1pt]%
+      \path[draw=foreground, line width=1pt]%
         ($\facefactor*(-0.1,0) + (0,0.2)$) --  ++($\facefactor*( 0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*(-0.1,0)$);% bufferstop marker
     }{% friction
-      \path[draw=\foreground, line width=1pt]%
+      \path[draw=foreground, line width=1pt]%
         ($\facefactor*(-\friction,0) + \facefactor*(-0.05,0) + (0,0.2)$) --  ++($\facefactor*(0.1,0)$) -- ++(0,-0.4) -- ++ ($\facefactor*(-0.1,0)$);% bufferstop marker
-      \fill[\foreground] (0,0) circle (0.06);% track closure indicator
+      \fill[foreground] (0,0) circle (0.06);% track closure indicator
     }%
   }},% END pics/bufferstop/.style args={#1}
   %
@@ -200,8 +192,8 @@
     %% settings
     \def\coordcommand{#1} % beware of leading and tailing spaces!
     %%
-    \fill[\foreground] (0,0) circle (0.06);% track closure indicator
-    % \path[fill=\foreground] (0.04,0.02) -- (0.04,-0.02) -- (0.02,-0.04) -- (-0.02,-0.04) -- (-0.04,-0.02) -- (-0.04,0.02) -- (-0.02,0.04) -- (0.02,0.04) -- cycle;% label
+    \fill[foreground] (0,0) circle (0.06);% track closure indicator
+    % \path[fill=foreground] (0.04,0.02) -- (0.04,-0.02) -- (0.02,-0.04) -- (-0.02,-0.04) -- (-0.04,-0.02) -- (-0.04,0.02) -- (-0.02,0.04) -- (0.02,0.04) -- cycle;% label
   }},% END pics/track_closure/.style args={#1}
   %
   % symbology entry
@@ -272,13 +264,13 @@
           \def\patterntype{north east lines}%
         }%
       }%
-      \path[draw=\foreground,pattern=\patterntype, pattern color=\foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
+      \path[draw=foreground,pattern=\patterntype, pattern color=foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
     }{%
       \ifdefstring{\operationmode}{remote}{% operation=remote
-        \path[fill=\foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
+        \path[fill=foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
       }{%
         \ifdefstring{\operationmode}{none}{
-          \path[draw=\foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
+          \path[draw=foreground] (0,0) -- ++($\facefactor*(0.4,0)$) -- ++($\branchfactor*(0,0.4)$) -- cycle;% turnout marker
         }{%
           \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/operation}{“manual“, “remote“ OR “none“ as key required}}%
         }%
@@ -287,7 +279,7 @@
     %
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={text=\foreground}};%
+      \tikzset{every node/.style={text=foreground}};%
       \coordinate (ts-y-l) at ($\branchfactor*(0,-8pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-y-l) at ($(ts-y-l)+(\x1,\y1)$);%
@@ -297,29 +289,29 @@
     %
     %% fouling point indicator
     \iftoggle{fouling_point}{%
-      \path[draw=\foreground] ($\facefactor*(0.7,0)$) -- ++($\branchfactor*(0,0.7)$);% fouling point indicator
+      \path[draw=foreground] ($\facefactor*(0.7,0)$) -- ++($\branchfactor*(0,0.7)$);% fouling point indicator
     }{}%
     %
     %% points
     \ifdefstring{\points}{left}{% points left
       \ifdefstring{\branch}{left}{%
-        \path[draw=\foreground,line width=1.5pt] ($\facefactor*(-0.035,0)+(0,0.1)$) -- ++($\facefactor*(0.2,0)+(0,0.2)$);%
+        \path[draw=foreground,line width=1.5pt] ($\facefactor*(-0.035,0)+(0,0.1)$) -- ++($\facefactor*(0.2,0)+(0,0.2)$);%
       }{%
-        \path[draw=\foreground,line width=1.5pt] ($\facefactor*( 0.035,0)+(0,0.1)$) -- ++($\facefactor*( 0.265,0  )$);%
+        \path[draw=foreground,line width=1.5pt] ($\facefactor*( 0.035,0)+(0,0.1)$) -- ++($\facefactor*( 0.265,0  )$);%
       }%
     }{%
       \ifdefstring{\points}{right}{% points right
         \ifdefstring{\branch}{left}{%
-          \path[draw=\foreground,line width=1.5pt] ($\facefactor*( 0.035,0)+(0,-0.1)$) -- ++($\facefactor*( 0.265,0  )$);%
+          \path[draw=foreground,line width=1.5pt] ($\facefactor*( 0.035,0)+(0,-0.1)$) -- ++($\facefactor*( 0.265,0  )$);%
         }{%
-          \path[draw=\foreground,line width=1.5pt] ($\facefactor*(-0.035,0)+(0,-0.1)$) -- ++($\facefactor*(0.2,0)+(0,-0.2)$);%
+          \path[draw=foreground,line width=1.5pt] ($\facefactor*(-0.035,0)+(0,-0.1)$) -- ++($\facefactor*(0.2,0)+(0,-0.2)$);%
         }%
       }{%
         \ifdefstring{\points}{moving}{% moving points
-          \fill[\foreground] ($\facefactor*(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($\facefactor*(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($\facefactor*(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
-          \fill[\foreground] ($\facefactor*(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
+          \fill[foreground] ($\facefactor*(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($\facefactor*(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($\facefactor*(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
+          \fill[foreground] ($\facefactor*(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
         }{% error message
           \ifdefstring{\points}{none}{%
           }{%
@@ -413,12 +405,12 @@
       }{%
         \def\patterntype{north east lines}%
       }%
-      \path[draw,pattern=\patterntype, pattern color=\foreground] (0,0) -- ++($( 0.4,0)$) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
-      \path[draw,pattern=\patterntype, pattern color=\foreground] (0,0) -- ++($(-0.4,0)$) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
+      \path[draw,pattern=\patterntype, pattern color=foreground] (0,0) -- ++($( 0.4,0)$) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
+      \path[draw,pattern=\patterntype, pattern color=foreground] (0,0) -- ++($(-0.4,0)$) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
     }{% operated automaticly
       \ifdefstring{\operationmode}{remote}{% operation=remote
-        \path[fill=\foreground] (0,0) -- ++($( 0.4,0)$) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
-        \path[fill=\foreground] (0,0) -- ++($(-0.4,0)$) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
+        \path[fill=foreground] (0,0) -- ++($( 0.4,0)$) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
+        \path[fill=foreground] (0,0) -- ++($(-0.4,0)$) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
       }{%
         \ifdefstring{\operationmode}{none}{}{%
           \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/operation}{“manual“, “remote“ OR “none“ as key required}}%
@@ -427,30 +419,30 @@
     }%
     %% fouling point indicator
     \iftoggle{fouling_point}{%
-      \path[draw=\foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
-      \path[draw=\foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
+      \path[draw=foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
+      \path[draw=foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
     }{}%
     %
     %% points
     \ifdefstring{\forwardpoints}{left}{% points left
       \ifdefstring{\branch}{left}{%
-        \path[draw=\foreground,line width=1.5pt] (-0.035,0.1) -- ++(0.2,0.2);%
+        \path[draw=foreground,line width=1.5pt] (-0.035,0.1) -- ++(0.2,0.2);%
       }{%
-        \path[draw=\foreground,line width=1.5pt] ( 0.035,0.1) -- ++(0.265,0);%
+        \path[draw=foreground,line width=1.5pt] ( 0.035,0.1) -- ++(0.265,0);%
       }%
     }{%
       \ifdefstring{\forwardpoints}{right}{% points right
         \ifdefstring{\branch}{left}{%
-          \path[draw=\foreground,line width=1.5pt] ( 0.035,-0.1) -- ++(0.265,0);
+          \path[draw=foreground,line width=1.5pt] ( 0.035,-0.1) -- ++(0.265,0);
         }{%
-          \path[draw=\foreground,line width=1.5pt] (-0.035,-0.1) -- ++(0.2,-0.2);%
+          \path[draw=foreground,line width=1.5pt] (-0.035,-0.1) -- ++(0.2,-0.2);%
         }%
       }{%
         \ifdefstring{\forwardpoints}{moving}{% moving points
-          \fill[\foreground] ($(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
-          \fill[\foreground] ($(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
+          \fill[foreground] ($(0.075,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(0.225,0) + \branchfactor*(0,-0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(0.015,0) + \branchfactor*(0, 0.15)$) circle (0.05);% points indicator right
+          \fill[foreground] ($(0.115,0) + \branchfactor*(0, 0.25)$) circle (0.05);% points indicator right
         }{% error message
           \ifdefstring{\forwardpoints}{none}{%
           }{%
@@ -461,23 +453,23 @@
     }% end of  \ifdefstring{\forwardpoints}
     \ifdefstring{\backwardpoints}{left}{% points left
       \ifdefstring{\branch}{left}{%
-        \path[draw=\foreground,line width=1.5pt] (0.035,-0.1) -- ++(-0.2,-0.2);%
+        \path[draw=foreground,line width=1.5pt] (0.035,-0.1) -- ++(-0.2,-0.2);%
       }{%
-        \path[draw=\foreground,line width=1.5pt] (-0.035,-0.1) -- ++(-0.265,0);%
+        \path[draw=foreground,line width=1.5pt] (-0.035,-0.1) -- ++(-0.265,0);%
       }%
     }{%
       \ifdefstring{\backwardpoints}{right}{% points right
         \ifdefstring{\branch}{left}{%
-          \path[draw=\foreground,line width=1.5pt] (-0.035,0.1) -- ++(-0.265,0);
+          \path[draw=foreground,line width=1.5pt] (-0.035,0.1) -- ++(-0.265,0);
         }{%
-          \path[draw=\foreground,line width=1.5pt] (0.035,0.1) -- ++(-0.2,0.2);%
+          \path[draw=foreground,line width=1.5pt] (0.035,0.1) -- ++(-0.2,0.2);%
         }%
       }{%
         \ifdefstring{\backwardpoints}{moving}{% moving points
-          \fill[\foreground] ($(-0.075,0) + \branchfactor*(0, 0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($(-0.225,0) + \branchfactor*(0, 0.1 )$) circle (0.05);% points indicator left
-          \fill[\foreground] ($(-0.015,0) + \branchfactor*(0,-0.15)$) circle (0.05);% points indicator right
-          \fill[\foreground] ($(-0.115,0) + \branchfactor*(0,-0.25)$) circle (0.05);% points indicator right
+          \fill[foreground] ($(-0.075,0) + \branchfactor*(0, 0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(-0.225,0) + \branchfactor*(0, 0.1 )$) circle (0.05);% points indicator left
+          \fill[foreground] ($(-0.015,0) + \branchfactor*(0,-0.15)$) circle (0.05);% points indicator right
+          \fill[foreground] ($(-0.115,0) + \branchfactor*(0,-0.25)$) circle (0.05);% points indicator right
         }{% error message
           \ifdefstring{\backwardpoints}{none}{%
           }{%
@@ -489,14 +481,14 @@
     %
     %% slips
     \ifdefstring{\slip}{double}{% slip
-      \path[draw=\foreground,line width=0.75pt] ($\branchfactor*(-0.4,0) + (0, 0.1)$) --  ($\branchfactor*( 0.3,0) + (0, 0.4)$);% slip
-      \path[draw=\foreground,line width=0.75pt] ($\branchfactor*( 0.4,0) + (0,-0.1)$) --  ($\branchfactor*(-0.3,0) + (0,-0.4)$);% slip
+      \path[draw=foreground,line width=0.75pt] ($\branchfactor*(-0.4,0) + (0, 0.1)$) --  ($\branchfactor*( 0.3,0) + (0, 0.4)$);% slip
+      \path[draw=foreground,line width=0.75pt] ($\branchfactor*( 0.4,0) + (0,-0.1)$) --  ($\branchfactor*(-0.3,0) + (0,-0.4)$);% slip
     }{%
       \ifdefstring{\slip}{left}{%
-        \path[draw=\foreground,line width=0.75pt] ($\branchfactor*(-0.4,0) + (0,0.1)$) --  ($\branchfactor*(0.3,0) + (0,0.4)$);% slip
+        \path[draw=foreground,line width=0.75pt] ($\branchfactor*(-0.4,0) + (0,0.1)$) --  ($\branchfactor*(0.3,0) + (0,0.4)$);% slip
       }{%
         \ifdefstring{\slip}{right}{%
-          \path[draw=\foreground,line width=0.75pt] ($\branchfactor*(0.4,0) + (0,-0.1)$) --  ($\branchfactor*(-0.3,0) + (0,-0.4)$);% slip
+          \path[draw=foreground,line width=0.75pt] ($\branchfactor*(0.4,0) + (0,-0.1)$) --  ($\branchfactor*(-0.3,0) + (0,-0.4)$);% slip
         }{%
           \ifdefstring{\slip}{none}{%
             %
@@ -508,7 +500,7 @@
     }%
     %
     %% label
-    \tikzset{every node/.style={text=\foreground}};%
+    \tikzset{every node/.style={text=foreground}};%
     \ifdefstring{\labelcontentleft}{}{}{% label NOT empty
       \coordinate (ts-sy-l1) at ($(2pt,0) + \branchfactor*(0, 10pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
@@ -563,12 +555,12 @@
     }%
     %
     %% crossing marker
-    \path[draw=\foreground] (0,0) -- ++( 0.4,0) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
-    \path[draw=\foreground] (0,0) -- ++(-0.4,0) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
+    \path[draw=foreground] (0,0) -- ++( 0.4,0) -- ++($\branchfactor*(0, 0.4)$) -- cycle;% turnout marker
+    \path[draw=foreground] (0,0) -- ++(-0.4,0) -- ++($\branchfactor*(0,-0.4)$) -- cycle;% turnout marker
     %
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={text=\foreground}};%
+      \tikzset{every node/.style={text=foreground}};%
       \coordinate (ts-x-l) at ($(2pt,0) + \branchfactor*(0,-9pt)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-x-l) at ($(ts-x-l)+(\x1,\y1)$);%
@@ -578,8 +570,8 @@
     %
     %% fouling point indicator
     \iftoggle{fouling_point}{%
-      \path[draw=\foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
-      \path[draw=\foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
+      \path[draw=foreground] ( 0.7,0) -- ++($\branchfactor*(0, 0.7)$);% fouling point indicator
+      \path[draw=foreground] (-0.7,0) -- ++($\branchfactor*(0,-0.7)$);% fouling point indicator
     }{}%
     %
   }},% end of  pics/crossing/.style args={#1/#2/#3}
@@ -639,12 +631,12 @@
     }% end \ifdefstring{\branch}
     %
     %% symbol
-    \path[draw=\foreground, line width=1pt] (0,0.1) -- ++(0,-0.2);% derailer marker
-    \path[draw=\foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++($\facefactor*(0.4,0) + \branchfactor*(0,0.4)$);% derailer arrow
+    \path[draw=foreground, line width=1pt] (0,0.1) -- ++(0,-0.2);% derailer marker
+    \path[draw=foreground,->,>=latex,line width=1pt,dashed] (0,0) -- ++($\facefactor*(0.4,0) + \branchfactor*(0,0.4)$);% derailer arrow
     %
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={text=\foreground}};%
+      \tikzset{every node/.style={text=foreground}};%
       \coordinate (ts-dr-l) at ($\branchfactor*(0,-0.3)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-dr-l) at ($(ts-dr-l)+(\x1,\y1)$);%

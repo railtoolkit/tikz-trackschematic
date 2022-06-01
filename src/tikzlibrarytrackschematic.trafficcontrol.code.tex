@@ -18,14 +18,6 @@
 \pgfkeys{%
   /tikz/trackschematic/.is family,%
   /tikz/trackschematic/.cd,%
-  %% color \foreground
-  foreground/.store in=\foreground,%
-  foreground=black,% DEFAULT
-  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
-  %% color \background
-  background/.store in=\background,%
-  background=white,% DEFAULT
-  /tikz/background/.forward to=/tikz/trackschematic/background,%
   %% face
   face/.value required,% forward OR backward
   face/.store in=\face,% forward OR backward
@@ -189,8 +181,8 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
       }%
     }% end \ifdefstring{\face}
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
-    \tikzset{every node/.style={text=\foreground,inner sep=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
+    \tikzset{every node/.style={text=foreground,inner sep=1pt}};%
     %% signal pole
     \path (0,0) -- ++($\trafficfactor*\facefactor*(0,-0.4)$) -- ++($\facefactor*(0.7,0)$);% signal pole
     %
@@ -202,7 +194,7 @@
       }%
       \node[\align] at (ts-s-l) {\footnotesize \labelcontent};%
     }%
-    \tikzset{every path/.style={draw=\foreground,line width=1pt,fill=\background},rounded corners=0.1pt};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt,fill=background},rounded corners=0.1pt};%
     %% signal marker
     \iftoggle{is_distant_type}{% marker for distant signal
       \path ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.35,0)$) --%
@@ -250,7 +242,7 @@
     }{}%
     %% speed indicator
     \ifdefstring{\speed}{}{}{% speed NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       \iftoggle{is_speed_type}{% marker for speed signal
         \node[rotate=\rotate] at ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.85,0)$) {\speed};%
       }{%
@@ -260,7 +252,7 @@
       }%
     }%
     \ifdefstring{\distantspeed}{}{}{% distant speed NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground,fill=\background,inner sep=0.5pt}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground,fill=background,inner sep=0.5pt}};%
       \node[rotate=\rotate] at ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.2,0)$) {\distantspeed};%
     }%
     %% locked
@@ -382,7 +374,7 @@
     }{% default case
       \pgfmathsetmacro{\facefactor}{1}%
     }% end \ifdefstring{\face}
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
     %% marker
     \path ($\trafficfactor*\facefactor*(0,-0.1)$) -- ++($\trafficfactor*\facefactor*(0,0.2)$);% marker
     %% sign
@@ -400,7 +392,7 @@
     }{}%
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       \coordinate (ts-cp-l) at ($\trafficfactor*\facefactor*(0,0.25)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-cp-l) at ($(ts-cp-l)+(\x1,\y1)$);%
@@ -452,11 +444,11 @@
       }%
     }% end \ifdefstring{\trafficpractice}
     %% marker
-    \tikzset{every path/.style={draw=\foreground}};%
+    \tikzset{every path/.style={draw=foreground}};%
     \path[line width=1pt] ($\trafficfactor*(0,-0.175)$) -- ++(-0.0625,-0.0625) -- ++(-0.2,0) -- ++(-0.125,0.125) -- ++(-0.1,0) -- ++(0,-0.125) -- ++(0.1,0) -- ++(0.125,0.125) -- ++(0.2,0) -- ++(0.125,-0.125) -- ++(0.2,0) -- ++(0.125,0.125) -- ++(0.1,0) -- ++(0,-0.125) -- ++(-0.1,0) -- ++(-0.125,0.125) -- ++(-0.2,0) -- cycle;% loop marker
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       \coordinate (ts-tm-l) at ($\trafficfactor*(0,0.25)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-tm-l) at ($(ts-tm-l)+(\x1,\y1)$);%
@@ -567,54 +559,54 @@
     %%
     %%%%%%%%%%%%%%%%%%%%
     %% 1. marker 
-    \tikzset{every path/.style={draw=\foreground,line width=0.75pt,rounded corners=0.2pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=0.75pt,rounded corners=0.2pt}};%
     %%
     \iftoggle{unnumberd}{% no number has been set
       %% marker for undefined balises
-      \path[fill=\background] ($(-0.3,0)$) rectangle ($\trafficfactor*\facefactor*(0,-0.25) + (0.3,0)$);% balise marker
+      \path[fill=background] ($(-0.3,0)$) rectangle ($\trafficfactor*\facefactor*(0,-0.25) + (0.3,0)$);% balise marker
       \iftoggle{switched}{% balises can be switched
-        \path[fill=\foreground] ($\trafficfactor*\facefactor*(0,-0.075) + (-0.225,0)$) rectangle%
+        \path[fill=foreground] ($\trafficfactor*\facefactor*(0,-0.075) + (-0.225,0)$) rectangle%
                                 ($\trafficfactor*\facefactor*(0,-0.175) + ( 0.225,0)$);% switch marker
       }{}%
     }{% a number has been set
       %% marker for numbered balises
       \ifdefstring{\along}{none}{}{
         \foreach \n in \along{%
-          \path[fill=\background] ($\n*\facefactor*(0.2,0)$) rectangle%
+          \path[fill=background] ($\n*\facefactor*(0.2,0)$) rectangle%
                                   ($\n*\facefactor*(0.2,0) + (0.2 ,0) + \trafficfactor*\facefactor*(0,-0.25)$);% balise marker
           \iftoggle{index_number}{%
-            \node[text=\foreground] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,-0.125)$) {\tiny\n};%
+            \node[text=foreground] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,-0.125)$) {\tiny\n};%
           }{}%
         }%
       }%
       \ifdefstring{\oppose}{none}{}{
         \foreach \n in \oppose{%
-          \path[fill=\background] ($\n*\facefactor*(0.2,0)$) rectangle%
+          \path[fill=background] ($\n*\facefactor*(0.2,0)$) rectangle%
                                   ($\n*\facefactor*(0.2,0) + (0.2 ,0) + \trafficfactor*\facefactor*(0,0.25)$);% balise marker
           \iftoggle{index_number}{%
-            \node[text=\foreground] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,0.125)$) {\tiny\n};%
+            \node[text=foreground] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,0.125)$) {\tiny\n};%
           }{}%
         }%
       }%
       \ifdefstring{\alongswitched}{none}{}{
         \foreach \n in \alongswitched{%
-          \path[fill=\background] ($\n*\facefactor*(0.2,0)$) rectangle%
+          \path[fill=background] ($\n*\facefactor*(0.2,0)$) rectangle%
                                   ($\n*\facefactor*(0.2,0) + (0.2 ,0) + \trafficfactor*\facefactor*(0,-0.25)$);% balise marker
-          \path[fill=\foreground] ($\n*\facefactor*(0.2,0) + (0.05,0) + \trafficfactor*\facefactor*(0,-0.05)$) rectangle%
+          \path[fill=foreground] ($\n*\facefactor*(0.2,0) + (0.05,0) + \trafficfactor*\facefactor*(0,-0.05)$) rectangle%
                                   ($\n*\facefactor*(0.2,0) + (0.15,0) + \trafficfactor*\facefactor*(0,-0.2)$);% switch marker
           \iftoggle{index_number}{%
-            \node[text=\background] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,-0.125)$) {\tiny\n};%
+            \node[text=background] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,-0.125)$) {\tiny\n};%
           }{}%
         }%
       }%
       \ifdefstring{\opposeswitched}{none}{}{
         \foreach \n in \opposeswitched{%
-          \path[fill=\background] ($\n*\facefactor*(0.2,0)$) rectangle%
+          \path[fill=background] ($\n*\facefactor*(0.2,0)$) rectangle%
                                   ($\n*\facefactor*(0.2,0) + (0.2 ,0) + \trafficfactor*\facefactor*(0,0.25)$);% balise marker
-          \path[fill=\foreground] ($\n*\facefactor*(0.2,0) + (0.05,0) + \trafficfactor*\facefactor*(0,0.05)$) rectangle%
+          \path[fill=foreground] ($\n*\facefactor*(0.2,0) + (0.05,0) + \trafficfactor*\facefactor*(0,0.05)$) rectangle%
                                   ($\n*\facefactor*(0.2,0) + (0.15,0) + \trafficfactor*\facefactor*(0,0.2)$);% switch marker
           \iftoggle{index_number}{%
-            \node[text=\background] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,0.125)$) {\tiny\n};%
+            \node[text=background] at ($\n*\facefactor*(0.2,0) + (0.1,0) + \trafficfactor*\facefactor*(0,0.125)$) {\tiny\n};%
           }{}%
         }%
       }%
@@ -633,7 +625,7 @@
         \path let \p1=\labelcoord in coordinate (label-coord) at ($(label-coord)+(\x1,\y1)$);%
       }%
       %% label style
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       %
       \ifdefstring{\trafficpractice}{left}{%
         \tikzset{every node/.append style={left,align=right}};%
@@ -695,11 +687,11 @@
       }%
     }% end \ifdefstring{\trafficpractice}
     %% arrow
-    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+    \path[draw=foreground,<-,>=latex,line width=1pt]%
       ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
     %% eye
-    \filldraw[\foreground] ($\facefactor*(0.4,0) + \facefactor*\trafficfactor*(0,-0.4)$) circle (0.1);% pupil
-    \path[draw=\foreground, line width=1pt]% eye contour
+    \filldraw[foreground] ($\facefactor*(0.4,0) + \facefactor*\trafficfactor*(0,-0.4)$) circle (0.1);% pupil
+    \path[draw=foreground, line width=1pt]% eye contour
       ($\facefactor*(0.4, 0) + \facefactor*\trafficfactor*(0,-0.15)$) .. controls%
       ($\facefactor*(0.25,0) + \facefactor*\trafficfactor*(0,-0.25)$) and%
       ($\facefactor*(0.25,0) + \facefactor*\trafficfactor*(0,-0.55)$) ..%
@@ -754,16 +746,16 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
       }%
     }% end \ifdefstring{\face}
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
     %% marker
       \path ($\trafficfactor*\facefactor*(0,-0.55) + \facefactor*(0.3,0)$) rectangle%
           ++($\trafficfactor*\facefactor*(0, 0.3) + \facefactor*(0.3,0)$);% 
     %% arrow
-    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+    \path[draw=foreground,<-,>=latex,line width=1pt]%
       ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       \coordinate (ts-ma-l) at ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(0.3,0)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-ma-l) at ($(ts-ma-l)+(\x1,\y1)$);%
@@ -817,17 +809,17 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
       }%
     }% end \ifdefstring{\face}
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
     %% marker
       \path ($\trafficfactor*\facefactor*(0,-0.4) + \facefactor*(0.3,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.15) + \facefactor*(0.25,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.3)$) -- cycle;% signal marker
     %% arrow
-    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+    \path[draw=foreground,<-,>=latex,line width=1pt]%
       ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       \coordinate (ts-bp-l) at ($\trafficfactor*\facefactor*(0,-0.6) + \facefactor*(0.3,0)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-bp-l) at ($(ts-bp-l)+(\x1,\y1)$);%
@@ -881,18 +873,18 @@
         \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
       }%
     }% end \ifdefstring{\face}
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
     %% marker
       \path ($\trafficfactor*\facefactor*(0,-0.4)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*(-0.1,0)$) --%
           ++($\trafficfactor*\facefactor*(0,-0.1) + \facefactor*( 0.1,0)$) --%
           ++($\trafficfactor*\facefactor*(0, 0.1) + \facefactor*( 0.1,0)$) -- cycle;% sign
     %% arrow
-    \path[draw=\foreground,<-,>=latex,line width=1pt]%
+    \path[draw=foreground,<-,>=latex,line width=1pt]%
       ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.25)$);% arrow
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \tikzset{every node/.style={font=\sffamily,text=\foreground}};%
+      \tikzset{every node/.style={font=\sffamily,text=foreground}};%
       \coordinate (ts-dp-l) at ($\trafficfactor*\facefactor*(0,0.25)$);%
       \ifdefstring{\labelcoord}{(none)}{}{% initialize if NOT default
         \path let \p1=\labelcoord in coordinate (ts-dp-l) at ($(ts-dp-l)+(\x1,\y1)$);%
@@ -932,7 +924,7 @@
       }%
     }% end \ifdefstring{\face}
     %% symbol
-    \fill[\foreground] ($\facefactor*(-0.175,0)+(0,-0.15)$) --%
+    \fill[foreground] ($\facefactor*(-0.175,0)+(0,-0.15)$) --%
                        ($\facefactor*(-0.175,0)+(0, 0.15)$) --%
                        ($\facefactor*( 0.175,0)+(0, 0   )$) -- cycle;%
   }},% END pics/route/.style args={#1}
@@ -971,31 +963,31 @@
     %
     %% face setup
     \ifdefstring{\face}{forward}{% face
-      \path[draw=\foreground,line width=0.5pt,densely dotted]%
+      \path[draw=foreground,line width=0.5pt,densely dotted]%
         ($\trafficfactor*(0,0.1) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.25) + (-0.2125,0)$) -- ($\trafficfactor*(0,0.4) + (-0.0125,0)$) --%
         ($\trafficfactor*(0,0.325) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.325) + (0.1875,0)$) -- ($\trafficfactor*(0,0.175) + (0.1875,0)$) --%
         ($\trafficfactor*(0,0.175) + (-0.0125,0)$) -- cycle;% arrow backward
-      \fill[\foreground]%
+      \fill[foreground]%
         ($\trafficfactor*(0,-0.1) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.25) + (0.2125,0)$) -- ($\trafficfactor*(0,-0.4) + (0.0125,0)$) --%
         ($\trafficfactor*(0,-0.325) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.325)+(-0.1875,0)$) -- ($\trafficfactor*(0,-0.175) + (-0.1875,0)$) --%
         ($\trafficfactor*(0,-0.175) + (0.0125,0)$) -- cycle;% arrow forward
     }{%
       \ifdefstring{\face}{backward}{% face
-        \fill[\foreground]%
+        \fill[foreground]%
           ($\trafficfactor*(0,0.1) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.25) + (-0.2125,0)$) -- ($\trafficfactor*(0,0.4) + (-0.0125,0)$) --%
           ($\trafficfactor*(0,0.325) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.325) + (0.1875,0)$) -- ($\trafficfactor*(0,0.175) + (0.1875,0)$) --%
           ($\trafficfactor*(0,0.175) + (-0.0125,0)$) -- cycle;% arrow backward
-        \path[draw=\foreground,line width=0.5pt,densely dotted]%
+        \path[draw=foreground,line width=0.5pt,densely dotted]%
           ($\trafficfactor*(0,-0.1) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.25) + (0.2125,0)$) -- ($\trafficfactor*(0,-0.4) + (0.0125,0)$) --%
           ($\trafficfactor*(0,-0.325)+(0.0125,0)$) -- ($\trafficfactor*(0,-0.325)+(-0.1875,0)$) -- ($\trafficfactor*(0,-0.175) + (-0.1875,0)$) --%
           ($\trafficfactor*(0,-0.175) + (0.0125,0)$) -- cycle;% arrow forward
       }{
         \ifdefstring{\face}{bidirectional}{% face
-          \path[draw=\foreground,line width=0.5pt]%
+          \path[draw=foreground,line width=0.5pt]%
             ($\trafficfactor*(0,0.1) + (-0.0125,0)$) -- ($\trafficfactor*(0,0.25) + (-0.2125,0)$) -- ($\trafficfactor*(0,0.4) + (-0.0125,0)$) --%
             ($\trafficfactor*(0,0.325) +(-0.0125,0)$) -- ($\trafficfactor*(0,0.325) +(0.1875,0)$) -- ($\trafficfactor*(0,0.175) + (0.1875,0)$) --%
             ($\trafficfactor*(0,0.175) + (-0.0125,0)$) -- cycle;% arrow backward
-          \path[draw=\foreground,line width=0.5pt]%
+          \path[draw=foreground,line width=0.5pt]%
             ($\trafficfactor*(0,-0.1) + (0.0125,0)$) -- ($\trafficfactor*(0,-0.25) + (0.2125,0)$) -- ($\trafficfactor*(0,-0.4) + (0.0125,0)$) --%
             ($\trafficfactor*(0,-0.325)+(0.0125,0)$) -- ($\trafficfactor*(0,-0.325)+(-0.1875,0)$) -- ($\trafficfactor*(0,-0.175)+(-0.1875,0)$) --%
             ($\trafficfactor*(0,-0.175) + (0.0125,0)$) -- cycle;% arrow forward
@@ -1005,7 +997,7 @@
       }%
     }% end \ifdefstring{\face}
     %% frame
-    % \path[draw=\foreground,line width=0.5pt]%
+    % \path[draw=foreground,line width=0.5pt]%
     %   (-0.3, 0.1) -- (-0.3, 0.5) -- (0.3, 0.5) -- (0.3, 0.1)
     %   (-0.3,-0.1) -- (-0.3,-0.5) -- (0.3,-0.5) -- (0.3,-0.1);
   }},% END pics/direction_control/.style args={#1}

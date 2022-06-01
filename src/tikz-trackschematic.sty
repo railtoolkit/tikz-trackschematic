@@ -15,6 +15,9 @@
 \DeclareOptionX{dev}[\settoggle{development}{false}]{\settoggle{development}{true}}
 \ProcessOptionsX
 %
+% colors
+\colorlet{background}{white}
+\colorlet{foreground}{black}
 
 \iftoggle{development}{%
   \PackageInfo{tikz-trackschematic}{development mode}%

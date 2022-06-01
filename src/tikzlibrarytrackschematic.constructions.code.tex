@@ -23,14 +23,6 @@
 \pgfkeys{%
   /tikz/trackschematic/.is family,%
   /tikz/trackschematic/.cd,%
-  %% color foreground
-  foreground/.store in=\foreground,%
-  foreground=black,% DEFAULT
-  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
-  %% color background
-  background/.store in=\background,%
-  background=white,% DEFAULT
-  /tikz/background/.forward to=/tikz/trackschematic/background,%
   %% length
   length/.store in=\objectlength,% default length 4cm
   /tikz/length/.forward to=/tikz/trackschematic/length,%
@@ -84,7 +76,7 @@
       }%
     }% end \ifdefstring{\side}
     %% platform shape
-    \tikzset{every path/.style={draw=\foreground,line width=0.75pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=0.75pt}};%
     \ifdefstring{\side}{both}{% double side
       \path ($-0.5*(\objectlength,0) + (0, \objectwidth)$) --%
             ($-0.5*(\objectlength,0) + (0, 0.2)$) --%
@@ -159,7 +151,7 @@
       }%
     }% end \ifdefstring{\trafficpractice}
     %% symbol
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
     \iftoggle{show_road}{% true
       \path ($0.5*(-\roadwidth,0) + (0,-0.1)$) --%
             ++($(0,-\objectwidth)$);% road part 1
@@ -172,18 +164,18 @@
     }{}% END \iftoggle{show_road}
     \ifdefstring{\barrier}{full}{% full barrier
       \ifdefstring{\side}{both}{%
-        \filldraw[\foreground]% left barrier part 1
+        \filldraw[foreground]% left barrier part 1
           ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) circle (0.05);%
-        \filldraw[\foreground]% left barrier part 2
+        \filldraw[foreground]% left barrier part 2
           ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) circle (0.05);%
         \path ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) --%
               ++($( 0.45\roadwidth,0)+( 0.2,0)$);% left barrier part 3
         \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) --%
               ++($(-0.45\roadwidth,0)+(-0.2,0)$);% left barrier part 4
         %
-        \filldraw[\foreground]% right barrier part 1
+        \filldraw[foreground]% right barrier part 1
           ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) circle (0.05);%
-        \filldraw[\foreground]% right barrier part 2
+        \filldraw[foreground]% right barrier part 2
           ($(-0.5\roadwidth,0)+(-0.2,0)+(0,-0.35)$) circle (0.05);%
         \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) --%
               ++($(-0.45\roadwidth,0)+(-0.2,0)$);% right barrier part 3
@@ -191,9 +183,9 @@
               ++($( 0.45\roadwidth,0)+( 0.2,0)$);% right barrier part 4
       }{%
         \ifdefstring{\side}{left}{%
-          \filldraw[\foreground]% left barrier part 1
+          \filldraw[foreground]% left barrier part 1
             ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) circle (0.05);%
-          \filldraw[\foreground]% left barrier part 2
+          \filldraw[foreground]% left barrier part 2
             ($( 0.5\roadwidth,0)+( 0.2,0)+(0,0.35)$) circle (0.05);%
           \path ($(-0.5\roadwidth,0)+(-0.2,0)+(0,0.35)$) --%
                 ++($( 0.45\roadwidth,0)+( 0.2,0)$);% left barrier part 3
@@ -201,9 +193,9 @@
                 ++($(-0.45\roadwidth,0)+(-0.2,0)$);% left barrier part 4
         }{%
           \ifdefstring{\side}{right}{%
-            \filldraw[\foreground]% right barrier part 1
+            \filldraw[foreground]% right barrier part 1
               ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) circle (0.05);%
-            \filldraw[\foreground]% right barrier part 2
+            \filldraw[foreground]% right barrier part 2
               ($(-0.5\roadwidth,0)+(-0.2,0)+(0,-0.35)$) circle (0.05);%
             \path ($( 0.5\roadwidth,0)+( 0.2,0)+(0,-0.35)$) --%
                   ++($(-0.45\roadwidth,0)+(-0.2,0)$);% right barrier part 3
@@ -217,24 +209,24 @@
     }{%
       \ifdefstring{\barrier}{semi}{% semi barrier
         \ifdefstring{\side}{both}{%
-          \filldraw[\foreground]% left barrier part 1
+          \filldraw[foreground]% left barrier part 1
             ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) circle (0.05);%
           \path ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) --%
                 ++($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)$);% left barrier part 2
           %
-          \filldraw[\foreground]% right barrier part 1
+          \filldraw[foreground]% right barrier part 1
             ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) circle (0.05);%
           \path ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) --%
                 ++($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)$);% right barrier part 2
         }{%
           \ifdefstring{\side}{left}{%
-            \filldraw[\foreground]% left barrier part 1
+            \filldraw[foreground]% left barrier part 1
               ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) circle (0.05);%
             \path ($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)+(0,0.35)$) --%
                   ++($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)$);% left barrier part 2
           }{%
             \ifdefstring{\side}{right}{%
-              \filldraw[\foreground]% right barrier part 1
+              \filldraw[foreground]% right barrier part 1
                 ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) circle (0.05);%
               \path ($\trafficfactor*(0.5\roadwidth,0)+\trafficfactor*(0.2,0)+(0,-0.35)$) --%
                     ++($\trafficfactor*(-0.5\roadwidth,0)+\trafficfactor*(-0.2,0)$);% right barrier part 2
@@ -292,11 +284,11 @@
     \def\coordcommand{#1} % beware of leading and tailing spaces!
     %% symbol
     \iftoggle{show_background}{% true
-      \fill[\background]%
+      \fill[background]%
         ($(-0.5\objectlength,\objectwidth)+(0,-0.1)$) rectangle%
         ($(0.5\objectlength,-\objectwidth)+(0,0.1)$);%
     }{}%
-    \tikzset{every path/.style={draw=\foreground,line width=0.75pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=0.75pt}};%
     \ifdefstring{\side}{both}{%
       \path ($-0.5*(\objectlength,0)+(-0.1,0)+(\shiftleft,\objectwidth)$) --%
             ++($(0.1,-0.1)$) --%
@@ -352,10 +344,10 @@
     %% settings
     \def\coordcommand{#1} % beware of leading and tailing spaces!
     %% symbol
-    \tikzset{every path/.style={draw=\foreground,line width=1pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=1pt}};%
     \path (-0.6,-0.4 ) rectangle ++(1.2,0.8); % building
-    \path[fill=\foreground] (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
-    \path[fill=\foreground] ( 0  , 0.15) circle      (0.15); % human dot
+    \path[fill=foreground] (-0.5,-0.3 ) rectangle ++(1.0,0.2); % table
+    \path[fill=foreground] ( 0  , 0.15) circle      (0.15); % human dot
   }},% END pics/interlocking/.style args={#1}
   % symbology entry
   symbology_interlocking/.pic = {
@@ -384,7 +376,7 @@
     %% settings
     \def\coordcommand{#1} % beware of leading and tailing spaces!
     %% symbol
-    \tikzset{every path/.style={draw=\foreground,line width=0.75pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=0.75pt}};%
     % left side
     \path (-0.3, 0.1) -- ++(0,0.05);
     \path (-0.2, 0.1) -- ++(0,0.15);
@@ -439,7 +431,7 @@
       }%
     }% end \ifdefstring{\side}
     %% pylon shape
-    \tikzset{every path/.style={draw=\foreground,line width=0.5pt}};%
+    \tikzset{every path/.style={draw=foreground,line width=0.5pt}};%
     \ifdefstring{\side}{both}{% double side
       \path (0,-0.5) circle [radius=0.075];% part 1
       \path (0, 0.5) circle [radius=0.075];% part 2

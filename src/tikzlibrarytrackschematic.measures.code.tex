@@ -23,14 +23,6 @@
 \pgfkeys{%
   /tikz/trackschematic/.is family,%
   /tikz/trackschematic/.cd,%
-  %% color foreground
-  foreground/.store in=\foreground,%
-  foreground=black,% DEFAULT
-  /tikz/foreground/.forward to=/tikz/trackschematic/foreground,%
-  %% color background
-  background/.store in=\background,%
-  background=white,% DEFAULT
-  /tikz/background/.forward to=/tikz/trackschematic/background,%
   %% face
   face/.value required,% forward, backward OR bidirectional
   face/.store in=\face,% forward, backward OR bidirectional
@@ -59,7 +51,7 @@
   /tikz/trackschematic/measures/.cd,%
   %% color hectometer
   color/.store in=\hectometercolor,%
-  color=\foreground!50!\background,% DEFAULT
+  color=foreground!50!background,% DEFAULT
   /tikz/hectometer color/.forward to=/tikz/trackschematic/measures/color,%
 }%
 %%%%%%%%%%%%%%%%
@@ -104,7 +96,7 @@
       }%
     }% end \ifdefstring{\trafficpractice}
     %
-    \tikzset{every path/.style={draw=\foreground,line width=0.75pt,line cap=round,dash pattern=on 0pt off 2.4\pgflinewidth}};%
+    \tikzset{every path/.style={draw=foreground,line width=0.75pt,line cap=round,dash pattern=on 0pt off 2.4\pgflinewidth}};%
     \path% berth shape forward
       ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
       ($-0.5*(\objectlength,0) + (-0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
@@ -112,10 +104,10 @@
       ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
       ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
       ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$);% berth shape forward
-    \path[draw=none,fill=\foreground]% arrow front
+    \path[draw=none,fill=foreground]% arrow front
       ($\facefactor*0.5*(\objectlength,0) + \facefactor*(-0.1,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
       ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
-    \path[draw=none,fill=\foreground]% arrow back
+    \path[draw=none,fill=foreground]% arrow back
       ($\facefactor*-0.5*(\objectlength,0) + \facefactor*(0.2,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
       ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
     \ifdefstring{\face}{bidirectional}{% bidirectional
@@ -127,19 +119,19 @@
         ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$)%
         ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.25)$) --%
         ($ 0.5*(\objectlength,0) + ( 0.05,0) + \trafficfactor*\facefactor*(0,-0.35)$);% berth shape forward
-      \path[draw=none,fill=\foreground]% arrow front
+      \path[draw=none,fill=foreground]% arrow front
         ($\facefactor*0.5*(\objectlength,0) + \facefactor*(-0.1,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
         ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
-      \path[draw=none,fill=\foreground]% arrow back
+      \path[draw=none,fill=foreground]% arrow back
         ($\facefactor*-0.5*(\objectlength,0) + \facefactor*(0.2,0) + \trafficfactor*\facefactor*(0,-0.35)$) --%
         ++($(0,-0.04) + \facefactor*(-0.1,0)$) -- ++(0,0.08) -- cycle;% arrow
     }{}%
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \node[fill=\background,text=\foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
+      \node[fill=background,text=foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
       \ifdefstring{\face}{bidirectional}{% bidirectional
         \pgfmathsetmacro{\facefactor}{1}%
-        \node[fill=\background,text=\foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
+        \node[fill=background,text=foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
       }{}%
     }%
   }},% END pics/train_berth/.style args={#1/#2/#3}
@@ -157,8 +149,8 @@
 %% command
 \newcommand\trackdistance{}% just for safety
 \def\trackdistance#1(#2)#3(#4)#5(#6){% \trackdistance between (coord1) and (coord2) distance (distance);
-  \path[draw=\background,<->,>={Stealth[\foreground,inset=0pt,angle=50:0.2cm]},shorten <=1pt,shorten >=1pt] (#2) -- (#4)% arrow tips
-  node[hectometer base=(current bounding box.center),text=\foreground,midway,sloped,rotate=90] {#6};% label
+  \path[draw=background,<->,>={Stealth[foreground,inset=0pt,angle=50:0.2cm]},shorten <=1pt,shorten >=1pt] (#2) -- (#4)% arrow tips
+  node[hectometer base=(current bounding box.center),text=foreground,midway,sloped,rotate=90] {#6};% label
 }%
 % symbology entry
 \tikzset{%
@@ -230,7 +222,7 @@
       (0,0) -- (ts-hm-b1) -- (ts-hm-b2) -- (ts-hm-l);%
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \node[font=\sffamily,text=\hectometercolor,rotate=-90,\orientation,align=\align,fill=\background] at (ts-hm-l) {\labelcontent};%
+      \node[font=\sffamily,text=\hectometercolor,rotate=-90,\orientation,align=\align,fill=background] at (ts-hm-l) {\labelcontent};%
     }%
   }},% END
   % symbology entry

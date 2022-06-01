@@ -262,8 +262,8 @@
 
   \subsection{Colors: background and foreground}\label{sec:colors}
 
-    The two main colors \texttt{white} and \texttt{black} are set for the \texttt{background} and \texttt{foreground} keys by default.
-    If you want to change them, provide a new value for the keys.
+    The two main colors \texttt{background} and \texttt{foreground} are set as an alias to \texttt{white} and \texttt{black} by default.
+    If you want to change them, override them by defining a new alias.
     For example like this:\\
     \begin{minipage}[c]{0.65\textwidth}
       \begin{lstlisting}[gobble=8]
@@ -271,12 +271,13 @@
 
         % load the library
         \usepackage{tikz-trackschematic}
+        
+        % set the colors
+        \colorlet{background}{lightgray}
+        \colorlet{foreground}{violet}
 
         \begin{document}
           \begin{tikzpicture}
-            % set the colors
-            \tikzset{background=lightgray,foreground=violet}
-
             \maintrack  (0,0) -- (6,0);
             \train[forward] at (5,0) label (grey train);
           \end{tikzpicture}
@@ -286,7 +287,8 @@
     \hfil
     \begin{minipage}[c]{0.34\textwidth}
       \begin{tikzpicture}
-        \tikzset{background=lightgray,foreground=violet}
+        \colorlet{background}{lightgray}
+        \colorlet{foreground}{violet}
         \path (-0.2,-1.6) rectangle (5.2,1.6);
         \coordinate (A) at (0  ,0);
         \coordinate (T) at (4.5,0);

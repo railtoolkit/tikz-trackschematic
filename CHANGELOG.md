@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -8,9 +9,17 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 
 ## [Unreleased]
 
-### Added
+### Todo
 
   * i18n option
+
+
+## Version [0.7.1] - 2022-06-02
+
+### Changed
+  
+  * handeling color background and foreground with native xcolor alias "\colorlet{}{}" instead of pgf macro
+
 
 ## Version [0.7.0] - 2022-04-02
 
@@ -30,6 +39,7 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
   * wrong option for labels in vehicles
   * foreground of sidetrack (alias)
   * PackageWarning Error in development mode
+
 
 ## Version [0.6.3] - 2022-02-15
 
@@ -149,7 +159,8 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
   Basic concept of a library with railway topology symbols and some examples.
 
 
-[Unreleased]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.7.0...master
+[Unreleased]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.7.1...master
+[0.7.1]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/railtoolkit/tikz-trackschematic/compare/v0.6.1...v0.6.2
