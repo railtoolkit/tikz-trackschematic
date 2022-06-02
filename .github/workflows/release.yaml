@@ -180,10 +180,10 @@ jobs:
     name: "tweet about it!"
     runs-on: ubuntu-latest
     steps:
-    - uses: infraway/tweet-action@v1
+    - uses: devigned/go-twitter-action@v1
       with:
-        status: "The version ${{needs.create_package.outputs.version}} of TikZ-trackschematic is available! DOI: https://doi.org/${{needs.publish_zenodo.outputs.doi}}"
-        api_key: ${{ secrets.TWITTER_API_KEY }}
-        api_key_secret: ${{ secrets.TWITTER_API_KEY_SECRET }}
-        access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-        access_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        message: "The version ${{needs.create_package.outputs.version}} of TikZ-trackschematic is available! DOI: https://doi.org/${{needs.publish_zenodo.outputs.doi}}"
+        apiKey: ${{ secrets.TWITTER_API_KEY }}
+        apiKeySecret: ${{ secrets.TWITTER_API_SECRET }}
+        accessToken: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+        accessTokenSecret: ${{ secrets.TWITTER_ACCESS_SECRET }}
