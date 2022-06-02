@@ -17,7 +17,7 @@ identifiers:
     value: 10.5281/zenodo.5539844
     description: 'Collection of archived snapshots of all versions of the library'
   - type: doi
-    value: 10.5281/zenodo.6418404
+    value: 10.5281/zenodo.6607601
     description: Current version
 url: 'https://www.railtoolkit.org/projects/tikz-trackschematic/'
 repository: 'https://github.com/railtoolkit/tikz-trackschematic'
@@ -40,5 +40,5 @@ keywords:
   - tracks
   - schematics
 license: ISC
-version: v0.7.0
-date-released: 2022-04-02
+version: v0.7.1
+date-released: 2022-06-02
