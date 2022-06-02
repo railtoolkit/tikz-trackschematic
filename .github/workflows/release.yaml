@@ -147,7 +147,7 @@ jobs:
           ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
           COLLECTION: 5539844
         run: |
-          ID=$(zenodraft deposition create in-existing-collection $COLLECTION)
+          ID=$(zenodraft deposition create version $COLLECTION)
           zenodraft file add $ID tikz-trackschematic-*.zip
           zenodraft metadata update $ID artifact/metadata.json
           zenodraft deposition publish $ID
