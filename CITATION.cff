@@ -4,7 +4,7 @@
 ---
 cff-version: 1.2.0
 title: tikz-trackschematic
-message: 'If you use this software, please cite it using these metadata.'
+message: 'If you use this software, please cite both the proceedings from preferred-citation and the software itself.'
 type: software
 authors:
   - given-names: Martin
@@ -19,26 +19,39 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.6607601
     description: Current version
-url: 'https://www.railtoolkit.org/projects/tikz-trackschematic/'
-repository: 'https://github.com/railtoolkit/tikz-trackschematic'
-repository-code: 'https://repository.ivev.bau.tu-bs.de/martin/tikz-trackschematic'
-repository-artifact: 'https://ctan.org/pkg/tikz-trackschematic'
+url: https://www.railtoolkit.org/projects/tikz-trackschematic
+repository: https://github.com/railtoolkit/tikz-trackschematic
+repository-code: https://repository.ivev.bau.tu-bs.de/martin/tikz-trackschematic
+repository-artifact: https://ctan.org/pkg/tikz-trackschematic
 abstract: >-
-  A TikZ library for creating track diagrams in
+  'A TikZ library for creating track diagrams in
   railways. The tikz-trackschematic library is a
   toolbox of symbols geared primarily towards
   creating track schematic for either research or
   educational purposes. It provides a TikZ frontend
   to some of the symbols which maybe needed to
   describe situations and layouts in railway
-  operation.
+  operation.'
 keywords:
   - tex
-  - tikz
+  - symbology
   - railway
   - railroad
-  - tracks
-  - schematics
+  - operational scenarios
+  - graphical description
 license: ISC
 version: v0.7.1
 date-released: 2022-06-02
+preferred-citation:
+  authors:
+    - family-names: Scheidt
+      given-names: Martin
+      orcid: https://orcid.org/0000-0002-9384-8945
+    - family-names: Pachl
+      given-names: Jörn
+  doi: 10.24355/dbbs.084-202204140847-0
+  title: 'TikZ-trackschematic library: a symbology towards a universal graphical description for operational scenarios in railway research'
+  type: proceedings
+  year: 2022
+  publisher:
+    name: "RailBeijing 2021 - the 9th International Conference on Railway Operations Modelling and Analysis (ICROMA). 3.-7. November , 2021"
