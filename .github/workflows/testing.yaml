@@ -5,10 +5,34 @@ name: "continuous integration test"
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  pull_request:
-    branches: [ master ]
   push:
     branches: [ master ]
+    paths-ignore:
+      - 'CHANGELOG.md'
+      - 'CITATION.cff'
+      - 'CODE_OF_CONDUCT.md'
+      - 'CONTRIBUTING.md'
+      - 'LICENSE'
+      - 'README.md'
+      - '.github/workflows/cffvalidation.yaml'
+      - '.github/workflows/debug.yaml'
+      - '.github/workflows/release.yaml'
+      - '.github/workflows/zenodo.yaml'
+      - '.github/zenodo/*'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - 'CHANGELOG.md'
+      - 'CITATION.cff'
+      - 'CODE_OF_CONDUCT.md'
+      - 'CONTRIBUTING.md'
+      - 'LICENSE'
+      - 'README.md'
+      - '.github/workflows/cffvalidation.yaml'
+      - '.github/workflows/debug.yaml'
+      - '.github/workflows/release.yaml'
+      - '.github/workflows/zenodo.yaml'
+      - '.github/zenodo/*'
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
