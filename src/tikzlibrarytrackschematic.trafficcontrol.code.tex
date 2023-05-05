@@ -1,6 +1,6 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2022, Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2023, Martin Scheidt (ISC license)
 %
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 %
@@ -651,6 +651,56 @@
     \maintrack (0,0) -- (6,0);%
     \balise[forward,along={0,1,2}] at (2,0) label (A);%
     \balise[forward,along switched={0,1,2}] at (4,0) label (B);%
+  },%
+}%
+%
+%%%%%%%%%%%%%%%
+% symbol trigger point
+%%%%%%%%%%%%%%%
+% command
+\newcommand\triggerpoint{}% just for safety
+\def\triggerpoint[#1]#2(#3){% \triggerpoint[options] at (coord);
+  \pic[#1] at (#3) {trigger_point={#2}};% symbol
+}%
+% symbol definition
+\tikzset{%
+  pics/trigger_point/.default=,%
+  pics/trigger_point/.style args={#1}{code={%
+    %% face setup
+    \ifdefstring{\face}{forward}{% face
+      \pgfmathsetmacro{\facefactor}{1}%
+    }{%
+      \ifdefstring{\face}{backward}{% face
+        \pgfmathsetmacro{\facefactor}{-1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/face}{“forward“ OR “backward“ as key required}}%
+      }%
+    }% end \ifdefstring{\face}
+    %% traffic practice setup
+    \ifdefstring{\trafficpractice}{left}{% branch
+      \pgfmathsetmacro{\trafficfactor}{-1}%
+    }{%
+      \ifdefstring{\trafficpractice}{right}{% branch
+        \pgfmathsetmacro{\trafficfactor}{1}%
+      }{% error message
+        \pgfkeys{/errors/unknown choice value={/tikz/trackschematic/trafficcontrol/traffic practice}{“left“ OR “right“ as key required}}%
+      }%
+    }% end \ifdefstring{\trafficpractice}
+    %% arrow
+    \path[draw=foreground,<-,>=latex,line width=1pt]%
+      ($\facefactor*\trafficfactor*(0,-0.1)$) -- ++($\facefactor*\trafficfactor*(0,-0.3)$) -- ++($\facefactor*(0.2,0)$);% arrow
+    %% rings
+    \path[draw=foreground, line width=1pt]% circle
+      ($\facefactor*(0.4,0) + \facefactor*\trafficfactor*(0,-0.4)$) circle (0.1);
+    \path[fill=background]% line
+      ($\facefactor*(0.45,0) + \facefactor*\trafficfactor*(0,-0.45)$) rectangle ++($\facefactor*(0.1,0) + \facefactor*\trafficfactor*(0,0.1)$);
+    \path[draw=foreground, line width=1pt]% line
+      ($\facefactor*(0.425,0) + \facefactor*\trafficfactor*(0,-0.4)$) -- ++($\facefactor*(0.15,0)$);
+  }},% END pics/trigger_point/.style args={#1}
+  % symbology entry
+  symbology_trigger_point/.pic = {%
+    \maintrack (0,0) -- (6,0);%
+    \triggerpoint[forward] at (3,0);%
   },%
 }%
 %

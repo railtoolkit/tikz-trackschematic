@@ -9,9 +9,9 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 
 ## [Unreleased]
 
-### Todo
+### Added
 
-  * i18n option
+  * new symbol "trigger point"
 
 
 ## Version [0.7.1] - 2022-06-02

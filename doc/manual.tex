@@ -1,6 +1,6 @@
 %% symbol library for TikZ track schematics
 %
-% Copyright (c) 2018 - 2022 Martin Scheidt (ISC license)
+% Copyright (c) 2018 - 2023 Martin Scheidt (ISC license)
 
 % Permission to use, copy, modify, and/or distribute this file for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 
@@ -816,6 +816,25 @@
 
     \subsubsection{Non-stationary locations}\label{sec:locations}
 
+      \symboldescription{Trigger point}\label{sym:triggerpoint}
+        \tsSymbol[1.4]{trigger_point}
+        \begin{lstlisting}[gobble=10]
+          \triggerpoint[options] at (coord);
+        \end{lstlisting}
+        values for \texttt{options} (comma seperated):
+        \begin{itemize}[label={}]
+          \item \texttt{forward} or \texttt{backward} (mandatory)
+          \item \texttt{position=left} or \texttt{position=right} (optional, default: \textit{traffic practice})
+          \item \texttt{foreground=\textit{color}} (optional, default: \texttt{black})
+        \end{itemize}
+      
+        \mbox{}\\[0.2cm]
+        Symbology entry as seen at top:
+        \begin{lstlisting}[gobble=10]
+          \tsSymbol[1.4]{trigger_point}% TeX environment
+        \end{lstlisting}
+
+
       \symboldescription{View point}\label{sym:viewpoint}
         \tsSymbol[1.4]{view_point}
         \begin{lstlisting}[gobble=10]
@@ -1569,6 +1588,8 @@
       \No & shunt limit                     & \tsSymbol[1.4]{shunt_limit}                    & \ref{sym:signals}        \\
     \hline
       \No & train berth sign                & \tsSymbol[1.4]{train_berth_sign}               & \ref{sym:signals}        \\
+    \hline
+      \No & trigger point                   & \tsSymbol[1.4]{trigger_point}                  & \ref{sec:locations}      \\
     \hline
       \No & view point                      & \tsSymbol[1.4]{view_point}                     & \ref{sec:locations}      \\
     \hline
