@@ -128,10 +128,10 @@
     }{}%
     %% label
     \ifdefstring{\labelcontent}{}{}{% label NOT empty
-      \node[fill=background,text=foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
+      \node[fill=background,text=foreground,inner sep=1pt] at ($\facefactor*\trafficfactor*(0,-0.35)$) {\tiny \labelcontent};%
       \ifdefstring{\face}{bidirectional}{% bidirectional
         \pgfmathsetmacro{\facefactor}{1}%
-        \node[fill=background,text=foreground,inner sep=1pt] at ($\facefactor*(0,-0.35)$) {\tiny \labelcontent};%
+        \node[fill=background,text=foreground,inner sep=1pt] at ($\facefactor*\trafficfactor*(0,-0.35)$) {\tiny \labelcontent};%
       }{}%
     }%
   }},% END pics/train_berth/.style args={#1/#2/#3}
